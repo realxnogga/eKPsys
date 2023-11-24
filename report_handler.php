@@ -7,7 +7,7 @@ if (isset($_POST['submit'])) {
     $region = $_POST['region'];
     $budget = $_POST['budget'];
     $population = $_POST['population'];
-    $land_area = $_POST['land_area'];
+    $landarea = $_POST['landarea'];
     $male = $_POST['male'];
     $female = $_POST['female'];
 
@@ -47,20 +47,20 @@ if (isset($_POST['submit'])) {
     if (!$last_report_date) {
         // No report exists for this user and barangay, insert new row
 $insert_query = "INSERT INTO reports (user_id, barangay_id, mayor, region, budget, population, landarea, male, female, totalcase, numlupon, criminal, civil, others, totalNature, media, concil, arbit, totalSet, pending, dismissed, repudiated, certcourt, dropped, totalUnset, outsideBrgy)
-                 VALUES (:user_id, :barangay_id, :mayor, :region, :budget, :population, :land_area, :male, :female, :totalc, :numlup, :criminal, :civil, :others, :totalNature, :mediation, :conciliation, :arbit, :totalSet, :pending, :dismissed, :repudiated, :certified, :dropped, :totalUnset, :outside)";
+                 VALUES (:user_id, :barangay_id, :mayor, :region, :budget, :population, :landarea, :male, :female, :totalc, :numlup, :criminal, :civil, :others, :totalNature, :mediation, :conciliation, :arbit, :totalSet, :pending, :dismissed, :repudiated, :certified, :dropped, :totalUnset, :outside)";
 
         $stmt = $conn->prepare($insert_query);
     } else {
         if (date('Y-m', strtotime($last_report_date)) === date('Y-m')) {
             // Update existing row for the current month
-            $update_query = "UPDATE reports SET mayor = :mayor, region = :region, budget = :budget, population = :population, landarea = :land_area, male = :male, female = :female, totalcase = :totalc, numlupon = :numlup, criminal = :criminal, civil = :civil, others = :others, totalNature = :totalNature, media = :mediation, concil = :conciliation, arbit = :arbit, totalSet = :totalSet, pending = :pending, dismissed = :dismissed, repudiated = :repudiated, certcourt = :certified, dropped = :dropped, totalUnset = :totalUnset, outsideBrgy = :outside 
+            $update_query = "UPDATE reports SET mayor = :mayor, region = :region, budget = :budget, population = :population, landarea = :landarea, male = :male, female = :female, totalcase = :totalc, numlupon = :numlup, criminal = :criminal, civil = :civil, others = :others, totalNature = :totalNature, media = :mediation, concil = :conciliation, arbit = :arbit, totalSet = :totalSet, pending = :pending, dismissed = :dismissed, repudiated = :repudiated, certcourt = :certified, dropped = :dropped, totalUnset = :totalUnset, outsideBrgy = :outside 
                              WHERE user_id = :user_id AND barangay_id = :barangay_id AND report_date = :last_report_date";
             $stmt = $conn->prepare($update_query);
             $stmt->bindParam(':last_report_date', $last_report_date);
         } else {
             // Different month, create a new row
             $insert_query = "INSERT INTO reports (user_id, barangay_id, report_date, mayor, region, budget, population, landarea, male, female, totalcase, numlupon, criminal, civil, others, totalNature, media, concil, arbit, totalSet, pending, dismissed, repudiated, certcourt, dropped, totalUnset, outsideBrgy)
-                 VALUES (:user_id, :barangay_id, :current_date, :mayor, :region, :budget, :population, :land_area, :male, :female, totalc, :numlup, :criminal, :civil, :others, :totalNature, :mediation, :conciliation, :arbit, :totalSet, :pending, :dismissed, :repudiated, :certified, :dropped, :totalUnset, :outside)";
+                 VALUES (:user_id, :barangay_id, :current_date, :mayor, :region, :budget, :population, :landarea, :male, :female, totalc, :numlup, :criminal, :civil, :others, :totalNature, :mediation, :conciliation, :arbit, :totalSet, :pending, :dismissed, :repudiated, :certified, :dropped, :totalUnset, :outside)";
             $stmt = $conn->prepare($insert_query);
         }
     }
@@ -73,7 +73,7 @@ $stmt->bindParam(':mayor', $mayor);
 $stmt->bindParam(':region', $region);
 $stmt->bindParam(':budget', $budget);
 $stmt->bindParam(':population', $population);
-$stmt->bindParam(':land_area', $land_area);
+$stmt->bindParam(':landarea', $landarea);
 $stmt->bindParam(':male', $male);
 $stmt->bindParam(':female', $female);
 $stmt->bindParam(':totalc', $totalc);
@@ -111,7 +111,7 @@ if ($row) {
     $region = $row['region'];
     $budget = $row['budget'];
     $population = $row['population'];
-    $land_area = $row['landarea'];
+    $landarea = $row['landarea'];
     $male = $row['male'];
     $female = $row['female'];
 }
@@ -136,7 +136,7 @@ $mayor = $row['mayor'] ?? '';
 $region = $row['region'] ?? '';
 $budget = $row['budget'] ?? '';
 $population = $row['population'] ?? '';
-$land_area = $row['landarea'] ?? '';
+$landarea = $row['landarea'] ?? '';
 $totalc = $row['totalcase'] ?? '';
 $numlup = $_SESSION['linkedNamesCount'] ?? ''; // Update $numlup to reflect the linked names count
 

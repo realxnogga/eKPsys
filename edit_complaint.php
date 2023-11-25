@@ -226,16 +226,12 @@ input[type="submit"]:hover {
 document.addEventListener('DOMContentLoaded', function () {
     var hiddenCMethod = document.getElementById('hiddenCMethod');
     var cMethodSelect = document.getElementById('CMethodSelect');
+    var cStatusSelect = document.getElementById('cStatusSelect');
 
-    // Set the initial value of the select field based on the hidden input
-    cMethodSelect.value = hiddenCMethod.value;
-
-    // Update the hidden input value when the select field changes
-    cMethodSelect.addEventListener('change', function () {
-        hiddenCMethod.value = cMethodSelect.value;
-    });
+    // Function to update Case Method options based on Case Status
     function updateMethodOptions(selectedStatus) {
         var methodOptions = [];
+
         if (selectedStatus === 'Settled') {
             methodOptions = ['Mediation', 'Conciliation', 'Arbitration'];
         } else if (selectedStatus === 'Unsettled') {
@@ -255,15 +251,16 @@ document.addEventListener('DOMContentLoaded', function () {
         cMethodSelect.value = hiddenCMethod.value;
     }
 
+    // Event listener to handle changes in Case Status
     cStatusSelect.addEventListener('change', function () {
         var selectedStatus = cStatusSelect.value;
 
         if (selectedStatus === 'Others') {
             cMethodSelect.style.display = 'none';
             cMethodSelect.value = null;
+            hiddenCMethod.value = null; // Reset hidden value
         } else {
             cMethodSelect.style.display = 'block';
-            console.log(selectedStatus);
             updateMethodOptions(selectedStatus);
         }
     });
@@ -274,8 +271,11 @@ document.addEventListener('DOMContentLoaded', function () {
         updateMethodOptions(initialStatus);
     } else {
         cMethodSelect.style.display = 'none';
+        hiddenCMethod.value = null; // Reset hidden value
     }
 });
+
+
 </script>
 <script src="edit_script.js"></script>
 

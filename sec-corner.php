@@ -11,15 +11,11 @@ include 'admin_func.php';
 include 'admin-nav.php';
 include 'functions.php';
 
-// Add a flag to determine whether an action was submitted
 $action_submitted = isset($_POST['action']);
 
 // Process the "Unverify" action if submitted
 if ($action_submitted && $_POST['action'] === 'unverify' && isset($_POST['user_id'])) {
-    // Perform the unverify operation here
-    // ...
 
-    // Redirect to the same page to avoid form resubmission issues
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
@@ -39,14 +35,12 @@ if ($action_submitted && $_POST['action'] === 'unverify' && isset($_POST['user_i
         <h4><b>Barangay Secretaries</b></h4><br>
         <form method="GET" action="" class="searchInput">
             <input type="text" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput">
-            <input type="button" value="Search" onclick="location.href='user_complaints.php';" class="refresh-button">
+            <input type="button" value="Search" class="refresh-button">
         </form>
 
         <?php
-        // Check if an action has been submitted; if not, display the account requests
         if (!$action_submitted && !empty($barangays)) {
     echo '<div class="card-body">';
-   // Display the verified users
 echo '<div id="verified-users">';
 echo '<table class="table table-bordered">';
 echo '<thead><tr><th>ID</th><th>Username</th><th>User Name</th><th>Email</th><th>Contact Number</th><th>Barangay Name</th><th>Actions</th></tr></thead>';
@@ -78,6 +72,22 @@ while ($verifiedUser = $verifiedUsersStatement->fetch(PDO::FETCH_ASSOC)) {
 
 
     echo '</td>';
+        echo '<td>';
+echo '<form method="post" action="admin_viewreport.php">';
+echo '<input type="hidden" name="user_id" value="' . $verifiedUser['id'] . '">';
+// Fetch barangay_id and include it as a hidden input
+$barangayIdQuery = "SELECT barangay_id FROM users WHERE id = ?";
+$barangayStatement = $conn->prepare($barangayIdQuery);
+$barangayStatement->execute([$verifiedUser['id']]);
+$barangayId = $barangayStatement->fetchColumn();
+echo '<input type="hidden" name="barangay_id" value="' . $barangayId . '">';
+echo '<button class="btn-success" type="submit" name="viewreport">View Report</button>';
+echo '</form>';
+
+
+
+
+    echo '</td>';
     echo '</tr>';
 }
 
@@ -86,8 +96,6 @@ echo '</table>';
 echo '</div>';
 echo '</div>';
         }
-
-        // Your existing PHP code to display the table of verified users...
         ?>
 
         </div>
@@ -95,5 +103,3 @@ echo '</div>';
 </div>
 </body>
 </html>
-
-<script src="populateBrgyscript.js"></script>

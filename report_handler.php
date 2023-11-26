@@ -1,18 +1,7 @@
 <?php 
-$user_type = $_SESSION['user_type'] ?? '';
 
-if ($user_type === 'admin') {
-if (isset($_POST['user_id']) && isset($_POST['barangay_id'])) {
-    $user_id = $_POST['user_id'];
-    $barangay_id = $_POST['barangay_id'];
-}
-
-} elseif ($user_type === 'user') {
-    // Assign the current session's user_id and barangay_id to avoid conflicts
-    $user_id = $_SESSION['user_id'] ?? '';
+ $user_id = $_SESSION['user_id'] ?? '';
     $barangay_id = $_SESSION['barangay_id'] ?? '';
-}
-
 try{
 
 if (isset($_POST['submit'])) {
@@ -133,17 +122,6 @@ catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
 
-if ($user_type === 'admin') {
-if (isset($_POST['user_id']) && isset($_POST['barangay_id'])) {
-    $user_id = $_POST['user_id'];
-    $barangay_id = $_POST['barangay_id'];
-}
-
-} elseif ($user_type === 'user') {
-    // Assign the current session's user_id and barangay_id to avoid conflicts
-    $user_id = $_SESSION['user_id'] ?? '';
-    $barangay_id = $_SESSION['barangay_id'] ?? '';
-}
 
 $stmt = $conn->prepare("SELECT mayor, region, budget, population, landarea, totalcase, numlupon, male, female, criminal, civil, others, totalNature, media, concil, arbit, totalSet, pending, dismissed, repudiated, certcourt, dropped, totalUnset, outsideBrgy FROM reports WHERE user_id = :user_id AND barangay_id = :barangay_id ORDER BY report_date DESC LIMIT 1");
 $stmt->bindParam(':user_id', $user_id);
@@ -242,7 +220,7 @@ $months = $months_query->fetchAll(PDO::FETCH_ASSOC);
 // Set a default value for selected_month if not set
 $selected_month = isset($_POST['selected_month']) ? $_POST['selected_month'] : date('F Y');
 
-
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Check if a month is selected
 if (isset($_POST['selected_month'])) {
     $selected_month = $_POST['selected_month'];
@@ -317,5 +295,5 @@ if (isset($_POST['selected_month'])) {
 
 }
 
-
+}
  ?>

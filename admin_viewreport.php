@@ -5,22 +5,23 @@ include 'connection.php';
 include 'admin_func.php';   
 include 'admin-nav.php';
 include 'functions.php';
+$user_id = isset($_POST['user_id']) ? $_POST['user_id'] : '';
+$barangay_id = isset($_POST['barangay_id']) ? $_POST['barangay_id'] : '';
+
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
     header("Location: login.php");
     exit;
 }
-include 'count_lupon.php';
 
-include 'report_handler.php';
-
+include 'viewreporthandler.php';
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 
-    <title>Reports</title>
+    <title>Barangay Report</title>
     <link rel="stylesheet" type="text/css" href="style copy.css">
     <!-- Link Bootstrap CSS -->
     <link href="path/to/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -29,14 +30,7 @@ include 'report_handler.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<style>
-    .custom-modal-dialog {
-    max-width: 800px; /* Adjust the width as needed */
-    width: 90%; /* Adjust to your preference */
-  }
-</style>
-<body>
-<hr><br>
+
 <body>
     <div class="container">
         <form method="POST">
@@ -87,13 +81,13 @@ include 'report_handler.php';
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="totalc">TOTAL NO. OF CASES:</label>
-                        <input type="number" class="form-control" id="totalc" name="totalc" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="number" class="form-control" id="totalc" name="totalc" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_totalc; // Display the selected month's value
         } else {echo $natureSum;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="numlup">NUMBER OF LUPONS:</label>
-                        <input type="number" class="form-control" id="numlup" name="numlup" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="number" class="form-control" id="numlup" name="numlup" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_numlup; // Display the selected month's value
         } else {echo $numlup;} ?>">
                     </div>
@@ -116,25 +110,25 @@ include 'report_handler.php';
         <div class="row">
             <div class="col-md-4">
                 <label for="criminal">Criminal:</label>
-                <input type="number" class="form-control" id="criminal" name="criminal" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="criminal" name="criminal" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_criminal; // Display the selected month's value
         } else {echo $criminalCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="civil">Civil:</label>
-                <input type="number" class="form-control" id="civil" name="civil" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="civil" name="civil" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_civil; // Display the selected month's value
         } else {echo $civilCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="others">Others:</label>
-                <input type="number" class="form-control" id="others" name="others" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="others" name="others" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_others; // Display the selected month's value
         } else {echo $othersCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="totalNature">Total:</label>
-                <input type="number" class="form-control" id="totalNature" name="totalNature" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="totalNature" name="totalNature" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_totalNature; // Display the selected month's value
         } else {echo $natureSum;} ?>">
             </div>
@@ -150,32 +144,32 @@ include 'report_handler.php';
         <div class="row">   
             <div class="col-md-4">
                 <label for="mediation">Mediation:</label>
-               <input type="number" class="form-control" id="mediation" name="mediation" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+               <input type="number" class="form-control" id="mediation" name="mediation" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_mediation; // Display the selected month's value
         } else {echo $mediationCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="conciliation">Conciliation:</label>
-                <input type="number" class="form-control" id="conciliation" name="conciliation" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="conciliation" name="conciliation" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_conciliation; // Display the selected month's value
         } else {echo $conciliationCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="arbit">Arbitration:</label>
-                <input type="number" class="form-control" id="arbit" name="arbit" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="arbit" name="arbit" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_arbit; // Display the selected month's value
         } else {echo $arbitrationCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="totalSet">Total:</label>
-                <input type="number" class="form-control" id="totalSet" name="totalSet" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="totalSet" name="totalSet" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_totalSet; // Display the selected month's value
         } else {echo $totalSettledCount;} ?>">
             </div>
         <b>Outside the Jurisdiction of Barangay</b>
             <div class="col-md-2">
                 <label for="outside"></label>
-                <input type="number" class="form-control" id="outside" name="outside" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="outside" name="outside" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_outside; // Display the selected month's value
         } else {echo $totalOutsideCount;} ?>">
             </div>
@@ -187,63 +181,46 @@ include 'report_handler.php';
         <div class="row">
             <div class="col-md-4">
                 <label for="pending">Pending:</label>
-                <input type="number" class="form-control" id="pending" name="pending" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="pending" name="pending" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_pending; // Display the selected month's value
         } else {echo $pendingCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="dismissed">Dismissed:</label>
-                <input type="number" class="form-control" id="dismissed" name="dismissed" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="dismissed" name="dismissed" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_dismissed; // Display the selected month's value
         } else {echo $dismissedCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="repudiated">Repudiated:</label>
-                <input type="number" class="form-control" id="repudiated" name="repudiated" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="repudiated" name="repudiated" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_repudiated; // Display the selected month's value
         } else {echo $repudiatedCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="certified">Certified to Court:</label>
-                <input type="number" class="form-control" id="certified" name="certified" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="certified" name="certified" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_certified; // Display the selected month's value
         } else {echo $certifiedCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="dropped">Dropped/Withdrawn:</label>
-                <input type="number" class="form-control" id="dropped" name="dropped" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="dropped" name="dropped" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_dropped; // Display the selected month's value
         } else {echo $droppedCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="totalUnset">Total:</label>
-                <input type="number" class="form-control" id="totalUnset" name="totalUnset" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="totalUnset" name="totalUnset" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_totalUnset; // Display the selected month's value
         } else {echo $totalUnsetCount;} ?>">
+         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+    <input type="hidden" name="barangay_id" value="<?php echo $barangay_id; ?>">
             </div>
                         </div>
         </form>
         </div>
   
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reportModal">
-  View Report
-</button>
-
-<div class="modal fade" id="reportModal" name="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered custom-modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="reportModalLabel" name="reportModalLabel">Monthly Report</h5>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <?php include 'reports_table.php'; ?>
-      </div>
-    </div>
-  </div>
-</div>
-
 
 
 

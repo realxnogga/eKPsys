@@ -48,31 +48,31 @@ include 'viewreporthandler.php';
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="mayor">MAYOR:</label>
-                        <input type="text" class="form-control" id="mayor" name="mayor" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="text" class="form-control" id="mayor" name="mayor" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_mayor; // Display the selected month's value
         } else {echo $mayor;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="region">REGION:</label>
-                        <input type="text" class="form-control" id="region" name="region" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="text" class="form-control" id="region" name="region" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_region; // Display the selected month's value
         } else {echo $region;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="budget">BUDGET ALLOCATED:</label>
-                        <input type="text" class="form-control" id="budget" name="budget" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="text" class="form-control" id="budget" name="budget" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_budget; // Display the selected month's value
         } else {echo $budget;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="popul">POPULATION:</label>
-                        <input type="text" class="form-control" id="popul" name="population" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="text" class="form-control" id="popul" name="population" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_population; // Display the selected month's value
         } else {echo $population;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="landarea">LAND AREA:</label>
-                        <input type="text" class="form-control" id="landarea" name="landarea" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="text" class="form-control" id="landarea" name="landarea" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_landarea; // Display the selected month's value
         } else {echo $landarea;} ?>" >
                     </div>
@@ -93,14 +93,14 @@ include 'viewreporthandler.php';
                     </div>
                     <div class="form-group">
                         <label for="male">MALE:</label>
-                        <input type="number" class="form-control" id="male" name="male" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="number" class="form-control" id="male" name="male" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_male; // Display the selected month's value
         } else {echo $male;} ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="female">FEMALE:</label>
-                        <input type="number" class="form-control" id="female" name="female" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="number" class="form-control" id="female" name="female" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_female; // Display the selected month's value
         } else {echo $female;} ?>">
                     </div>

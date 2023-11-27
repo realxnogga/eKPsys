@@ -12,22 +12,22 @@ include 'admin-nav.php';
 include 'functions.php';
 
 $action_submitted = isset($_GET['search']);
-
+$currentMunicipalityID = $_SESSION['municipality_id'] ?? null;
 // Prepare the search query if search form is submitted
 if ($action_submitted) {
     $search_query = $_GET['search'];
-    $searchUsersQuery = "SELECT u.id, u.username, u.first_name, u.last_name, u.email, u.contact_number, b.barangay_name 
-                        FROM users u 
-                        LEFT JOIN barangays b ON u.barangay_id = b.id 
-                        WHERE u.verified = 1 
-                        AND (u.first_name LIKE '%$search_query%' 
-                            OR u.last_name LIKE '%$search_query%' 
-                            OR b.barangay_name LIKE '%$search_query%')";
+$searchUsersQuery = "SELECT u.id, u.username, u.first_name, u.last_name, u.email, u.contact_number, b.barangay_name 
+                    FROM users u 
+                    LEFT JOIN barangays b ON u.barangay_id = b.id 
+                    WHERE u.verified = 1 
+                    AND u.municipality_id = ? 
+                    AND (u.first_name LIKE '%$search_query%' 
+                        OR u.last_name LIKE '%$search_query%' 
+                        OR b.barangay_name LIKE '%$search_query%')";
 
-    $searchUsersStatement = $conn->prepare($searchUsersQuery);
-    $searchUsersStatement->execute();
+$searchUsersStatement = $conn->prepare($searchUsersQuery);
+$searchUsersStatement->execute([$currentMunicipalityID]);
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -44,11 +44,16 @@ if ($action_submitted) {
         <h4><b>Barangay Secretaries</b></h4><br>
         <form method="GET" action="" class="searchInput">
             <input type="text" name="search" id="search" placeholder="Search by Name or Barangay Name" class="searchInput">
-            <input type="submit" value="Search" class="refresh-button"> <!-- Changed type to submit -->
+            <input type="submit" value="Search" class="refresh-button">
         </form>
         <?php // Your code before the table structure
-$verifiedUsersStatement = $conn->prepare("SELECT id, username, first_name, last_name, email, contact_number, barangay_id FROM users WHERE verified = 1");
-$verifiedUsersStatement->execute();
+$verifiedUsersQuery = "SELECT id, username, first_name, last_name, email, contact_number, barangay_id 
+                        FROM users 
+                        WHERE verified = 1 
+                        AND municipality_id = ?";
+
+$verifiedUsersStatement = $conn->prepare($verifiedUsersQuery);
+$verifiedUsersStatement->execute([$currentMunicipalityID]);
  ?>
         <div class="card-body">
             <div id="verified-users">
@@ -72,10 +77,10 @@ if ($action_submitted) {
         // Fetch barangay name for the current user if the key exists
         $barangayName = $verifiedUser['barangay_name'] ?? '';
         if (array_key_exists('barangay_id', $verifiedUser)) {
-            $barangayNameQuery = "SELECT barangay_name FROM barangays WHERE id = ?";
-            $barangayStatement = $conn->prepare($barangayNameQuery);
-            $barangayStatement->execute([$verifiedUser['barangay_id']]);
-            $barangayName = $barangayStatement->fetchColumn();
+    $barangayNameQuery = "SELECT barangay_name FROM barangays WHERE id = ?";
+    $barangayStatement = $conn->prepare($barangayNameQuery);
+    $barangayStatement->execute([$verifiedUser['barangay_id']]);
+    $barangayName = $barangayStatement->fetchColumn();
         }
 
         // Displaying table rows for search results
@@ -116,7 +121,7 @@ if ($action_submitted) {
             $barangayStatement = $conn->prepare($barangayNameQuery);
             $barangayStatement->execute([$verifiedUser['barangay_id']]);
             $barangayName = $barangayStatement->fetchColumn();
-        }
+        } 
         // Displaying table rows for verified users
         echo '<tr>';
         echo '<td>' . $verifiedUser['username'] . '</td>';

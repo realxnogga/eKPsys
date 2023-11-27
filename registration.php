@@ -11,14 +11,8 @@ include 'connection.php';
 include 'registration_handler.php';
 
   ?>
-
-
-
     <title>Registration</title>
     <style>
-
-
- 
   .card {
     position: relative;
     top: 50px;
@@ -97,7 +91,7 @@ include 'registration_handler.php';
 
       <div class="form-row">
         <div class="col">
-          <input type="password" class="form-control" required name="password" placeholder="Password">
+<input type="password" class="form-control" required pattern=".{8,}" title="Password must be at least 8 characters long" name="password" placeholder="Password">
         </div>
 
         <div class="col">

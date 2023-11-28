@@ -1,9 +1,16 @@
 <?php
 session_start();
 include 'connection.php';
-include 'user-navigation.php';
 include 'functions.php';
 
+$usertype = $_SESSION['user_type'];
+
+if ($usertype === "user") {
+  include 'user-navigation.php';
+}
+elseif ($usertype === "admin"|| $usertype === "superadmin") {
+  include 'admin-nav.php';
+}
 
 
 include 'update_user.php';

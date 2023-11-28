@@ -8,8 +8,7 @@ try {
     $conn = new PDO("mysql:host=$db_host;dbname=$db_name", $username, $password);
     // Set PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // Additional PDO configurations if needed
-    // $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
     // Handle connection error gracefully, you might want to log the error or display a user-friendly message

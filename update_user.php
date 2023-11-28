@@ -57,6 +57,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($updateStmt->execute()) {
             // Redirect back to the user settings page after successful update
             $message = "Updated Successfully.";
+            // Fetch updated user data after the successful update
+    $updatedStmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
+    $updatedStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+    $updatedStmt->execute();
+    $user = $updatedStmt->fetch(PDO::FETCH_ASSOC);
         } else {
             // Handle the case where the update fails
             $error = "Update failed. Please try again.";

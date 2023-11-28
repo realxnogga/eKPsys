@@ -9,56 +9,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 }
 
 include 'add_handler.php';
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome, User!</title>
+    <title>Add Complaint</title>
 </head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
-<style>
-        .back-button {
-            background-color: #007bff; 
-            color: #fff; 
-            border: none; 
-            padding: 10px 20px;
-            text-decoration: none; 
-            font size: 16px; 
-            cursor: pointer; 
-            border-radius: 5px;
-            transition: background-color 0.3s ease; 
-        }
-
-        .back-button:hover {
-            background-color: #0056b3; 
-        }
-
-        canvas {
-            border: 1px solid lightgray;
-            float: right;
-            
-        }  
-        body{color: #000;overflow-x: hidden;height: 100%; background-repeat: no-repeat;background-size: 100% 100%}.card{padding: 30px 40px;margin-top: 60px;margin-bottom: 60px;border: none !important;box-shadow: 0 6px 12px 0 rgba(0,0,0,0.2)}.blue-text{color: #00BCD4}.form-control-label{margin-bottom: 0}input, textarea, button{padding: 8px 15px;border-radius: 5px !important;margin: 5px 0px;box-sizing: border-box;border: 1px solid #ccc;font-size: 18px !important;font-weight: 300}input:focus, textarea:focus{-moz-box-shadow: none !important;-webkit-box-shadow: none !important;box-shadow: none !important;border: 1px solid #00BCD4;outline-width: 0;font-weight: 400}.btn-block{text-transform: uppercase;font-size: 15px !important;font-weight: 400;height: 43px;cursor: pointer}.btn-block:hover{color: #fff !important}button:focus{-moz-box-shadow: none !important;-webkit-box-shadow: none !important;box-shadow: none !important;outline-width: 0}
-    </style>
 <body>
-    <h2>Add a Complaint</h2>
-
-<?php
-    // Display the user's username here
-    $fname = $_SESSION['first_name'];
-    $lname = $_SESSION['last_name'];
-    echo "<h2>Welcome, $fname $lname!</h2>";
-    
-    ?>
-<a href="user_complaints.php"><button class="btn">Back to Complaints Table</button></a>
+   <a href="user_complaints.php"><button class="btn">Back</button></a>
    <div class="container-fluid px-1 py-5 mx-auto">
     <div class="row d-flex justify-content-center">
         <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
@@ -75,7 +35,7 @@ include 'add_handler.php';
     <div class="form-group col-sm-6 flex-column d-flex">
           <label class="form-control-label px-3">Case No.<span class="text-danger"> *</span></label>
           <!-- Set the Case Number input field value -->
-          <input type="text" id="CNum" name="CNum" placeholder="MMYY - Case No." value="<?php echo getNextCaseNumber($conn); ?>" onblur="validate(1)" >
+          <input type="text" id="CNum" name="CNum" placeholder="MMYY - Case No." value="<?php echo $caseNum; ?>" onblur="validate(1)" >
       </div>
 <div class="form-group col-sm-6 flex-column d-flex">
         <label class="form-control-label px-3">For:<span class="text-danger"> *</span></label>

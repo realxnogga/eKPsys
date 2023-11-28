@@ -8,13 +8,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: login.php");
     exit;
 }
+include 'upload_pic.php';
 
-$user_id = $_SESSION['user_id'];
-
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = :id");
-$stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
-$stmt->execute();
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
+include 'update_user.php';
 
 ?>
 <!DOCTYPE html>
@@ -37,123 +33,107 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="col-md-3 pt-0">
           <div class="list-group list-group-flush account-settings-links">
             <a class="list-group-item list-group-item-action active" data-toggle="list" href="#account-general">General</a>
-            <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-change-password">Change password</a>
-            <a class="list-group-item list-group-item-action" data-toggle="list" href="#account-social-links">Social links</a>
         </div>
     </div>
 
-    <div class="col-md-9">
-          <div class="tab-content">
-            <div class="tab-pane fade active show" id="account-general">
+   <div class="col-md-9">
+                    <div class="tab-content">
+            <form id="profilePicForm" method="post" enctype="multipart/form-data">
+                        <div class="tab-pane fade active show" id="account-general">
 
-            <div class="card-body media align-items-center">
-            
-            <div class="prof-container">
-                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="d-block ui-w-80">
-                <button class="upload-button">Upload a picture</button>
-            </div>     
-
+                           <!-- Profile Picture Form -->
+                <div class="prof-container">
+                    <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80">
+                    <input type="file" id="fileInput" style="display: none;">
+                    <button type="button" id="uploadButton" class="upload-button">Upload a picture</button>
+                </div>
+         
             <br>
 
-                </div>
+                            </div>
 
               <hr class="border-light m-0">
-
               <div class="card-body">
-                <div class="form-group">
-                  <label class="form-label">Username</label>
-                  <input type="text" class="form-control mb-1" value="<?php echo htmlspecialchars($row['username']); ?>">
-                </div><br>
-
-                <div class="form-group">
-                  <label class="form-label">First Name</label>
-                  <input type="text" class="form-control mb-1" value="<?php echo htmlspecialchars($row['first_name']); ?>">
-                </div><br>
-
-                 <div class="form-group">
-                  <label class="form-label">Last Name</label>
-                  <input type="text" class="form-control mb-1" value="<?php echo htmlspecialchars($row['last_name']); ?>">
-                </div><br>
-
-                <div class="form-group">
-                  <label class="form-label">E-mail</label>
-                  <input type="text" class="form-control mb-1" value="<?php echo htmlspecialchars($row['email']); ?>">
-                </div><br>
-
-                <div class="form-group">
-                  <label class="form-label">Contact Number</label>
-                  <input type="text" class="form-control mb-1" value="<?php echo htmlspecialchars($row['contact_number']); ?>">
-                </div><br>
-                
-              </div>
-              </div>
-
-              <div class="tab-pane fade" id="account-change-password">
-              <div class="card-body pb-2">
-
-                <div class="form-group">
-                  <label class="form-label">Current password</label>
-                  <input type="password" class="form-control">
-                </div><br>
-
-                <div class="form-group">
-                  <label class="form-label">New password</label>
-                  <input type="password" class="form-control">
-                </div><br>
-
-                <div class="form-group">
-                  <label class="form-label">Repeat new password</label>
-                  <input type="password" class="form-control">
-                </div><br>
-
-              </div>
-      
-            </div>
-
-            <div class="tab-pane fade" id="account-social-links">
-              <div class="card-body pb-2">
-
-                <div class="form-group">
-                  <label class="form-label">Twitter</label>
-                  <input type="text" class="form-control" value="https://twitter.com/user">
-                </div><br>
-
-                <div class="form-group">
-                  <label class="form-label">Facebook</label>
-                  <input type="text" class="form-control" value="https://www.facebook.com/user">
-                </div><br>
-
-                <div class="form-group">
-                  <label class="form-label">Google+</label>
-                  <input type="text" class="form-control" value="">
-                </div><br>
-
-                <div class="form-group">
-                  <label class="form-label">Instagram</label>
-                  <input type="text" class="form-control" value="https://www.instagram.com/user">
-                </div><br>
-
-              </div>
-            </div>
-
-            <div class="text-right mt-3">
-                <button type="button" class="save">Save changes</button>&nbsp;
-            </div>
-
+<h4><b>User Settings</b></h4><br>
+                <?php if (isset($error)) { ?>
+                    <p class="text-danger"><?php echo $error; ?></p>
+                <?php } ?>
+                    <div class="form-group">
+                        <label for="first_name">User Name:</label>
+                        <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>" required><br>
+                    </div><br>
+                    
+                    <div class="form-group">
+                        <label for="first_name">First Name:</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" required><br>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="last_name">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" required><br>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="contact_number">Contact Number:</label>
+                        <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>" required><br>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>" required><br>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="new_password">New Password (leave empty to keep current password):</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password"><br>
+                    </div><br>
+                    <button type="submit" class="save">Save Changes</button>
+                </form>
                     
 
         </div>
     </div>
 </div>
 <script>
-    $(document).ready(function() {
-        // Activate the clicked tab and deactivate others
-        $(".account-settings-links a").click(function(e) {
-            e.preventDefault();
-            $(".account-settings-links a").removeClass("active");
-            $(this).addClass("active");
-            $(".tab-pane").removeClass("active show");
-            $($(this).attr("href")).addClass("active show");
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const uploadButton = document.getElementById('uploadButton');
+        const profilePicForm = document.getElementById('profilePicForm');
+        const profilePic = document.getElementById('profilePic');
+
+        // Handle button click to trigger file input
+        uploadButton.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        // Handle file input change
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePic.setAttribute('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+
+                // Upload the file using Fetch API
+                const formData = new FormData();
+                formData.append('profile_pic', file);
+
+                fetch('upload-pic.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok.');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    // Handle the response
+                    console.log('Upload successful:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
         });
     });
 </script>

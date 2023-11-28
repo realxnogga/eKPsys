@@ -1,19 +1,21 @@
 <?php
 $successMessage = "";
+$userID = $_SESSION['user_id'];
+$barangayID = $_SESSION['barangay_id'];
 
-// Function to get the next available Case Number
-function getNextCaseNumber($conn) {
-    // Get the last used Case Number
-    $query = "SELECT MAX(CNum) AS lastCaseNumber FROM complaints";
-    $result = $conn->query($query);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-    $lastCaseNumber = $row['lastCaseNumber'];
+// Get the last used Case Number
+$query = "SELECT MAX(CNum) AS lastCaseNumber FROM complaints WHERE UserID = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+$stmt->execute();
 
-    // If no Case Number exists, start with "01"
-    if (!$lastCaseNumber) {
-        return date('my') . '-01';
-    }
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$lastCaseNumber = $row['lastCaseNumber'];
 
+// If no Case Number exists, start with "01"
+if (!$lastCaseNumber) {
+    $caseNum = date('my') . '-01';
+} else {
     // Extract the Year and Case Number parts
     $lastYearCase = explode('-', $lastCaseNumber);
     $lastYear = $lastYearCase[0];
@@ -25,20 +27,16 @@ function getNextCaseNumber($conn) {
         // Increment the Case Number part
         $caseNumber = intval($lastCase);
         $caseNumber++;
-        return $lastYear . '-' . sprintf('%02d', $caseNumber);
+        $caseNum = $lastYear . '-' . sprintf('%02d', $caseNumber);
     } else {
         // Start with "01" for the new year
-        return $currentYear . '-01';
+        $caseNum = $currentYear . '-01';
     }
 }
 
-if (isset($_POST['submit'])) {
-    // Retrieve the logged-in user's UserID and BarangayID
-    $userID = $_SESSION['user_id'];
-    $barangayID = $_SESSION['barangay_id'];
-    // Get the next available Case Number
-    $caseNum = getNextCaseNumber($conn);
 
+if (isset($_POST['submit'])) {
+ 
     // Sanitize and validate user input
     $forTitle = $_POST['ForTitle'];
     $complainants = $_POST['CNames'];
@@ -72,7 +70,7 @@ if (isset($_POST['submit'])) {
     } else {
         // Failed to submit complaint
         $successMessage = '<div class="alert alert-danger" role="alert">
-                Failed to Submit Complaint. Check Code.
+                Failed to Submit Complaint. Contact Devs.
               </div>';
     }
 }

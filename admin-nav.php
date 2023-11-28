@@ -27,7 +27,7 @@
         <li><a href="user_dashboard.php"><i class="fa fa-home"></i> Dashboard</a></li>
         <li><a href="acc-req.php"><i class="fa fa-users" style="font-size: 14px;"></i> Account Requests</a></li>
         <li><a href="sec-corner.php"><i class="fa fa-user-check" style="font-size: 13px;"></i> Secretaries Corner</a></li><br><br><br>
-        <li><a href="#"><i class="fa fa-wrench"></i> Settings</a>
+        <li><a href="user-settings.php"><i class="fa fa-wrench"></i> Settings</a>
         <li><a href="#"><i class="fa fa-question-circle"></i> Help Center</a>
 </ul>
 </div>

@@ -4,14 +4,9 @@ include 'connection.php';
 include 'user-navigation.php';
 include 'functions.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
-    header("Location: login.php");
-    exit;
-}
-include 'upload_pic.php';
+
 
 include 'update_user.php';
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,48 +31,52 @@ include 'update_user.php';
         </div>
     </div>
 
-   <div class="col-md-9">
-                    <div class="tab-content">
-            <form id="profilePicForm" method="post" enctype="multipart/form-data">
-                        <div class="tab-pane fade active show" id="account-general">
-
-                           <!-- Profile Picture Form -->
-                <div class="prof-container">
-                    <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80">
-                    <input type="file" id="fileInput" style="display: none;">
-                    <button type="button" id="uploadButton" class="upload-button">Upload a picture</button>
-                </div>
-         
-            <br>
+<div class="col-md-9">
+                        <div class="tab-content">
+                            <form id="profilePicForm" method="post" enctype="multipart/form-data">
+                                <div class="tab-pane fade active show" id="account-general">
+                                    <!-- Profile Picture Form -->
+                                    <div class="prof-container">
+                                        <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80">
+                                        <input type="file" id="fileInput" name="profile_pic" style="display: none;">
+                                        <button type="button" id="uploadButton" class="upload-button">Upload a picture</button>
+                                    </div>
+                                    <br>
+                                </div>
 
                             </div>
 
               <hr class="border-light m-0">
               <div class="card-body">
 <h4><b>User Settings</b></h4><br>
-                <?php if (isset($error)) { ?>
-                    <p class="text-danger"><?php echo $error; ?></p>
-                <?php } ?>
+<h6>                <?php if (!empty($message)) { ?>
+    <p class="text-success"><?php echo $message; ?></p>
+<?php } ?>
+
+<?php if (!empty($error)) { ?>
+    <p class="text-danger"><?php echo $error; ?></p>
+<?php } ?></h6>
+                
                     <div class="form-group">
                         <label for="first_name">User Name:</label>
-                        <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>" required><br>
+                        <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>" ><br>
                     </div><br>
                     
                     <div class="form-group">
                         <label for="first_name">First Name:</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" required><br>
+                        <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" ><br>
                     </div><br>
                     <div class="form-group">
                         <label for="last_name">Last Name:</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" required><br>
+                        <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" ><br>
                     </div><br>
                     <div class="form-group">
                         <label for="contact_number">Contact Number:</label>
-                        <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>" required><br>
+                        <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>" ><br>
                     </div><br>
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>" required><br>
+                        <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>" ><br>
                     </div><br>
                     <div class="form-group">
                         <label for="new_password">New Password (leave empty to keep current password):</label>
@@ -90,53 +89,52 @@ include 'update_user.php';
         </div>
     </div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const fileInput = document.getElementById('fileInput');
-        const uploadButton = document.getElementById('uploadButton');
-        const profilePicForm = document.getElementById('profilePicForm');
-        const profilePic = document.getElementById('profilePic');
+ <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const uploadButton = document.getElementById('uploadButton');
+            const profilePic = document.getElementById('profilePic');
 
-        // Handle button click to trigger file input
-        uploadButton.addEventListener('click', function() {
-            fileInput.click();
+            // Handle button click to trigger file input
+            uploadButton.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            // Handle file input change
+            fileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profilePic.setAttribute('src', e.target.result);
+                    };
+                    reader.readAsDataURL(file);
+
+                    // Upload the file using Fetch API
+                    const formData = new FormData();
+                    formData.append('profile_pic', file);
+
+                    fetch('upload_pic.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok.');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        // Handle the response
+                        console.log('Upload successful:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            });
         });
-
-        // Handle file input change
-        fileInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    profilePic.setAttribute('src', e.target.result);
-                };
-                reader.readAsDataURL(file);
-
-                // Upload the file using Fetch API
-                const formData = new FormData();
-                formData.append('profile_pic', file);
-
-                fetch('upload-pic.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok.');
-                    }
-                    return response.text();
-                })
-                .then(data => {
-                    // Handle the response
-                    console.log('Upload successful:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            }
-        });
-    });
-</script>
+    </script>
     
 </body>
 </html>

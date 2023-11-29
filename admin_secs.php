@@ -14,7 +14,7 @@ include 'admin_func.php';
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Secretary's Corner</title>
+    <title>Secretary's Corners</title>
 </head>
 <body>
 <h2 style="text-align: center;">Secretary's Corner</h2>

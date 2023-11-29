@@ -73,25 +73,16 @@
 </head>
 
 <body>
-<!--navbar1-->
-<navbar1 class="navbar1 navbar-danger" style="background: linear-gradient(to right, #660000 0%, #ff0000 50%) left,
-linear-gradient(to left, #660000 0%, #ff0000 50%) right, #ff0000; background-size: 50% 100%, 50% 100%, auto; background-repeat: no-repeat; height: 35px">
-    <span class="navbar1-text">Department of the Interior and Local Government</span>
-</navbar1>
 
-<!--navbar2-->
-  <nav class="navbar2 navbar-expand-lg" style="background-color: #002D62;">
-  <a class="nav-link" href="home.php">
-  <div class style="color: white;">Cluster A | E-Justice System</div></nav>
+
 
 <!--navbar3-->
 <div class="navbar">
     <div class="navbar-logo">
-        <img src="img/dilg-banner.png" alt="Logo">
+        <img src="img/new-logo.png" alt="Logo">
     </div>
     <div class="navbar-links">
         <a class="navbar-link" href="about-us.php"><b>About</b></a>
-        <a class="navbar-link" href="registration.php"><b>Register</b></a>
         <div class="search-bar-container">
         <input class="search-bar" type="text" placeholder="Search...">
         <i class="fas fa-search search-icon"></i></div>

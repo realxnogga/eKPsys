@@ -15,7 +15,7 @@ include 'functions.php';
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Account Requests</title>
+    <title>Account Requestszxc</title>
     <link rel="stylesheet" type="text/css" href="style copy.css">
 </head>
 <hr><br>

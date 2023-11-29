@@ -12,8 +12,9 @@ if (isset($_POST['submit'])) {
     $population = $_POST['population'];
     $landarea = $_POST['landarea'];
     $male = $_POST['male'];
+    $male = intval($male); 
     $female = $_POST['female'];
-
+$female = intval($female); 
     $totalc = $_POST['totalc'] ?? '';
     $numlup = $_POST['numlup'] ?? '';
     $criminal = $_POST['criminal'] ?? '';

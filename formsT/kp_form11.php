@@ -13,6 +13,7 @@ $year = $_SESSION['year'] ?? '';
 
 $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
+$RDate = $_SESSION['RDate'] ?? '';
 ?>
 <!DOCTYPE html>
 <html>
@@ -117,7 +118,8 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 
             <form method="POST">
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Tinanggap ngayong ika-<input type="text" name="day" placeholder="araw" size="6" required>  araw ng
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Tinanggap ngayong ika-<input type="text" name="RDate" placeholder="araw" size="1" required value="<?php echo substr($RDate, -2); ?>">
+  araw ng
                 <select name="month" required>
                     <option value="">Pumili ng buwan</option>
                     <?php foreach ($months as $month): ?>

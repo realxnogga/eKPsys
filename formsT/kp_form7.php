@@ -102,17 +102,35 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
                 <form method="POST">
                     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">Ginawa ngayong ika-  
-    <!-- MDate 'day' here -->
-    <input type="text" name="day" placeholder="araw" size="6" required value="<?php echo $day; ?>"> araw ng 
-    <!-- Change this to input type and MDate 'month' here  -->
-        <select name="month" required style="width: 70px;">
-        <option value="">Pumili ng Buwan</option>
-        <?php foreach ($months as $m): ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $month) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endforeach; ?>
-    </select>,
-    <!-- MDate Year here, change the input type code to much necessary -->
-    <input type="text" name="year" placeholder="taon" size="1" value="<?php echo $year; ?>" pattern="[0-9]{2}" required>.
+                    <?php $currentDate = date('d'); echo  $currentDate;?> araw ng 
+                    <?php
+// Get the current month in English
+$currentMonth = date('F');
+
+// Define an array for English to Tagalog month names mapping
+$monthTranslations = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
+
+// Translate the current month to Tagalog
+$translatedMonth = $monthTranslations[$currentMonth];
+
+// Output the translated month
+echo $translatedMonth;
+?>
+,
+                    <?php $currentYear = date('Y'); echo  $currentYear;?>.
 </div>
 
            <div style="position: relative;">
@@ -122,15 +140,35 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                         <input type="text" id="cmplnts" name="cmplnts" size="25" value="<?php echo $cNames; ?>" style="text-align: center;"><br>(mga) Maysumbong</p>
             </div>
            
-            <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 	Tinanggap at inihain ngayong  <input type="text" name="day" placeholder="araw" size="6" required>  araw ng 
-                    <select name="month" required>
-                        <option value="">Pumili ng buwan</option>
-                        <?php foreach ($months as $month): ?>
-                            <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
-                        <?php endforeach; ?>
-                    </select>,
-                    20
-                    <input type="text" name="year" placeholder="taon" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.
+            <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 	Tinanggap at inihain ngayong  <?php $currentDate = date('d'); echo  $currentDate;?>  araw ng 
+            <?php
+// Get the current month in English
+$currentMonth = date('F');
+
+// Define an array for English to Tagalog month names mapping
+$monthTranslations = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
+
+// Translate the current month to Tagalog
+$translatedMonth = $monthTranslations[$currentMonth];
+
+// Output the translated month
+echo $translatedMonth;
+?>
+,
+                    <?php $currentYear = date('Y'); echo  $currentYear;?>.
             </div>
 
                 </form>

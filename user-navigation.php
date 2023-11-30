@@ -5,7 +5,6 @@
 
             <div class="welcome-container">
             <?php
-                // Display the user's username here
                 $fname = $_SESSION['first_name'];
                 $lname = $_SESSION['last_name'];
                 echo "<h2><b>Welcome,</b></h2>";

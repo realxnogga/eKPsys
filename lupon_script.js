@@ -28,7 +28,7 @@
         }
 
         document.getElementById('open-kp-form1').addEventListener('click', function() {
-            openAndLoadForm('forms/kp_form1.php');
+            openAndLoadForm('formsT/kp_form1.php');
         });
 
         document.getElementById('open-kp-form2').addEventListener('click', function() {

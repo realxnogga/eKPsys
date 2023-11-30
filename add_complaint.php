@@ -18,13 +18,8 @@ include 'add_handler.php';
 </head>
 
 <body>
-   <a href="user_complaints.php"><button class="btn">Back</button></a>
-   <div class="container-fluid px-1 py-5 mx-auto">
-    <div class="row d-flex justify-content-center">
-        <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+  
            
-            <h2>Add Complaint</h2>
-            <div class="card">
 
                     <?php echo $successMessage; // Display success message here ?>
 
@@ -91,5 +86,7 @@ include 'add_handler.php';
         <input type="submit" name="submit" value="Submit">
     </div>
 </div>
+
+
 </body>
 </html>

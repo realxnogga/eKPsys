@@ -36,6 +36,7 @@ include 'report_handler.php';
 <body>
     <div class="container">
         <form method="POST">
+            
         <h2>Monthly Report (<?php echo isset($selected_month) ? $selected_month : date('F, Y'); ?>)</h2>
 
           <!-- Dropdown to select month -->

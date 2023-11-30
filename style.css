@@ -251,7 +251,7 @@ background: linear-gradient(rgba(1,23,80,0.9), rgba(1,23,80,0.9)), url('img/flag
   }
   .footer-content {
     text-align: left;
-    font-family: sans-serif;
+    font-family: 'Roboto';
     font-size: 10px;
   align-items: center;
   }
@@ -524,7 +524,7 @@ background: linear-gradient(rgba(1,23,80,0.9), rgba(1,23,80,0.9)), url('img/flag
   }
   .footer-content {
     text-align: left;
-    font-family: sans-serif;
+    font-family: 'Roboto';
     font-size: 10px;
   align-items: center;
   }

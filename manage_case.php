@@ -15,10 +15,12 @@ if ($rowID === null) {
     echo "Error: Row ID is missing. Please select a valid case to manage.";
     header("Location: user_complaints.php");
 } else {
-    $query = "SELECT * FROM complaints WHERE id = $rowID AND UserID = " . $_SESSION['user_id'];
-    $result = $conn->query($query);
-    $row = $result->fetch(PDO::FETCH_ASSOC);
-
+   $query = "SELECT * FROM complaints WHERE id = :rowID AND UserID = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':rowID', $rowID);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($row) {
         // Set session variables for the data from 'complaints' table
         $_SESSION['forTitle'] = $row['ForTitle'];

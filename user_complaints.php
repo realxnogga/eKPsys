@@ -10,18 +10,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     exit;
 
 }
-// Retrieve the search input from the form
+
 $searchInput = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Retrieve user-specific complaints from the database
 $userID = $_SESSION['user_id'];
 
-// Initial query for all complaints sorted by Mdate in descending order
 $query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 0";
 
-// Modify your SQL query to filter out archived complaints if a search is performed
 if (!empty($searchInput)) {
-    // Add conditions to filter based on the search input
+
     $query .= " AND (CNum LIKE '%$searchInput%' OR ForTitle LIKE '%$searchInput%' OR CNames LIKE '%$searchInput%' OR RspndtNames LIKE '%$searchInput%')";
 }
 
@@ -40,18 +37,49 @@ include 'add_handler.php';
     <title>User Dashboard</title>
     <link rel="stylesheet" type="text/css" href="style copy.css">
     <style>
-        .card {
-            height: 700px; /* Set a fixed height for the card */
-            overflow: auto; /* Enable scrolling within the fixed height */
+        
+        body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.card {
+    height: 75vh; /* Set the height to 100% of the viewport height */
+    overflow: auto;
+    padding-bottom: 20px; /* Add some padding to the bottom */
+    transition: height 0.3s ease; /* Add a smooth transition effect for height changes */
+}
+
+@media screen and (min-resolution: 192dpi), screen and (min-resolution: 2dppx) {
+    /* Adjust for high-density (Retina) displays */
+    .card {
+        height: 50vh;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    /* Adjust for window resolution 125% scaling */
+    .card {
+        height: 80vh;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    /* Adjust for window resolution 150% scaling */
+    .card {
+        height: 66.67vh;
+    }
+}
+
+
+    .form-group {
+        margin-bottom: 1px;
         }
 
-        .form-group {
-            margin-bottom: 1px;
-        }
-
-        .form-control-label {
-            font-weight: bold;
-        }
+    .form-control-label {
+        font-weight: bold;
+    }
 
         input[type="text"],
         input[type="datetime-local"],
@@ -276,5 +304,32 @@ echo "<td>" . date('Y-m-d', strtotime($row['Mdate'])) . "</td>";
             </div>
         </div>
     </div>
+
+
+
+
+<script>
+
+const card = document.querySelector('.card');
+
+function adjustCardHeight() {
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+
+    if (isFullscreen) {
+        card.style.height = '100vh'; // Set height to 100% of the viewport height in fullscreen
+    } else {
+        card.style.height = '75vh'; // Set the initial height when exiting fullscreen
+    }
+}
+
+document.addEventListener('fullscreenchange', adjustCardHeight);
+document.addEventListener('webkitfullscreenchange', adjustCardHeight);
+document.addEventListener('mozfullscreenchange', adjustCardHeight);
+document.addEventListener('MSFullscreenChange', adjustCardHeight);
+
+</script>
+
+
+
 </body>
 </html>

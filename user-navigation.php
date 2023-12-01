@@ -38,20 +38,10 @@
         <div class="content">
             <div class="navbar">
                 <div class="logo">
-                    <img src="img copy/dilg-logo.png" alt="Logo">
+                    <img src="img/dilg-banner.png" alt="Logo">
                 </div>
                 <ul>
-                <li>
-  <a href="#" style="position: relative; display: inline-block;">
-    <i class="fa fa-bell"></i> 
-  </a>
-</li>
-
-                    <li>
-  <a href="#" style="position: relative; display: inline-block;">
-    <i class="fa fa-clock-o"></i> 
-  </a>
-</li>
+             
 
 <li>
   <a href="logout.php" style="position: relative; display: inline-block;">

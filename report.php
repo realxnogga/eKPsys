@@ -30,11 +30,98 @@ include 'report_handler.php';
     max-width: 800px; /* Adjust the width as needed */
     width: 90%; /* Adjust to your preference */
   }
+
+
+  <style>
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.card {
+    height: 75vh; /* Set the height to 100% of the viewport height */
+    width: 160vh; /* Set the height to 100% of the viewport height */
+
+    overflow: auto;
+    padding-bottom: 20px; /* Add some padding to the bottom */
+    transition: height 0.3s ease; /* Add a smooth transition effect for height changes */
+}
+
+@media screen and (min-resolution: 192dpi), screen and (min-resolution: 2dppx) {
+    /* Adjust for high-density (Retina) displays */
+    .card {
+        height: 50vh;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    /* Adjust for window resolution 125% scaling */
+    .card {
+        height: 80vh;
+    }
+}
+
+@media screen and (max-width: 960px) {
+    /* Adjust for window resolution 150% scaling */
+    .card {
+        height: 66.67vh;
+    }
+}
+
+
+    .form-group {
+        margin-bottom: 1px;
+        }
+
+    .form-control-label {
+        font-weight: bold;
+    }
+
+        input[type="text"],
+        input[type="datetime-local"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            background-color: green;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 auto; /* Center the submit button */
+    display: block; /* Ensure it takes up full width */
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        /* Center align the submit button */
+        .row.justify-content-end {
+    display: flex;
+    justify-content: center;
+}
+
+.form-group.col-sm-2 {
+    text-align: center;
+    margin-right: 190px; /* Add some top margin for better spacing */
+}
+
+</style>
 </style>
 <body>
-<hr><br>
-<body>
-    <div class="container">
+
+<div class="row">
+        <div class="leftcolumn">
+            <div class="card">
+                <div class="row">
+                <div class="container">
         <form method="POST">
             
         <h2>Monthly Report (<?php echo isset($selected_month) ? $selected_month : date('F, Y'); ?>)</h2>
@@ -240,6 +327,12 @@ include 'report_handler.php';
       </div>
     </div>
   </div>
+</div>
+
+
+
+</div>
+</div>
 </div>
 
 

@@ -139,13 +139,13 @@ include 'add_handler.php';
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
-            <th style="width: 9%">Case No.</th>
+            <th style="width: 10%">Case No.</th>
             <th style="width: 20%">Title</th>
             <th style="width: 15%">Complainants</th>
             <th style="width: 15%">Respondents</th>
             <th style="width: 12%">Date Made</th>
-            <th style="width: 9%">Case Status</th>
-            <th style="width: 13%">Actions</th>
+            <th style="width: 20%">Case Status</th>
+            <th style="width: 15%">Actions</th>
         </tr>
     </thead>
         
@@ -229,7 +229,7 @@ echo "<td>" . date('Y-m-d', strtotime($row['Mdate'])) . "</td>";
         <div class="rightcolumn">
             <div class="card">
 
-                <h3>+ Add a complaint</h3><hr>
+                <h3>Add a complaint</h3><hr>
                 <h2>KP Form 7</h2>        
 
                     <?php echo $successMessage; // Display success message here ?>

@@ -51,8 +51,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     }
 }
 
-
-   
         /* Center align the submit button */
 .row.justify-content-end {
     display: flex;
@@ -64,8 +62,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     margin-right: 190px; /* Add some top margin for better spacing */
 }
 
-        
-
+    
     </style>
 </head>
 <body>
@@ -77,17 +74,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 
     <br>
 
-
-
-
-    
-     
-
-
-
-
-   
-                    
+            
 
                 </div>
             </div>

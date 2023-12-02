@@ -22,16 +22,15 @@
 
     <br><br>
 
-                <h4><b>Menu</b></h4><br>
+                <h4><b>Menu</b></h4><br><br>
                     <li><a href="user_dashboard.php"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li><a href="user_lupon.php"><i class="fa fa-users"></i> Lupon</a></li>
 
                     <li><a href="user_complaints.php"><i class="fa fa-bullhorn"></i> Complaints</a></li>
                     <li><a href="user_archives.php"><i class="fa fa-folder-open"></i> Archives</a></li>
 
-                    <li><a href="report.php"><i class="fa fa-files-o"></i> Reports</a></li><br><br><br>
+                    <li><a href="report.php"><i class="fa fa-files-o"></i> Reports</a></li>
                     <li><a href="user-settings.php"><i class="fa fa-wrench"></i> Settings</a>
-                    <li><a href="lupon.php"><i class="fa fa-question-circle"></i> Help Center</a>
             </ul>
         </div>
         

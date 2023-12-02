@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["action"]) && isset($_P
     $verifyStatement->execute([$userId]);
 
     // Redirect to refresh the page or show a success message
-    header("Location: admin_dashboard.php");
+    header("Location: acc-req.php");
     exit();
 } 
 
@@ -56,7 +56,7 @@ elseif ($action === "deny") {
     $unverifyStatement->execute([$userId]);
 
     // Redirect to refresh the page or show a success message
-    header("Location: admin_dashboard.php");
+    header("Location: sec-corner.php");
     exit();
 }
 }
@@ -91,7 +91,7 @@ if (isset($_GET['deny_user_id'])) {
         $conn->commit();
 
         // Redirect to refresh the page or show a success message
-        header("Location: admin_dashboard.php");
+        header("Location: acc-req.php");
         exit();
     } catch (PDOException $e) {
         $conn->rollBack();

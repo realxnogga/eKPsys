@@ -55,7 +55,7 @@ foreach ($barangays as $barangay) {
 
 if ($hasAccountRequests) {
     echo '<table class="table table-bordered">';
-    echo '<thead><tr><th>ID</th><th>Username</th><th>Secretary</th><th>Email</th><th>Contact Number</th><th>Barangay</th><th>Actions</th></tr></thead>';
+    echo '<thead><tr><th>Username</th><th>Secretary</th><th>Email</th><th>Contact Number</th><th>Barangay</th><th>Actions</th></tr></thead>';
     echo '<tbody>';
     
     foreach ($barangays as $barangay) {
@@ -68,7 +68,7 @@ if ($hasAccountRequests) {
 
         foreach ($users as $user) {
             echo '<tr>';
-            echo '<td>' . $user['id'] . '</td>';
+     
             echo '<td>' . $user['username'] . '</td>';
             echo '<td>' . $user['first_name'] . ' ' . $user['last_name'] . '</td>';
             echo '<td>' . $user['email'] . '</td>';

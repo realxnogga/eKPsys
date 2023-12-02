@@ -26,7 +26,7 @@
                 <h4><b>Menu</b></h4><br>
                     <li><a href="superadmin_dashboard.php"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li><a href="registeredMuni.php"><i class="fas fa-file-alt"></i> Registered Municipalities</a></li>
-                    <li><a href="reports.php"><i class="fa fa-book"></i> Reports</a></li>
+                    <li><a href="sa_reports.php"><i class="fa fa-book"></i> Reports</a></li>
                     <!-- <li><a href="user_lupon.php"><i class="fa fa-users"></i> Lupon</a></li><br><br><br> -->
                     <br><br><br>
                     <li><a href="user-settings.php"><i class="fa fa-wrench"></i> Settings</a>

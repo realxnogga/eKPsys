@@ -26,12 +26,12 @@ if (isset($_GET['admin_id'])) {
 
     if (!$adminUser) {
         // Admin user not found, handle this case
-        header("Location: superadmin_dashboard.php");
+        header("Location: registeredmuni.php");
         exit;
     }
 } else {
     // Admin user ID is not provided in the URL, handle this case
-    header("Location: superadmin_dashboard.php");
+    header("Location: registeredmuni.php");
     exit;
 }
 
@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Perform SQL update to save the changes, including the new password
         $updateStmt = $conn->prepare("UPDATE users SET first_name = :first_name, last_name = :last_name, contact_number = :contact_number, email = :email, password = :password WHERE id = :admin_id");
-        $updateStmt->bindParam(':password', $newPassword, PDO::PARAM_STR); // Bind the new password
+        $updateStmt->bindParam(':password', $newPassword, PDO::PARAM_STR); 
     } else {
         // Perform SQL update without changing the password
         $updateStmt = $conn->prepare("UPDATE users SET first_name = :first_name, last_name = :last_name, contact_number = :contact_number, email = :email WHERE id = :admin_id");
@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($updateStmt->execute()) {
         // Redirect back to the superadmin dashboard after successful update
-        header("Location: superadmin_dashboard.php");
+        header("Location: registeredmuni.php");
         exit;
     } else {
         // Handle the case where the update fails

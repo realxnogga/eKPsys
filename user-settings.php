@@ -8,8 +8,11 @@ $usertype = $_SESSION['user_type'];
 if ($usertype === "user") {
   include 'user-navigation.php';
 }
-elseif ($usertype === "admin"|| $usertype === "superadmin") {
+elseif ($usertype === "admin") {
   include 'admin-nav.php';
+}
+elseif ($usertype === "superadmin") {
+  include 'superadmin-navigation.php';
 }
 
 $userId = $_SESSION['user_id'];

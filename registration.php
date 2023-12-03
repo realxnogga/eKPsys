@@ -89,7 +89,7 @@ body {
 
 .navbar {
     background: #e9ecf3;
-    margin-top: -65px; 
+    margin-top: -50px; 
     color: #000000;
     padding: 0; 
     display: flex;

@@ -32,7 +32,6 @@ include 'report_handler.php';
   }
 
 
-  <style>
 body, html {
     margin: 0;
     padding: 0;
@@ -113,7 +112,6 @@ body, html {
     margin-right: 190px; /* Add some top margin for better spacing */
 }
 
-</style>
 </style>
 <body>
 

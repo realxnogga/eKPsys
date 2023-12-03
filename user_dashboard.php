@@ -17,7 +17,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     <link rel="stylesheet" type="text/css" href="style copy.css">
     <style>
         
-        body, html {
+body, html {
     margin: 0;
     padding: 0;
     height: 100%;

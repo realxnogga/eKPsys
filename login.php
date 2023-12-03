@@ -63,9 +63,9 @@ body {
 }
 
 .card {
-    height: 79vh; /* Set the height to 100% of the viewport height */
+    height: 83vh; /* Set the height to 100% of the viewport height */
     overflow: auto;
-    margin-top: 90px; /* Add some padding to the bottom */
+    margin-top: 70px; /* Add some padding to the bottom */
     padding-bottom: 0; /* Add some padding to the bottom */
     transition: height 0.3s ease; /* Add a smooth transition effect for height changes */
 }
@@ -96,7 +96,7 @@ body {
 
 .navbar {
     background: #e9ecf3;
-    margin-top: -50px; 
+    margin-top: -65px; 
     color: #000000;
     padding: 0; 
     display: flex;
@@ -200,6 +200,9 @@ body {
             border-radius: 20px;
         }
 
+
+
+        
       
 
 
@@ -292,10 +295,8 @@ body {
   
   <div class="rightcolumn">
     <div class="card">
-    <h3>LOGIN</h3><hr>
+    <h3>LOGIN</h3><hr><br>
 
-      
-        <div class="card-body">
             <?php
            
             // Check if the 'error' query parameter is present in the URL

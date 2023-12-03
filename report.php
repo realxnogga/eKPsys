@@ -20,11 +20,8 @@ include 'report_handler.php';
 
     <title>Reports</title>
     <link rel="stylesheet" type="text/css" href="style copy.css">
-    <link href="path/to/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <style>
     .custom-modal-dialog {
     max-width: 800px; /* Adjust the width as needed */

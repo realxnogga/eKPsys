@@ -181,7 +181,7 @@ body, html {
 <div class="row">
     <div class="col-md-12">
         <h3 id="mayorName"></h3>
-        <canvas id="casesChart" width="500" height="200"></canvas>
+        <canvas id="casesChart" width="300" height="200"></canvas>
         <div id="totalCases" style="margin-top: 20px;"></div>
 
     </div>

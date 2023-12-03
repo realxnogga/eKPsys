@@ -93,7 +93,7 @@ body, html {
             <div class="card">
                 <div class="row">
 
-                <h3>Dashboard</h3><br<br><hr>
+                <h3>User Dashboard</h3><br<br><hr>
                     <h2>Data Showing: All Barangay Cases</h2><br>
 
 

@@ -332,9 +332,9 @@ body {
                  <div style="text-align: right;"><input type="submit" class="btn custom-button btn-primary" style="width: 100px;" value="Log in"></div>
              </form>
              <br>
-                <div style="text-align: center; font-size:12px;"><p>Don't have an account? <a href="javascript:void(0);" onclick="location.href='registration.php';">Register here</a>.</p>
+             <p>Don't have an account? <a href="registration.php">Sign up here</a>.</p>
 
-				<p><a href="javascript:void(0);" onclick="location.href='forgot_pass.php';"  style="font-size:12px;">Forgot Password?</a></div>
+				<p><a href="javascript:void(0);" onclick="location.href='forgot_pass.php';"  style="font-size:16px;">Forgot Password?</a></div>
         </div>
     </div>
 	

@@ -75,7 +75,7 @@ body, html {
 
 .card {
     height: 75vh; /* Set the height to 100% of the viewport height */
-    width: 160vh; /* Set the height to 100% of the viewport height */
+    width: 154vh; /* Set the height to 100% of the viewport height */
 
     overflow: auto;
     padding-bottom: 20px; /* Add some padding to the bottom */
@@ -133,7 +133,7 @@ body, html {
     display: block; /* Ensure it takes up full width */
         }
 
-        input[type="submit"]:hover {
+        input[type="searc"]:hover {
             background-color: #45a049;
         }
         /* Center align the submit button */
@@ -146,22 +146,123 @@ body, html {
     text-align: center;
     margin-right: 190px; /* Add some top margin for better spacing */
 }
-        </style>
+
+/* Style for the search wrapper */
+.search-wrapper {
+    position: relative;
+    height: 43px;
+    display: inline-block;
+    border-radius: 10px; /* Round corners for wrapper */
+    border: 1px solid #ccc; /* Thin line border */
+    overflow: hidden; /* Hide overflow to maintain border-radius */
+}
+
+.search-and-controls-container {
+    display: flex;
+    align-items: center; /* Align items vertically */
+    justify-content: flex-start; /* Align items to the start of the container */
+}
+
+/* Style for the search input field */
+input[type="text"] {
+    padding: 10px 20px; /* Add padding for spacing */
+    border: none;
+    font-size: 16px; /* Increase font size for readability */
+    outline: none; /* Remove default outline */
+}
+
+/* Style for the search button */
+.search-btn {
+    position: absolute;
+    left: 488;
+    width: 49px; /* Fixed width for the button */
+    height: 100%; /* Match height of the input field */
+    color: white; /* White text */
+    border: none;
+    cursor: pointer;
+    text-align: center; /* Center the icon */
+    font-size: 16px; /* Match font size of the input field */
+    border-radius: 0 2px 2px 0; /* Rounded right corners only */
+
+    background-color: #4CAF50; /* Green background */
+}
+
+/* Hover effect for the search button */
+.search-btn:hover {
+    background-color: #3a8e3a; /* Dark green color on hover */
+}
+/* Style for the search wrapper */
+.search-wrapper {
+    width: 40%; /* Take full width of the container */
+}
+
+/* Style for the select month dropdown */
+.select-and-clear-container select[name="selected_month"] {
+    flex: 1; /* This makes it take the available space. Adjust or remove if needed. */
+    padding: 10px;
+    border-radius: 10px; /* Rounded corners to match search bar */
+    border: 1px solid #ccc;
+    width: 40%; /* Adjust this value to change the width */
+}
+
+
+/* Style for the Clear button */
+input[name="clear"] {
+    background-color: red; /* Red color for the Clear button */
+    color: white;
+    height: 43px;
+    border: none; /* Remove border */
+    cursor: pointer;
+    padding: 10px 20px; /* Adjust padding to match search bar height */
+    margin-left: 10px; /* Add margin for spacing */
+    font-size: 16px; /* Match font size of the search bar */
+    border-radius: 10px; /* Rounded corners to match search bar */
+    vertical-align: top; /* Align with the top of search bar */
+}
+
+/* Hover effect for the Clear button */
+input[name="clear"]:hover {
+    background-color: #b30000; /* Darker red color on hover */
+}
+
+        /* Style for the background color */
+        body {
+            background-color: #e9ecf3; /* Light gray background color */
+        }
+
+        .card {
+            border-radius: 20px; /* Set the radius of the card's corners to 20px */
+
+        }
+
+.container {
+    width: 100%; /* Adjust this as needed */
+    max-width: 960px; /* Example max width, adjust to match your design */
+    margin: auto; /* Center the container */
+}
+
+
+
+</style>
 </head>
 <body>
     
 
-    <div class="row">
-        <div class="leftcolumn">
+    <div class="columns-container">
+        <div class="left-column">
             <div class="card">
-                <div class="row">
 
-                <h3><b>Municipality Reports</b></h3><br><br>
+                <h4><b>Municipality Reports</b></h4><hr><br>
 
                 <form method="POST">
-    <input type="text" name="municipality" placeholder="Search Municipality" value="<?php echo $searchedMunicipality; ?>">
+                    <div class="search-wrapper">
+                        <input type="text" name="municipality" placeholder="Search Municipality" value="<?php echo $searchedMunicipality; ?>">
+                      <button type="submit" name="search" class="btn-light search-btn">
+                            <i class="fas fa-search"></i></button>
+                    </div><br><br>
 
     <!-- Month and year dropdown -->
+    <div class="select-and-clear-container">
     <select name="selected_month">
         <?php
         // Loop through months and years to generate options for the last 12 months
@@ -172,25 +273,24 @@ body, html {
             ?>
             <option value="<?php echo $value; ?>"><?php echo $monthYear; ?></option>
         <?php } ?>
-    </select>
+    </select><br><br>
 
-    <input type="submit" name="search" value="Search">
     <input type="submit" name="clear" value="Clear" formnovalidate>
+</div>
 </form>
 <h1><?php echo $selectedMonth; ?></h1>
 <div class="columns-container">
-            <h4><b>Municipalities</b></h4>
-            <table class="table table-bordered">
+<table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Municipality</th>
-                        <th>Admin</th>
-                        <th>
+                        <th style="padding: 8px; background-color: #d3d3d3;">Municipality</th>
+                        <th style="padding: 8px; background-color: #d3d3d3;">Admin</th>
+                        <th style="padding: 8px; background-color: #d3d3d3;">
                             Settled
                             <a href="?sort=settled_asc">&#8593;</a>
                             <a href="?sort=settled_desc">&#8595;</a>
                         </th>
-                        <th>
+                        <th style="padding: 8px; background-color: #d3d3d3;">
                             Unsettled
                             <a href="?sort=unsettled_asc">&#8593;</a>
                             <a href="?sort=unsettled_desc">&#8595;</a>

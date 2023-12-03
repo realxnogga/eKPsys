@@ -77,41 +77,120 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Manage Account</title>
     <link rel="stylesheet" type="text/css" href="style copy.css">
      <?php include 'functions.php';?>
+     <style>
+/* Style for the background color */
+body {
+    background-color: #e9ecf3; /* Light gray background color */
+}
+
+.columns-container {
+    display: flex;
+    justify-content: flex-start; /* Aligns children to the start (left side) of the container */
+}
+
+.left-column {
+    width: 100%; /* Adjust this as needed */
+}
+
+.card {
+    border-radius: 20px; /* Set the radius of the card's corners to 20px */
+    width: 40%; /* Adjust the width as needed */
+    margin-left: 0; /* Align the card to the left */
+    padding: 20px; /* Optional: Add some padding inside the card */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Optional: Add some shadow for better aesthetics */
+}
+
+/* Add additional styles for responsive design */
+@media (max-width: 768px) {
+    .card {
+        width: 90%; /* Larger width for smaller screens */
+    }
+}
+
+.form-row {
+    display: flex;
+    align-items: center; /* Aligns items vertically in the center */
+    margin-bottom: 10px; /* Adds space between each row */
+}
+
+.form-row label {
+    margin-right: 10px; /* Adds some space between the label and the input */
+    width: 40%; /* Adjusts the width of the label */
+}
+
+.form-row .form-control {
+    flex-grow: 1; /* Allows the input to take up the remaining space */
+}
+
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    margin-bottom: 20px; /* Space between button and card */
+    background-color: #909090; /* Soft blue color */
+    color: white; /* Text color */
+    text-decoration: none; /* Remove underline from link */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 16px; /* Adjust font size as needed */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: add shadow for depth */
+    border: none; /* Remove border if any */
+}
+
+.back-button i {
+    margin-right: 5px; /* Space between icon and text */
+}
+
+/* Adjust the left-column layout to align items to the start */
+.left-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+</style>
 </head>
-<hr>
-<br>
 <body>
-   <div class="columns-container">
+<div class="columns-container">
     <div class="left-column">
+
+        <!-- Back Button -->
+        <a href="registeredmuni.php" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
         <div class="card">
-        <h4><b>Manage Account</b></h4>
+        <h4><b>Manage Account</b></h4><hr><br>
         <?php if (isset($error)) { ?>
             <p class="text-danger"><?php echo $error; ?></p>
         <?php } ?>
         <form method="post">
             
-            <div class="form-group">
-                <label for="first_name">First Name:</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $adminUser['first_name']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="last_name">Last Name:</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $adminUser['last_name']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="contact_number">Contact Number:</label>
-                <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $adminUser['contact_number']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?php echo $adminUser['email']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="new_password">New Password (leave empty to keep current password):</label>
-                <input type="password" class="form-control" id="new_password" name="new_password">
-            </div>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-        </form>
+<form method="post">
+    <div class="form-row">
+        <label for="first_name"><b>First Name:</label></b>
+        <input type="text" placeholder= "Enter First Name" class="form-control" id="first_name" name="first_name" value="<?php echo $adminUser['first_name']; ?>" required>
+    </div>
+    <div class="form-row">
+        <label for="last_name"><b>Last Name:</label></b>
+        <input type="text" placeholder= "Enter Last Name" class="form-control" id="last_name" name="last_name" value="<?php echo $adminUser['last_name']; ?>" required>
+    </div>
+    <div class="form-row">
+        <label for="contact_number"><b>Contact Number:</label></b>
+        <input type="text" placeholder= "Enter Contact Number" class="form-control" id="contact_number" name="contact_number" value="<?php echo $adminUser['contact_number']; ?>" required>
+    </div>
+    <div class="form-row">
+        <label for="email"><b>Email:</label></b>
+        <input type="email" placeholder= "Enter Email" class="form-control" id="email" name="email" value="<?php echo $adminUser['email']; ?>" required>
+    </div>
+    <br><div class="form-row">
+        <label for="new_password"><b>New Password </b>(leave empty to keep current password):</label>
+        <input type="password" placeholder= "Enter New Password" class="form-control" id="new_password" name="new_password">
+    </div>
+    <br><br>
+    <button type="submit" class="btn btn-success" style="margin-left: 380px;">Save Changes</button>
+</form>
+
     </div>
 </div>
 </div>

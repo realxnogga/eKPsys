@@ -1,12 +1,24 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
+
+$day = $_SESSION['day'] ?? '';
+$month = $_SESSION['month'] ?? '';
+$year = $_SESSION['year'] ?? '';
+
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form19</title>
+    <title>KP FORM 19</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
@@ -96,31 +108,27 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 
 <div class="form-group" style="text-align: right;">
 
-
-    <div class="label"> </div>
-    <div class="input-field">
-        <input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" placeholder="Case No. - Blotter No. - MMYY" style="width: 30%;"
-        value="<?php echo $case;?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $for;?>"> <br> <input type="text" name="for" id="for" size="30">
-    </div>
+<div class="input-field">
+Barangay Case No.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
+> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"> <br>
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
-    <br><p> — against —</p>
+<div class="label"></div>
+<div class="input-field">
+    <p>Complainant/s:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
+<br><p>   — against —</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30"><br><input type="text" name="respondent" id="respondent" size="30" 
-            value="<?php echo $respondent;?>"> </p>
-    </div>
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondent/s:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
 </div>
-            
+</div>     
             <?php
             $months = [
                 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
@@ -228,11 +236,7 @@ appear before the Punong Barangay/Pangkat ng Tagapagkasundo.
       <div style="text-align: left; text-indent: 0em; margin-left: 0px;">
 
 
-Notified this 
-<br>
-
-<br>
- This <input type="text" name="day" placeholder="day" size="1" required>  of
+Notified this <input type="text" name="day" placeholder="day" size="1" required>  of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -260,30 +264,6 @@ Notified this
         <input type="text" placeholder=" ">
     </div>
 </div>
- <br>
-        
-     <!-- New arrow buttons -->
-        <div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column;">
-        <!-- Button to go to the top of the form -->
-        <button class="btn btn-dark arrow-button" onclick="goToTop()">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        <!-- Button to go to the bottom of the form -->
-        <button class="btn btn-secondary arrow-button" onclick="goToBottom()">
-            <i class="fas fa-arrow-down"></i>
-        </button>
-        </div>
-        <script>
-        // Function to scroll to the top of the form
-        function goToTop() {
-            window.scrollTo(0, 0);
-        }
-        
-        // Function to scroll to the bottom of the form
-        function goToBottom() {
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-    </script>
-      
+ <br> 
 </body>
 </html>

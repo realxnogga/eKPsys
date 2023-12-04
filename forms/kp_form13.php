@@ -1,12 +1,24 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
+
+$day = $_SESSION['day'] ?? '';
+$month = $_SESSION['month'] ?? '';
+$year = $_SESSION['year'] ?? '';
+
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form13</title>
+    <title>KP FORM 13</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
@@ -54,17 +66,22 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 <div class="form-group" style="text-align: right;">
 
 
-    <div class="input-field">
-        Barangay Case No.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" placeholder="Case No. - Blotter No. - MMYY" style="width: 30%;"
-> <br><br> <p>For: <input type="text" name="for" id="for" size="30"> <br> <input type="text" name="for" id="for" size="30">
+    <div class="input-field"> 
+        <!-- case num here -->
+        Barangay Case No. <input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
+        value="<?php echo $cNum; ?>"> <br><br> <p>For:  
+            <!-- ForTitle here -->
+             <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"> <br> 
     </div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
-    <br><p> — against —</p>
+        <p> Complainant/s	
+            <!-- CNames here -->
+            <br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br> </p>
+    <br><p>— against —</p>
 </div>
 </div>
 
@@ -72,7 +89,9 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
+        <p> Respondent/s<br>
+            <!-- RspndtNames here -->
+            <input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br> </p>
     </div>
 </div>
 
@@ -88,8 +107,8 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
             </div>
 
 
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 
-                You are hereby commanded to appear before me on the <input type="text" name="day" placeholder="day" size="5" required>  of
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"><p style="text-align: justify; margin-left:180px;">Witnesses</p> 
+                <p style="text-indent: 2.0em; text-align: justify;">You are hereby commanded to appear before me on the <input type="text" name="day" placeholder="day" size="5" required>  of
                     <select name="month" required>
                         <option value="">Select Month</option>
                         <?php foreach ($months as $month): ?>
@@ -100,7 +119,6 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                     <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required> at <input type="time" name="time" size="10"> o'clock, then and there to testify in the hearing of the above-captioned case.  
                   
     </div>
-    <br>
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> This <input type="text" name="day" placeholder="day" size="5" required> day of
                 <select name="month" required>
@@ -114,10 +132,6 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
               
 </div>
     
-
-        <canvas id="canvas" width="190" height="60"></canvas>
-      
-        <script src="signature.js"></script>
 <div class="e">
 <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Punong Barangay/Lupon Chairman </p> 
 </div>

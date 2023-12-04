@@ -1,12 +1,24 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
+
+$day = $_SESSION['day'] ?? '';
+$month = $_SESSION['month'] ?? '';
+$year = $_SESSION['year'] ?? '';
+
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form20a</title>
+    <title>KP FORM 20-A</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">

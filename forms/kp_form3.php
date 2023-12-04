@@ -154,8 +154,46 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
             <i class="fas fa-arrow-down"></i>
         </button>
 		</div>
-<script src="lupon_datalist.js"></script>
+		<script>
+ document.addEventListener('DOMContentLoaded', function() {
+        const recipientInput = document.getElementById('recipient');
+        const nameList = document.getElementById('nameList'); // The datalist element
+        const namesArray = <?php echo json_encode($linkedNames); ?>; // Your PHP array of names
+        
+        // Function to update the datalist with matching names
+        function updateNameList() {
+            const inputValue = recipientInput.value.toLowerCase();
+            nameList.innerHTML = ''; // Clear the existing options
+            
+            // Filter the names array for matches
+            const matchingNames = namesArray.filter(name => name.toLowerCase().includes(inputValue));
+            
+            // Create and append options to the datalist
+            matchingNames.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                nameList.appendChild(option);
+            });
+        }
+        
+        // Event listener for input changes
+        recipientInput.addEventListener('input', updateNameList);
+        
+        // Trigger the update when the page loads
+        updateNameList();
+    });
 
+
+        // Function to scroll to the top of the form
+        function goToTop() {
+            window.scrollTo(0, 0);
+        }
+        
+        // Function to scroll to the bottom of the form
+        function goToBottom() {
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    </script>
 	<div class="bottom-right-buttons">
              <button id="clearBtn"class="btn btn-danger clear-button">Clear signature</button></div><br><br>
 </body>

@@ -1,12 +1,23 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
-?>
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
 
+$day = $_SESSION['day'] ?? '';
+$month = $_SESSION['month'] ?? '';
+$year = $_SESSION['year'] ?? '';
+
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form20</title>
+    <title>KP FORM 20</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
@@ -61,6 +72,30 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                     });
                 </script>
 
+<div class="form-group" style="text-align: right;">
+
+<div class="input-field">
+Barangay Case No.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
+> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"> <br>
+</div>
+</div>
+
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p>Complainant/s:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
+<br><p>   — against —</p>
+</div>
+</div>
+
+<div>
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondent/s:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
+</div>
+</div>
+
                 <h3 style="text-align: center;"><b> CERTIFICATION TO FILE ACTION</b> </h3>
 
 <div style="text-align: left;">
@@ -78,7 +113,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
         <input type="checkbox" id="checkbox1" name="confrontationCheckbox">
         <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;">  2. A settlement was reached; </label>
     </div>
-<p style="text-align: justify; text-indent: 0em; margin-left: 38.5px;"> 3. The settlement has been repudiated in a statement sworn to before the Punong Barangay by <input type="text" name="name" id="name" placeholder=" "required> on ground of<input type="text" name="name" id="name" placeholder=" "required>; and</p>
+<p style="text-align: justify; text-indent: 0em; margin-left: 38.5px;"> 3. The settlement has been repudiated in a statement sworn to before the Punong Barangay by <input type="text" name="name" id="name" placeholder=" "required> on ground of <input type="text" name="name" id="name" placeholder=" "required>; and </p>
             <p style="text-align: justify; text-indent: 0em; margin-left: 38px;"> 4. Therefore, the corresponding complaint for the dispute may now be filed in court/government office.</p>    
 <br>
 <p style="text-align: justify; text-indent: 0em; margin-left: 38.5px;"> This <input type="text" name="day" placeholder="day" size="1" required>  of
@@ -96,22 +131,8 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 </div>
 
 <br>
-<br>
- <div style="position: relative;"><br>
-    <style>
-        #canvas {
-            border: 1px solid lightgray;
-            float: right;
-        }
-        #canvas1{
-           border: 1px solid lightgray;
-            float: left;  
-        }
-    </style>
-  <canvas id="canvas" width="190" height="80"></canvas>
-
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="luponSec" name="luponSec" style="text-align: center; style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
+    <input type="text" id="luponSec" name="luponSec" style="text-align: center; style="border: none; border-bottom: 1px solid black; outline: none; size="25">
     Lupon Secretary
     </p>
     <br>
@@ -119,14 +140,9 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 </p>
 <br>
     <p style="text-align: justify; margin-top: 0;">
-        ATTESTED:</p>
-    <br>
-    <br>
-    <div style="position: relative; text-align: left;"><br>
-  
-  <canvas id="canvas1" width="190" height="80"></canvas>
+        Attested:</p>
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
-    <input type="text" id="luponChair" name="luponChair" style="text-align: center; style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
+    <input type="text" id="luponChair" name="luponChair" style="text-align: center; style="border: none; border-bottom: 1px solid black; outline: none; size="25">
     Lupon Chairman
     </p>
 <br>
@@ -140,35 +156,6 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
             </div>
         </div><br>
     </div>
- 
-
-
-<!-- New arrow buttons -->
-        <div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column;">
-        <!-- Button to go to the top of the form -->
-        <button class="btn btn-dark arrow-button" onclick="goToTop()">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        <!-- Button to go to the bottom of the form -->
-        <button class="btn btn-secondary arrow-button" onclick="goToBottom()">
-            <i class="fas fa-arrow-down"></i>
-        </button>
-    </div>
-
-           
-
-        <script>
-        // Function to scroll to the top of the form
-        function goToTop() {
-            window.scrollTo(0, 0);
-        }
-        
-        // Function to scroll to the bottom of the form
-        function goToBottom() {
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-    </script>
-
 
 
 </body>

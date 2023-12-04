@@ -1,16 +1,27 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
-?>
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
 
+$day = $_SESSION['day'] ?? '';
+$month = $_SESSION['month'] ?? '';
+$year = $_SESSION['year'] ?? '';
+
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form21</title>
+    <title>KP. FORM 21</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
-    
+     
 </head>
 <body>
     <br>
@@ -20,19 +31,50 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                 <!-- Print button -->
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
-                </button>
-               
             </div>
-            
-             <div style="text-align: left;">
-                <h5>KP Form No. 21</h5>
+
+            <div style="text-align: left;">
+            <h5>KP Form No. 21</h5>
                 <h5 style="text-align: center;">Republic of the Philippines</h5>
                 <h5 style="text-align: center;">Province of Laguna</h5>
                 <h5 style="text-align: center;">CITY/MUNICIPALITY OF <?php echo $_SESSION['municipality_name']; ?></h5>
                 <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
                 <h5 style="text-align: center;">OFFICE OF THE PUNONG BARANGAY</h5>
+                <br><br>
             </div>
 
+            <?php
+            $months = [
+              'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+
+            $currentYear = date('Y');
+            ?>
+
+            
+            <div class="form-group" style="text-align: right;">
+
+    <div class="input-field">
+    Barangay Case No.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
+> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"> <br>
+    </div>
+</div>
+
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+    <div class="label"></div>
+    <div class="input-field">
+        <p>Complainant/s:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
+    <br><p>   — against —</p>
+</div>
+</div>
+
+<div>
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+    <div class="label"></div>
+    <div class="input-field">
+        <p> Respondent/s:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
+    </div>
+</div>
             <?php
             $months = [
                 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
@@ -41,34 +83,11 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
             $currentYear = date('Y');
             ?>
 
-          
-                <script>
-                    var yearInput = document.getElementById('year');
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 38) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year + 1;
-                        }
-                    });
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 40) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year - 1;
-                        }
-                    });
-                </script>
-
-                <h3 style="text-align: center;"><b> CERTIFICATION TO BAR ACTION</b> </h3>
+             <h3 style="text-align: center;"><b> CERTIFICATION TO FILE ACTION</b> </h3>
   
     <div>
     <p style="text-indent: 2.8em; text-align: justify;">
-    This is to certify that the above-captioned case was dismissed pursuant to the Order dated
-
-    <input type="text" name="day" placeholder="day" size="1" required>  of
+    This is to certify that the above-captioned case was dismissed pursuant to the Order dated <input type="text" name="day" placeholder="day" size="1" required>  of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -77,17 +96,16 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                 </select>,
                 20
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>
-              for
+                for complainant/s
               <label for="complainant"> </label>
-            <input type="text" name="complainant" id="complainant/s" placeholder="Complainant's name"required> and
-             <label for="complainant"> </label>
-            <input type="text" name="complainant" id="complainant/ss" placeholder="Complainant's name"> willful failure or refusal to appear for hearing before the Punong Barangay/Pangkat
+            <input type="text" name="complainant" id="complainant/s" placeholder="Complainant's name"required> (name) and
+            <label for="complainant"> </label>
+            <input type="text" name="complainant" id="complainant/ss" placeholder="Complainant's name"> ______________ (name) willful failure or refusal to appear for hearing before the Punong Barangay/Pangkat
 ng Tagapagkasundo and therefore complainant/s is/are barred from filing an action in court/government office.
-
     </div>
       
 
-        <p style="text-align: justify; text-indent: 2.8em; "> This <input type="text" name="day" placeholder="day" size="1" required>  of
+        <p style="text-align: justify; text-indent: 2.8em; "> This  <input type="text" name="day" placeholder="day" size="1" required>  day of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -95,173 +113,34 @@ ng Tagapagkasundo and therefore complainant/s is/are barred from filing an actio
                     <?php endforeach; ?>
                 </select>,
                 20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.
                
             </p>
 
-        <?php if (!empty($errors)): ?>
-            <ul>
-                <?php foreach ($errors as $error): ?>
-                    <li><?php echo $error; ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
-
-    <div style="position: relative;"><br>
-    <style>
-        #canvas {
-            border: 1px solid lightgray;
-            float: right;
-        }
-        #canvas1{
-           border: 1px solid lightgray;
-            float: left;  
-        }
-    </style>
-  <canvas id="canvas" width="190" height="80"></canvas>
-
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 555px; margin-right: auto;">
     <input type="text" id="luponSec"  name="luponSec" style="text-align: center;style="border: none; border-bottom: 1px solid black; outline: none; size="25">
-    Lupon Secretary/Pangkat Secretary 
+    <br>Lupon Secretary/Pangkat Secretary
     </p>
     <br>
 </div>
 </p>
 <br>
     <p style="text-align: justify; margin-top: 0;">
-        ATTESTED:</p>
+   <br>  Attested:</p>
     <br>
     <br>
-    <div style="position: relative; text-align: left;"><br>
+ 
   
-  <canvas id="canvas1" width="190" height="80"></canvas>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 590px; ">
-    <input type="text" id="luponChair" name="luponChair" style="text-align: center;style="border: none; border-bottom: 1px solid black; outline: none;size="25">
-    Lupon Chairman/Pangkat Chairman
-    </p>
+    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
+    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
+  <br>  Lupon Chairman/Pangkat Chairman
+</p>
 <br>
-   <br>
-<br>
-<br>
-<br>
+
+ <p style="text-align: justify; margin-top: 0;">
+ IMPORTANT: If Lupon Secretary makes the certification, the Lupon Chairman attests. If the Pangkat Secretary makes the certification,
+the Pangkat Chairman attests. </p>
 </div>
-</div>
-                </div>
-            </div>
-        </div><br>
-        
-    </div>
-
-<!-- New arrow buttons -->
-        <div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column;">
-        <!-- Button to go to the top of the form -->
-        <button class="btn btn-dark arrow-button" onclick="goToTop()">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        <!-- Button to go to the bottom of the form -->
-        <button class="btn btn-secondary arrow-button" onclick="goToBottom()">
-            <i class="fas fa-arrow-down"></i>
-        </button>
-        </div>
-        <script>
-        // Function to scroll to the top of the form
-        function goToTop() {
-            window.scrollTo(0, 0);
-        }
-        
-        // Function to scroll to the bottom of the form
-        function goToBottom() {
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-    </script>
-      
-
-         <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get the canvas elements and buttons
-        var canvas = document.getElementById("canvas");
-        var canvas1 = document.getElementById("canvas1");
-        var clearBtn = document.getElementById("clearBtn");
-        var saveBtn = document.getElementById("saveBtn");
-        var ctx = canvas.getContext("2d");
-        var ctx1 = canvas1.getContext("2d");
-
-        // Set initial drawing states
-        var isDrawing = false;
-        var isDrawing1 = false;
-
-        // Set drawing styles
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "#000";
-        ctx1.lineWidth = 2;
-        ctx1.strokeStyle = "#000";
-
-        // Function to start drawing
-        function startDrawing(e) {
-            if (e.target === canvas) {
-                isDrawing = true;
-                ctx.beginPath();
-                ctx.moveTo(e.offsetX, e.offsetY);
-            } else if (e.target === canvas1) {
-                isDrawing1 = true;
-                ctx1.beginPath();
-                ctx1.moveTo(e.offsetX, e.offsetY);
-            }
-        }
-
-        // Function to draw
-        function draw(e) {
-            if (isDrawing) {
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.stroke();
-            } else if (isDrawing1) {
-                ctx1.lineTo(e.offsetX, e.offsetY);
-                ctx1.stroke();
-            }
-        }
-
-        // Function to stop drawing
-        function stopDrawing() {
-            isDrawing = false;
-            isDrawing1 = false;
-        }
-
-        // Function to clear the canvases
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
-        }
-
-        // Function to save the signatures as images
-        function saveSignature(canvas, fileName) {
-            var imgData = canvas.toDataURL();
-            var link = document.createElement("a");
-            link.href = imgData;
-            link.download = fileName;
-            link.click();
-        }
-
-        // Event listeners for both canvases
-        canvas.addEventListener("mousedown", startDrawing);
-        canvas1.addEventListener("mousedown", startDrawing);
-
-        canvas.addEventListener("mousemove", draw);
-        canvas1.addEventListener("mousemove", draw);
-
-        canvas.addEventListener("mouseup", stopDrawing);
-        canvas1.addEventListener("mouseup", stopDrawing);
-
-        canvas.addEventListener("mouseout", stopDrawing);
-        canvas1.addEventListener("mouseout", stopDrawing);
-
-        // Event listeners for buttons
-        clearBtn.addEventListener("click", clearCanvas);
-
-        saveBtn.addEventListener("click", function() {
-            saveSignature(canvas, "signature.png");
-            saveSignature(canvas1, "signature1.png");
-        });
-    });
-</script>
+   
 </body>
 </html>

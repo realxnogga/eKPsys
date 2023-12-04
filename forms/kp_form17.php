@@ -1,12 +1,24 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
+
+$day = $_SESSION['day'] ?? '';
+$month = $_SESSION['month'] ?? '';
+$year = $_SESSION['year'] ?? '';
+
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form17</title>
+    <title>KP FORM 17</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
@@ -74,12 +86,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
         <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
     </div>
 </div>
-
-   
-
-<h3 style="text-align: center;"> 
-REPUDIATION
-</h3>
+<h3 style="text-align: center;"><b>REPUDIATION</b></h3>
 
 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">I/WE hereby repudiate the settlement/agreement for arbitration on the ground that my/our consent was vitiated by: <br>
 (Check out whichever is applicable)
@@ -119,10 +126,6 @@ REPUDIATION
                 20
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.              
 </div><br>
-
-<canvas id="canvas" width="190" height="60"></canvas>
-      
-        <script src="signature.js"></script>
 <div class="z">
 <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Punong Barangay/Pangkat Chairman </p> 
 </div>
@@ -147,24 +150,6 @@ REPUDIATION
 
   <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">* Failure to repudiate the settlement or the arbitration agreement within the time limits respectively set (ten [10] days from the date of settlement and five[5] days from the date of arbitration agreement) shall be deemed a waiver of the right to challenge on
 said grounds.
-    </div>
-
-                <?php if (!empty($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-
-                
-            </div>
-        </div>
-
-</body>
-<br>
-<div class="blank-page">        
-       
-      
+    </div>       
 </div>
 </html>

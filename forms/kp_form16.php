@@ -1,12 +1,24 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
+
+$day = $_SESSION['day'] ?? '';
+$month = $_SESSION['month'] ?? '';
+$year = $_SESSION['year'] ?? '';
+
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form16</title>
+    <title>KP. FORM 16</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
@@ -24,32 +36,23 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                
             </div>
             
-             <div style="text-align: left;">
-                <h5>KP Form No. 16</h5>
+            <div style="text-align: left;">
+            <h5>KP Form No. 16</h5>
                 <h5 style="text-align: center;">Republic of the Philippines</h5>
                 <h5 style="text-align: center;">Province of Laguna</h5>
                 <h5 style="text-align: center;">CITY/MUNICIPALITY OF <?php echo $_SESSION['municipality_name']; ?></h5>
                 <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
                 <h5 style="text-align: center;">OFFICE OF THE PUNONG BARANGAY</h5>
+                <br><br>
             </div>
 
             <?php
             $months = [
-                'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+              'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+            ];
 
             $currentYear = date('Y');
             ?>
-
-            <script>
-                function downloadPDF() {
-                    removePlaceholdersForPrinting();
-                }
-
-                function saveChanges() {
-
-                    alert("Changes have been saved!");
-                }
-            </script>
 
 <div class="form-group" style="text-align: right;">
 
@@ -74,12 +77,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
         <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
     </div>
 </div>
-
-   
-
-<h3 style="text-align: center;"> 
-MICABLE SETTLEMENT
-</h3>
+<h3 style="text-align: center;"><b>AMMICABLE SETTLEMENT</b></h3>
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">We, complainant/s and respondent/s in the above-captioned case, do hereby agree to settle our dispute as follows:            
     </div>
@@ -89,7 +87,7 @@ MICABLE SETTLEMENT
 
 <p> and bind ourselves to comply honestly and faithfully with the above terms of settlement. </p>
 
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Made this <input type="text" name="day" placeholder="day" size="1" required> day of
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Enter into this <input type="text" name="day" placeholder="day" size="1" required> day of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -112,10 +110,6 @@ MICABLE SETTLEMENT
     <p>I hereby certify that the foregoing amicable settlement was entered into by the parties freely and voluntarily, after I had
 explained to them the nature and consequence of such settlement.</p>
   </div>
-
-<canvas id="canvas" width="190" height="60"></canvas>
-      
-        <script src="signature.js"></script>
 <div class="z">
 <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Punong Barangay/Pangkat Chairman </p> 
 </div>

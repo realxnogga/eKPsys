@@ -81,6 +81,9 @@ input[type="submit"]:hover {
     background-color: #0056b3;
 }
 
+.columns-container {
+            max-height: 800px; /* Adjust the height as needed */
+            overflow: auto;}
 </style>
 </head>
 

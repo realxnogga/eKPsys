@@ -372,7 +372,7 @@ var totalCases = criminalCount + civilCount + othersCount;
 var data = {
 labels: ['Criminal', 'Civil', 'Others'],
 datasets: [{
-label: 'Number of Cases',
+label: 'Number of Cases Unsettled/Settled',
 data: [criminalCount, civilCount, othersCount],
 backgroundColor: [
     'rgba(255, 99, 132, 0.6)',
@@ -434,7 +434,7 @@ var totalUnsetCount = <?php echo $totalUnsetCount; ?>;
 var unsetData = {
 labels: ['Pending', 'Dismissed', 'Repudiated', 'Certified to Court', 'Dropped/Withdrawn'],
 datasets: [{
-label: 'Number of Cases',
+label: 'Number of Cases Unsettled/Settled',
 data: [pendingCount, dismissedCount, repudiatedCount, certifiedCount, droppedCount],
 backgroundColor: [
     'rgba(255, 99, 132, 0.6)',

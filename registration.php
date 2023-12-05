@@ -13,7 +13,6 @@ include 'functions.php';
   ?>
 
 
-
     <title>Registration</title>
     <style>
 
@@ -279,7 +278,7 @@ body {
 
 
     </div>
-  </div> <!-- Close leftcolumn here -->
+  </div> 
   
   <div class="rightcolumn">
     <div class="card">

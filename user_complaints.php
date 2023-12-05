@@ -127,7 +127,7 @@ include 'add_handler.php';
             <div class="card">
                 <div class="row">
 
-                    <h3>Barangay Complaints</h3><br<br><hr>
+                    <h3>Barangay Cases</h3><br><br><hr>
                     <h2>Your files</h2>        
 
     <br>
@@ -245,7 +245,7 @@ echo "<td>" . date('Y-m-d', strtotime($row['Mdate'])) . "</td>";
           <input type="text" id="CNum" name="CNum" placeholder="MMYY - Case No." value="<?php echo $caseNum; ?>" onblur="validate(1)" >
       </div>
 <div class="form-group col-sm-6 flex-column d-flex">
-        <label class="form-control-label px-3">For:<span class="text-danger"> *</span></label>
+        <label class="form-control-label px-3">Title<span class="text-danger"> *</span></label>
 <input type="text" id="ForTitle" name="ForTitle" placeholder="Enter Name" onblur="validate(2)" required>
     </div>
 </div>
@@ -316,7 +316,7 @@ function adjustCardHeight() {
     const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
 
     if (isFullscreen) {
-        card.style.height = '100vh'; // Set height to 100% of the viewport height in fullscreen
+        card.style.height = '50vh'; // Set height to 100% of the viewport height in fullscreen
     } else {
         card.style.height = '75vh'; // Set the initial height when exiting fullscreen
     }

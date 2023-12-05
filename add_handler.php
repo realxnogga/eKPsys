@@ -67,6 +67,8 @@ if (isset($_POST['submit'])) {
         $successMessage = '<div class="alert alert-success" role="alert">
                 Complaint Submitted Successfully!
               </div>';
+                  header("Location: user_complaints.php");
+
     } else {
         // Failed to submit complaint
         $successMessage = '<div class="alert alert-danger" role="alert">

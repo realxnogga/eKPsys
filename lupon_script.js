@@ -28,27 +28,27 @@
         }
 
         document.getElementById('open-kp-form1').addEventListener('click', function() {
-            openAndLoadForm('forms/kp_form1.php');
+            openAndLoadForm('formsT/kp_form1.php');
         });
 
         document.getElementById('open-kp-form2').addEventListener('click', function() {
-            openAndLoadForm('forms/kp_form2.php');
+            openAndLoadForm('formsT/kp_form2.php');
         });
 
         document.getElementById('open-kp-form3').addEventListener('click', function() {
-            openAndLoadForm('forms/kp_form3.php');
+            openAndLoadForm('formsT/kp_form3.php');
         });
 
         document.getElementById('open-kp-form4').addEventListener('click', function() {
-            openAndLoadForm('forms/kp_form4.php');
+            openAndLoadForm('formsT/kp_form4.php');
         });
 
         document.getElementById('open-kp-form5').addEventListener('click', function() {
-            openAndLoadForm('forms/kp_form5.php');
+            openAndLoadForm('formsT/kp_form5.php');
         });
 
         document.getElementById('open-kp-form6').addEventListener('click', function() {
-            openAndLoadForm('forms/kp_form6.php');
+            openAndLoadForm('formsT/kp_form6.php');
         });
 // Function to adjust the input fields to fill gaps
 function adjustInputFields() {

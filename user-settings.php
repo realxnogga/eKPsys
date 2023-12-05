@@ -56,7 +56,7 @@ if ($securityQuestions) {
         <div class="settings">
             <h4><b>Account Settings</b></h4><br>
 
-            <div class="row no-gutters row-bordered row-border-light">
+           <div class="row no-gutters row-bordered row-border-light">
                 <!-- Sidebar -->
                 <div class="col-md-3 pt-0">
                     <div class="list-group list-group-flush account-settings-links">
@@ -65,13 +65,9 @@ if ($securityQuestions) {
                     </div>
                 </div>
 
-                <!-- Main Content -->
                 <div class="col-md-9">
                     <div class="tab-content">
-                        <!-- General Settings -->
-                        
-                        <hr class="border-light m-0">
-<div class="card-body tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-general">                            <form id="profilePicForm" method="post" enctype="multipart/form-data">
+                        <form id="profilePicForm" method="post" enctype="multipart/form-data">
                            <!-- Profile Picture Form -->
                                     <div class="prof-container">
                                         <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80">
@@ -79,7 +75,8 @@ if ($securityQuestions) {
                                         <button type="button" id="uploadButton" class="upload-button">Upload a picture</button>
                                     </div>
                         </form>
-                            <!-- User Settings -->
+
+                        <div class="card-body tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-general">
                             <h4><b>User Settings</b></h4>
                             <h6>
 <?php if (!empty($message)) { ?>
@@ -89,8 +86,9 @@ if ($securityQuestions) {
 <?php if (!empty($error)) { ?>
     <p class="text-danger"><?php echo $error; ?></p>
 <?php } ?>                            </h6>
+                            <!-- General Settings -->
                             <form id="userSettingsForm" method="post" action="general_handler.php">
-                                <div class="form-group">
+<div class="form-group">
                         <label for="first_name">User Name:</label>
                         <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>" ><br>
                     </div><br>
@@ -115,24 +113,23 @@ if ($securityQuestions) {
                         <label for="new_password">New Password (leave empty to keep current password):</label>
                         <input type="password" class="form-control" pattern=".{8,}" title="Password must be at least 8 characters long" id="new_password" name="new_password"><br>
                     </div><br>    <input type="hidden" name="active_tab" value="general">
-
                                 <button type="submit" class="save" name="general_settings">Save Changes</button>
                             </form>
                         </div>
 
-                        <!-- Security Settings -->
-<form id="securityForm" method="post" action="security_handler.php">
-                            <div class="tab-pane fade <?php echo isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-security">
-        <!-- Security Questions -->
-        <h6>
+                            <form id="securityForm" method="post" action="security_handler.php">
+                        <div class="tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-security">
+                            <h4>Security Questions</h4>
+                             <h6>
 <?php if (!empty($message)) { ?>
     <p class="text-success"><?php echo $message; ?></p>
 <?php } ?>
 
 <?php if (!empty($error)) { ?>
     <p class="text-danger"><?php echo $error; ?></p>
-<?php } ?>                            </h6>
-        <div class="form-group">
+<?php } ?>     </h6>
+
+<div class="form-group">
             <label for="question1">Security Question 1:</label>
     <select class="form-control" id="question1" name="question1" required>
             <option value="" <?php echo ($question1 == '') ? 'selected' : ''; ?>>Select a Question</option>
@@ -176,85 +173,80 @@ if ($securityQuestions) {
             <label for="answer3">Answer:</label>
             <input type="password" class="form-control" id="answer3" name="answer3">
         </div>
-    <button type="submit" class="save" name="security_settings">Save Security Settings</button>
-    </div>
-        <input type="hidden" name="active_tab" value="security">
-
-</form>
+                                <button type="submit" class="save" name="security_settings">Save Security Settings</button>
+                                <input type="hidden" name="active_tab" value="security">
+                        </div>
+                            </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const fileInput = document.getElementById('fileInput');
-            const uploadButton = document.getElementById('uploadButton');
-            const profilePic = document.getElementById('profilePic');
-
-            // Handle button click to trigger file input
-            uploadButton.addEventListener('click', function() {
-                fileInput.click();
-            });
-
-            // Handle file input change
-            fileInput.addEventListener('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        profilePic.setAttribute('src', e.target.result);
-                    };
-                    reader.readAsDataURL(file);
-
-                    // Upload the file using Fetch API
-                    const formData = new FormData();
-                    formData.append('profile_pic', file);
-
-                    fetch('upload_pic.php', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok.');
-                        }
-                        return response.text();
-                    })
-                    .then(data => {
-                        // Handle the response
-                        console.log('Upload successful:', data);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                }
-            });
-
-  const activeTab = sessionStorage.getItem('activeTab'); // Retrieve the active tab from session storage
-
-    if (activeTab) {
-        // If an active tab is found, show it
-        $(".account-settings-links a[href='" + activeTab + "']").addClass("active");
-        $(".tab-pane").removeClass("active show"); // Hide all tab panes
-        $(activeTab).addClass("active show"); // Show the active tab
-    }
-
-    // Change active tab on link click
-    $(".account-settings-links a").click(function(e) {
-        e.preventDefault();
-        $(".account-settings-links a").removeClass("active");
-        $(this).addClass("active");
-        $(".tab-pane").removeClass("active show");
-        $($(this).attr("href")).addClass("active show");
-
-        // Store the active tab in session storage
-        sessionStorage.setItem('activeTab', $(this).attr("href"));
-    });
-
-        });
-    </script>
 </div>
-    
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const uploadButton = document.getElementById('uploadButton');
+        const profilePic = document.getElementById('profilePic');
+        const activeTab = sessionStorage.getItem('activeTab');
+
+        // Handle button click to trigger file input
+        uploadButton.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        // Handle file input change
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePic.setAttribute('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+
+                // Upload the file using Fetch API
+                const formData = new FormData();
+                formData.append('profile_pic', file);
+
+                fetch('upload_pic.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok.');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    // Handle the response
+                    console.log('Upload successful:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+
+
+        if (activeTab) {
+            $(".account-settings-links a[href='" + activeTab + "']").addClass("active");
+            $(".tab-pane").removeClass("active show");
+            $(activeTab).addClass("active show");
+        }
+
+        $(".account-settings-links a").click(function(e) {
+            e.preventDefault();
+            $(".account-settings-links a").removeClass("active");
+            $(this).addClass("active");
+            $(".tab-pane").removeClass("active show").empty(); // Empty the content of unselected tabs
+            $($(this).attr("href")).addClass("active show");
+
+            sessionStorage.setItem('activeTab', $(this).attr("href"));
+        });
+
+    });
+    </script>
 </body>
 </html>

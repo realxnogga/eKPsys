@@ -216,8 +216,6 @@ body, html {
                     <h2>1-6</h2>        
                     
                     <br>
-                    <button id="englishforms" class="btn btn-dark">English</button>
-                    <button id="tagalogforms" class="btn btn-light">Tagalog</button><br><br>
 
                     <button id="open-kp-form1" class="one-button"><i class="fas fa-file-alt"></i> KP 1</button>
                     <button id="open-kp-form2" class="one-button"><i class="fas fa-file-alt"></i> KP 2</button>

@@ -171,8 +171,6 @@ include 'add_handler.php';
                     <h2>Forms</h2><br><br>
 
                     <div class="columns-container">
-            
-  
 
 
     <div class="form-buttons">

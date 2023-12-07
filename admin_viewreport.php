@@ -34,16 +34,27 @@ include 'viewreporthandler.php';
 <body>
     <div class="container">
         <form method="POST">
-        <h2>Monthly Report (<?php echo isset($selected_month) ? $selected_month : date('F, Y'); ?>)</h2>
+               <h2>Annual Report (<?php echo isset($selected_year) ? $selected_year : date('F, Y'); ?>)</h2>
 
-          <!-- Dropdown to select month -->
-        <label for="selected_month">Select Month to Display Report:</label>
-        <select name="selected_month" id="selected_month">
-            <?php foreach ($months as $month) : ?>
-                <option value="<?php echo $month['month_year']; ?>"><?php echo $month['month_year']; ?></option>
-            <?php endforeach; ?>
-        </select>
-        <input type="submit" value="Select">
+<!-- Dropdown to select year -->
+<label for="selected_year">Select Year to Display Report:</label>
+<select name="selected_year" id="selected_year">
+    <?php foreach ($years as $year) : ?>
+        <option value="<?php echo $year['year']; ?>"><?php echo $year['year']; ?></option>
+    <?php endforeach; ?>
+</select>
+    <input type="submit" name="submit_annual" value="Select Annual Report">
+
+<h2>Monthly Report (<?php echo isset($selected_month) ? $selected_month : date('F, Y'); ?>)</h2>
+
+<!-- Dropdown to select month -->
+<label for="selected_month">Select Month to Display Report:</label>
+<select name="selected_month" id="selected_month">
+    <?php foreach ($months as $month) : ?>
+        <option value="<?php echo $month['month_year']; ?>"><?php echo $month['month_year']; ?></option>
+    <?php endforeach; ?>
+</select>
+    <input type="submit" name="submit_monthly" value="Select Monthly Report">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">

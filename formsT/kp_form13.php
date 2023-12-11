@@ -94,9 +94,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
                  <p style="text-align: justify; margin-left:180px;">Mga Testigo</p> 
-                    Sa pamamagitan nito, inaatasan kayo na humarap sa akin sa ika- <input type="text" name="day" placeholder="araw" size="5" required>  araw ng
-                    <select name="month" required>
-                        <option value="">Pumili ng buwan</option>
+                    Sa pamamagitan nito, inaatasan kayo na humarap sa akin sa ika- <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
+                    <select name="month" required style="width: 60px;">
+                        <option value="">Buwan</option>
                         <?php foreach ($months as $month): ?>
                             <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                         <?php endforeach; ?>
@@ -109,9 +109,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
                 
-                    Sa pamamagitan nito’y kayoay inaatasan na humarap sa Pangkat sa ika- <input type="text" name="day" placeholder="araw" size="5" required>  araw ng
-                    <select name="month" required>
-                        <option value="">Pumili ng buwan</option>
+                    Sa pamamagitan nito’y kayoay inaatasan na humarap sa Pangkat sa ika- <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
+                    <select name="month" required style="width: 60px;">
+                        <option value="">Buwan</option>
                         <?php foreach ($months as $month): ?>
                             <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                         <?php endforeach; ?>

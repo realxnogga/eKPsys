@@ -106,8 +106,8 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
     SAPAGKAT,   noong 
 
     <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -160,8 +160,8 @@ nasabing  matiwasay na pag-aayos  (o sa inihatol sa nasabing gawad sa paghahatol
 </div>
 
             <div style="text-align: justify; text-indent: 0em; margin-left: 30px;"> Nilagdaan ngayong ika <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>

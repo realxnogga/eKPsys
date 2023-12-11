@@ -64,9 +64,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"></div>
                 <p> (Mga) Maysumbong</p> 
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Ikaw  ay inuutusan na humarap sa akin sa  <input type="text" name="day" placeholder="araw" size="6" required>  araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Ikaw  ay inuutusan na humarap sa akin sa  <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -76,9 +76,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 </div>  
 
             <form method="POST">
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Ngayong ika-  <input type="text" name="day" placeholder="araw" size="6" required>  araw ng 
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Ngayong ika-  <input type="text" name="day" placeholder="araw" size="1" required>  araw ng 
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -96,8 +96,13 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 </p>
         </div>
        
-        <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Pinaabisuhan ngayong ika  <input type="text" name="day" placeholder="araw" size="3" value="<?php echo $day; ?>">   ng 
-                <input type="text" size="5" value="<?php echo $month; ?>">,
+        <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Pinaabisuhan ngayong ika  <input type="text" name="day" placeholder="araw" size="1" value="<?php echo $day; ?>">   ng 
+        <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
+                    <?php foreach ($months as $month): ?>
+                        <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
+                    <?php endforeach; ?>
+                </select>,
                 20
                 <input type="text" name="year" placeholder="taon" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.
         </div>

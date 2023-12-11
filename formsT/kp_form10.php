@@ -97,9 +97,9 @@ PAABISO UKOL SA PAGBUBUO NG PANGKAT
 </div>
 </div>
 
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Sa pamamagitan nito, kayo ay inaatasan na humarap sa akin sa ika- <input type="text" name="day" placeholder="araw" size="5" required> araw ng 
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Sa pamamagitan nito, kayo ay inaatasan na humarap sa akin sa ika- <input type="text" name="day" placeholder="araw" size="1" required> araw ng 
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -115,9 +115,9 @@ PAABISO UKOL SA PAGBUBUO NG PANGKAT
     <br>Punong Barangay
 </p>
 
-    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Ngayong ika-  <input type="text" name="day" placeholder="araw" size="5" required> araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Ngayong ika-  <input type="text" name="day" placeholder="araw" size="1" required> araw ng
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>

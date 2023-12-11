@@ -91,9 +91,9 @@ KASUNDUAN UKOL SA PAGHAHATOL NG TAGAPAMAGITAN
    
     <br>
 
-    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">   Pinagkasunduan ngayong ika- <input type="text" name="day" placeholder="araw" size="5" required> araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">   Pinagkasunduan ngayong ika- <input type="text" name="day" placeholder="araw" size="1" required> araw ng
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>

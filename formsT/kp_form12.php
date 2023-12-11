@@ -63,9 +63,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
                 <div style="text-align: center; text-indent: 0em; margin-left: 20.5px;">
                 <h3 style="text-align: center;"><b>PAABISO  NG  PAGDINIG <br>(Mga  hakbang  sa Pagkakasudo)</b></h3> <br>
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Sa pamamagitan nito’y kayoay inaatasan na humarap sa Pangkat sa ika- <input type="text" name="day" placeholder="araw" size="6" required>  araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Sa pamamagitan nito’y kayoay inaatasan na humarap sa Pangkat sa ika- <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -82,9 +82,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 </p>
 
             <form method="POST">
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 	Ngayong ika-<input type="text" name="day" placeholder="araw" size="6" required>  araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 	Ngayong ika-<input type="text" name="day" placeholder="araw" size="1" required>  araw ng
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -98,9 +98,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
    <br>
 
        
-        <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Pinaabisuhan ngayong ika- <input type="text" name="day" placeholder="araw" size="6" required>  araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+        <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Pinaabisuhan ngayong ika- <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>

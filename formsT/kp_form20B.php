@@ -126,20 +126,6 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 </p>
 </div>
 
-<div style="position: relative; text-align: right;"><br>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
-    <input type="text" id="luponChair" name="luponChair" style="text-align: center;style="border: none; border-bottom: 1px solid black; outline: none;size="25">
-   <br>     Kalihim ng Lupon
-</div>
- <br>
-    Pinatunayan:
-
-  <br><br><br>
-  
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
-    Tagapangulo ng Pangkat
-</p>
 
   </body>
 </html>

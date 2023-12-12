@@ -115,13 +115,12 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
     });
 
 				function resetFields() {
-				// Clear the value of the day input field
+
 			document.getElementById('day').value = "";
         
-				// Get all input elements within the specified div
+
 			var inputs = document.querySelectorAll('.paper div[style="display: flex;"] input[type="text"]');
-        
-				// Clear the value of each input field
+
 				inputs.forEach(function(input) {
             input.value = "";
 				});
@@ -172,7 +171,7 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
 </p>
 
 <script>
-    // Function to select the text when clicked
+
     const positionInput = document.getElementById('positionInput');
     positionInput.addEventListener('click', function() {
         this.select();
@@ -194,35 +193,7 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
                     <br>
 					</div>
         </div>
-    </div><br>
-    <div class="blank-page"></div>
-    </body>
-        </div><br><br><br><br><br> 
-		
-		<!-- New arrow buttons -->
-		<div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column;">
-        <!-- Button to go to the top of the form -->
-        <button class="btn btn-dark arrow-button" onclick="goToTop()">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        <!-- Button to go to the bottom of the form -->
-        <button class="btn btn-secondary arrow-button" onclick="goToBottom()">
-            <i class="fas fa-arrow-down"></i>
-        </button>
-		</div>
-		<script>
-        // Function to scroll to the top of the form
-            
-        function goToTop() {
-            window.scrollTo(0, 0);
-        }
-        
-        // Function to scroll to the bottom of the form
-        function goToBottom() {
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-    </script>
-	<div class="bottom-right-buttons">
-             <button id="clearBtn"class="btn btn-danger clear-button">Clear signature</button></div><br><br>
+    </div>
+
 </body>
 </html>	

@@ -67,7 +67,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> TO: <br><input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"> <br> <input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"> </p>
+        <p> TO: <br><input type="text" name="to" id="to" size="25" value="<?php echo $cNames; ?>" > <input type="text" name="to" id="to" size="25"value="<?php echo $rspndtNames; ?>"> <br> <input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"> </p>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complainant/s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Respondent/s</p>
 </div>
@@ -102,7 +102,7 @@ hearing of the above-entitled case.
        <div style="position: relative;">
                     <br>
 <div class="e">
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Pangkat Chairman</p>
+<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25"value ="<?php echo $punong_barangay; ?>"> <br> Pangkat Chairman</p>
   </div>
 
        

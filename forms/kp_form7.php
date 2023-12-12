@@ -1,6 +1,6 @@
 <?php
 session_start();
-// Retrieve the data from session variables
+
 $forTitle = $_SESSION['forTitle'] ?? '';
 $cNames = $_SESSION['cNames'] ?? '';
 $rspndtNames = $_SESSION['rspndtNames'] ?? '';
@@ -144,7 +144,6 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
     <script src="signature.js"></script>
 
                     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">_____________________<input type="text" id="pngbrgy" name="pngbrgy" size="25" value="<?php echo $punong_barangay; ?>" style="text-align: center;">
-                    <!-- user id's, lupon table's, punong_barangay name here -->
                     Punong Barangay</p>
                 </div>
             </div>

@@ -1,6 +1,18 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
+
+$day = $_SESSION['day'] ?? '';
+$month = $_SESSION['month'] ?? '';
+$year = $_SESSION['year'] ?? '';
+
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+
 ?>
 
 <!DOCTYPE html>
@@ -54,15 +66,15 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 <div class="form-group" style="text-align: right;">
     
     <div class="input-field">
-        Barangay Case No.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" placeholder="Case No. - Blotter No. - MMYY" style="width: 30%;"
-> <br><br> <p>For: <input type="text" name="for" id="for" size="30"> <br> <input type="text" name="for" id="for" size="30">
+        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
+            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
     </div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
+        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
     <br><p> — against —</p>
 </div>
 </div>
@@ -71,7 +83,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
+        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
     </div>
 </div>
 

@@ -122,17 +122,9 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                 <?php endif; ?>
 
     <div style="position: relative;"><br>
-    <style>
-        #canvas {
-            border: 1px solid lightgray;
-            float: right;
-            
-        }
-    </style>
+
 		<p style="text-align: center; margin-left: 570px; margin-right: auto;">Very truly yours, </p>
 	<body>
-    <canvas id="canvas" width="190" height="80"></canvas>
-    <script src="signature.js"></script>
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
 	Barangay Secretary
@@ -143,58 +135,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
     </body>
         </div><br><br><br><br><br> 
 		
-		<!-- New arrow buttons -->
-		<div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column;">
-        <!-- Button to go to the top of the form -->
-        <button class="btn btn-dark arrow-button" onclick="goToTop()">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        <!-- Button to go to the bottom of the form -->
-        <button class="btn btn-secondary arrow-button" onclick="goToBottom()">
-            <i class="fas fa-arrow-down"></i>
-        </button>
-		</div>
-		<script>
- document.addEventListener('DOMContentLoaded', function() {
-        const recipientInput = document.getElementById('recipient');
-        const nameList = document.getElementById('nameList'); // The datalist element
-        const namesArray = <?php echo json_encode($linkedNames); ?>; // Your PHP array of names
-        
-        // Function to update the datalist with matching names
-        function updateNameList() {
-            const inputValue = recipientInput.value.toLowerCase();
-            nameList.innerHTML = ''; // Clear the existing options
-            
-            // Filter the names array for matches
-            const matchingNames = namesArray.filter(name => name.toLowerCase().includes(inputValue));
-            
-            // Create and append options to the datalist
-            matchingNames.forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                nameList.appendChild(option);
-            });
-        }
-        
-        // Event listener for input changes
-        recipientInput.addEventListener('input', updateNameList);
-        
-        // Trigger the update when the page loads
-        updateNameList();
-    });
 
 
-        // Function to scroll to the top of the form
-        function goToTop() {
-            window.scrollTo(0, 0);
-        }
-        
-        // Function to scroll to the bottom of the form
-        function goToBottom() {
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-    </script>
-	<div class="bottom-right-buttons">
-             <button id="clearBtn"class="btn btn-danger clear-button">Clear signature</button></div><br><br>
 </body>
 </html>	

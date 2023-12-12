@@ -54,9 +54,6 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             <div class="form-group" style="text-align: right;">
 
     <div class="input-field">
-c
-        
-
 
                 <h3 style="text-align: center;"><b> NOTICE OF HEARING<br>
                 (RE: MOTION FOR EXECUTION) </b> </h3>

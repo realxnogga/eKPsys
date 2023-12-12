@@ -55,27 +55,30 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
             <div class="form-group" style="text-align: right;">
 
-<div class="input-field">
-    Barangay Case No.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" placeholder="Case No. - Blotter No. - MMYY" style="width: 30%;"
-> <br><br> <p>For: <input type="text" name="for" id="for" size="30"> <br> <input type="text" name="for" id="for" size="30">
-</div>
+<div class="form-group" style="text-align: right;">
+    
+    <div class="input-field">
+        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
+            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
+    </div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-<div class="label"></div>
-<div class="input-field">
-    <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
-<br><p> — against —</p>
+    <div class="label"></div>
+    <div class="input-field">
+        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
+    <br><p> — against —</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-<div class="label"></div>
-<div class="input-field">
-    <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
+    <div class="label"></div>
+    <div class="input-field">
+        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
+    </div>
 </div>
-</div>
+
 <h3 style="text-align: center;"><b>ARBITRATION AWARD</b></h3>
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">   After hearing the testimonies given and careful examination of the evidence presented in this case, award is hereby made as

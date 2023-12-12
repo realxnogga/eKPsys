@@ -54,27 +54,27 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             ?>
 
 <div class="form-group" style="text-align: right;">
-
-<div class="input-field">
-Barangay Case No.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"> <br>
-</div>
+    
+    <div class="input-field">
+        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
+            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
+    </div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-<div class="label"></div>
-<div class="input-field">
-    <p>Complainant/s:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
-<br><p>   — against —</p>
+    <div class="label"></div>
+    <div class="input-field">
+        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
+    <br><p> — against —</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-<div class="label"></div>
-<div class="input-field">
-    <p> Respondent/s:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
-</div>
+    <div class="label"></div>
+    <div class="input-field">
+        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
+    </div>
 </div>
            
 
@@ -189,14 +189,14 @@ Notified this <input type="text" name="day" placeholder="day" size="1" required>
 
       <h3 style="text-align:left">Complainant/s</h3>
     <div style="text-align:left;" >
-        <input type="text" placeholder=" ">
+        <input type="text" placeholder=" " value="<?php echo $cNames; ?>">
         <br>
         <input type="text" placeholder=" ">
     </div>
 
     <h3 style="text-align:left">Respondent/s</h3>
     <div style="text-align:left;">
-        <input type="text" placeholder=" ">
+        <input type="text" placeholder=" " value="<?php echo $rspndtNames; ?>">
         <br>
         <input type="text" placeholder=" ">
     </div>

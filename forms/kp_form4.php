@@ -154,8 +154,6 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
     });
 </script>
 	<p style="text-align: justify; margin-left: 0;">ATTESTED:</p>
-	<canvas id="canvas1" width="190" height="80" style="float: left";></canvas>
-    <script src="signature.js"></script>
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
     <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
 	Barangay/Lupon Secretary

@@ -84,8 +84,8 @@ $RDate = $_SESSION['RDate'] ?? '';
 
                 <div class="e" style="text-align:right;">   <input  type="text" name="day" placeholder="araw" size="6" required>
                 
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -118,10 +118,10 @@ $RDate = $_SESSION['RDate'] ?? '';
 
 
             <form method="POST">
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Tinanggap ngayong ika-<input type="text" name="RDate" placeholder="araw" size="1" required value="<?php echo substr($RDate, -2); ?>">
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Tinanggap ngayong ika-<input type="text" name="day" placeholder="araw" size="1">
   araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>

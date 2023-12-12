@@ -100,9 +100,9 @@ PATAWAG
 (Mga) Ipinagsusumbong
 </h3>
 
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">Sa pamamagitan nito, kayo ay ipinatawag upang personal na humarap sa akin, kasama ang iyong mga testigo, sa ika- <input type="text" name="day" placeholder="araw" size="5" required>  araw ng 
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">Sa pamamagitan nito, kayo ay ipinatawag upang personal na humarap sa akin, kasama ang iyong mga testigo, sa ika- <input type="text" name="day" placeholder="araw" size="1" required>  araw ng 
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -118,9 +118,9 @@ PATAWAG
 
    <br>
 
-    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Ngayong ika- <input type="text" name="day" placeholder="araw" size="5" required> araw ng
-                <select name="month" required>
-                    <option value="">Select Month</option>
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Ngayong ika- <input type="text" name="day" placeholder="araw" size="1" required> araw ng
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -137,9 +137,9 @@ PATAWAG
 <h5 style= "text-align:left;">Pahina 2</h5>
   <h3 style="text-align: center;"> ULAT NG OPISYAL </h3>
 
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 	Inihatid ko ang patawag na ito sa ipinagsusumbong na si <input type="text" name="day" placeholder="araw" size="5" required> noong ika <input type="text" name="day" placeholder="araw" size="5" required>  araw ng 
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 	Inihatid ko ang patawag na ito sa ipinagsusumbong na si <input type="text" name="day" placeholder="pangalan" size="5" required> noong ika <input type="text" name="day" placeholder="araw" size="1" required>  araw ng 
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>

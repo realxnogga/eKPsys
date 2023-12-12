@@ -90,8 +90,8 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
         Ito ay nagpapatunay na ag usaping nakasaad sa itaas ay ipinagwalang-saysay alinsunod sa Kautusan may petsang    
 
     <input type="text" name="day" placeholder="araw" size="1" required>  of
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>

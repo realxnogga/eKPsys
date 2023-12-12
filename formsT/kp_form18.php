@@ -95,8 +95,8 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
   Sa pamamagitan nito;y inaatasan ka na humarap sa akin/Pangkat sa ika-
 
     <input type="text" name="day" placeholder="araw" size="1" required>araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -106,8 +106,8 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
              Sa ganap na ika-<input type="time" name="time" size="10" style="border:none">
     </script>ng umaga/hapon upang ipaliwanag kung bakit di ka humarap para sa pamamagitan/pag-aayos na nakatakda noong 
 <input type="text" name="day" placeholder="araw" size="1" required>araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -119,8 +119,8 @@ at bakit ang iyong sumbong ay di-dapat ipawalang-saysay, at kung bakit di-dapat 
 <br>
 <br>
     Ngayong ika- <input type="text" name="day" placeholder="araw" size="1" required>araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -143,8 +143,8 @@ at bakit ang iyong sumbong ay di-dapat ipawalang-saysay, at kung bakit di-dapat 
 <div>  
 
     Pinaabisuhan ngayong ika- <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
-                <select name="month" required>
-                    <option value="">Pumili ng buwan</option>
+                <select name="month" required style="width: 60px;">
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>

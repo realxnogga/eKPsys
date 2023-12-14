@@ -64,7 +64,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"></div>
                 <p>Complainant/s</p> 
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> You are hereby required to appear before me on the <input type="text" name="day" placeholder="day" size="6" required>  of
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> You are hereby required to appear before me on the <input type="text" name="day" placeholder="day" size="6" required> day  of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -89,10 +89,10 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
        <div style="position: relative;">
                     <br>
 
-    <canvas id="canvas" width="190" height="60"></canvas>
+  
   
 
-    <script src="signature.js"></script>
+    <br><br><br><br>
                     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="pngbrgy" name="pngbrgy" size="25">Punong Barangay/Lupon Chairman </p>
         </div>
        
@@ -112,9 +112,10 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                     </ul>
                 <?php endif; ?>
 
-    <div style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <p><br>Complainant/s <br> <input type="text" id="cmplnsts" name="cmplnsts" size="25" value="<?php echo $cNames; ?>"> <br>
-     </p>
+    <div style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><br>
+    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-left: auto;">_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: center;"></p><br><br><br><br>
+     
     </div>
             </div>
         </div>

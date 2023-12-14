@@ -237,8 +237,8 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
     <div style="position: relative;">
         <br>
         <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-            <!-- CName here but All Capital Letters -->
-            <input type="text" id="cmplnts" name="cmplnts" size="25" value="<?php echo $cNames; ?>" style="text-align: center;">Complainant/s</p>
+            <!-- CName here but All Capital Letters --><br><br><br><p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: center;">Complainant/s</p>
     </div>
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
         Received and filed this

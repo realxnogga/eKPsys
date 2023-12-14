@@ -85,7 +85,7 @@ SUMMONS
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> TO:<br><input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"> <br><input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"></p>
+        <p> TO:<br><input type="text" name="to" id="to" size="25" value="<?php echo $rspndtNames; ?>"> <input type="text" name="to" id="to" size="25"> <br><input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"></p>
 </div>
 </div>
 
@@ -129,7 +129,7 @@ Respondents
 
   <h3 style="text-align: center;"> OFFICER'S RETURN </h3>
 
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> I served this summons upon respondent <input type="text" name="day" placeholder="day" size="5" required>  of
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> I served this summons upon respondent <?php echo $rspndtNames; ?> on the  <input type="text" name="day" placeholder="day" size="5" required> day of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -137,7 +137,7 @@ Respondents
                     <?php endforeach; ?>
                 </select> ,
                 20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required> at <input type="time" id="time" name="time" size="5">, and upon respondent <input type="rspndnts" name="rspndnts" size="20"> on the day o <input type="text" name="day" placeholder="day" size="5" required>  of
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>, and upon respondent <input type="rspndnts" name="rspndnts" size="20"> on the day  <input type="text" name="day" placeholder="day" size="5" required>  of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -145,7 +145,7 @@ Respondents
                     <?php endforeach; ?>
                 </select> ,
                 20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required> at <input type="time" id="time" name="time" size="5">, by: <br>
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>  by: <br>
                 <p> (Write name/s of respondent/s before mode by which he/they was/were served.)</p>
 </div>
 
@@ -160,7 +160,7 @@ Respondents
 </div>
 
 <div class="e">
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Office</p>
+<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Officer</p>
 </div>
 
 <p>Received by Respondent/s representative/s:</p>

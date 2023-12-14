@@ -1,7 +1,8 @@
 <?php
 session_start();
 include_once("connection.php");
-include 'header.php';
+
+include 'functions.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: login.php");
@@ -17,12 +18,8 @@ include 'add_handler.php';
     <title>Add Complaint</title>
 </head>
 
-<body>
-  
-           
-
-                    <?php echo $successMessage; // Display success message here ?>
-
+<body>         <?php echo $successMessage; // Display success message here ?>
+<a href="user_complaints.php">Back</a>
     <form action="" method="post">
         <br>
         <h3>KP FORM 7</h3><br>

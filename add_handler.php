@@ -63,11 +63,24 @@ if (isset($_POST['submit'])) {
     $stmt->bindParam(':caseType', $caseType, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
-        // Complaint submitted successfully
+        // Get the ID of the last inserted complaint
+    $lastInsertedId = $conn->lastInsertId();
+
+    // Insert into case_progress table for the new complaint with default values
+    $stmtCaseProgress = $conn->prepare("INSERT INTO case_progress (complaint_id, current_hearing) VALUES (:complaintId, '0')");
+    $stmtCaseProgress->bindParam(':complaintId', $lastInsertedId, PDO::PARAM_INT);
+
+    if ($stmtCaseProgress->execute()) {
+        // Case progress updated successfully
         $successMessage = '<div class="alert alert-success" role="alert">
-                Complaint Submitted Successfully!
-              </div>';
-                  header("Location: user_complaints.php");
+            Complaint Submitted Successfully!
+        </div>';
+    } else {
+        // Failed to update case progress
+        $successMessage = '<div class="alert alert-danger" role="alert">
+            Failed to Update Case Progress. Contact Devs.
+        </div>';
+    }
 
     } else {
         // Failed to submit complaint

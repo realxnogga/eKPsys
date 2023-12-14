@@ -131,7 +131,7 @@ body, html {
         <div class="leftcolumn">
             <div class="card">
                 <div class="row">
-                <h3>Barangay Lupon</h3><br<br><hr>
+                <h3>Barangay Lupon</h3><br><br><hr>
                     <h2>...</h2>   
                     
 
@@ -212,7 +212,7 @@ body, html {
         <div class="rightcolumn">
             <div class="card">
 
-            <h3>KP Forms</h3><br<br><hr>
+            <h3>KP Forms</h3><br><br><hr>
                     <h2>1-6</h2>        
                     
                     <br>

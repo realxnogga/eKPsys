@@ -18,6 +18,8 @@ include 'report_handler.php';
 <html>
 <head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports</title>
     <link rel="stylesheet" type="text/css" href="style copy.css">
 </head>
@@ -110,220 +112,129 @@ body, html {
 }
 
 </style>
+
 <body>
 
 <div class="row">
-        <div class="leftcolumn">
-            <div class="card">
-                <div class="row">
-                <div class="container">
-
-        <form method="POST">
-            
-        <h2>Annual Report (<?php echo isset($selected_year) ? $selected_year : date('F, Y'); ?>)</h2>
-
-<!-- Dropdown to select year -->
-<label for="selected_year">Select Year to Display Report:</label>
-<select name="selected_year" id="selected_year">
-    <?php foreach ($years as $year) : ?>
-        <option value="<?php echo $year['year']; ?>"><?php echo $year['year']; ?></option>
-    <?php endforeach; ?>
-</select>
-    <input type="submit" name="submit_annual" value="Select Annual Report">
-
-<h2>Monthly Report (<?php echo isset($selected_month) ? $selected_month : date('F, Y'); ?>)</h2>
-
-<!-- Dropdown to select month -->
-<label for="selected_month">Select Month to Display Report:</label>
-<select name="selected_month" id="selected_month">
-    <?php foreach ($months as $month) : ?>
-        <option value="<?php echo $month['month_year']; ?>"><?php echo $month['month_year']; ?></option>
-    <?php endforeach; ?>
-</select>
-    <input type="submit" name="submit_monthly" value="Select Monthly Report">
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="mayor">MAYOR:</label>
-                        <input type="text" class="form-control" id="mayor" name="mayor" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_mayor; // Display the selected month's value
-        } else {echo $mayor;} ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="region">REGION:</label>
-                        <input type="text" class="form-control" id="region" name="region" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_region; // Display the selected month's value
-        } else {echo $region;} ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="budget">BUDGET ALLOCATED:</label>
-                        <input type="text" class="form-control" id="budget" name="budget" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_budget; // Display the selected month's value
-        } else {echo $budget;} ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="popul">POPULATION:</label>
-                        <input type="text" class="form-control" id="popul" name="population" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_population; // Display the selected month's value
-        } else {echo $population;} ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="landarea">LAND AREA:</label>
-                        <input type="text" class="form-control" id="landarea" name="landarea" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_landarea; // Display the selected month's value
-        } else {echo $landarea;} ?>" >
-                    </div>
-
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="totalc">TOTAL NO. OF CASES:</label>
-                        <input type="number" class="form-control" id="totalc" name="totalc" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_totalc; // Display the selected month's value
-        } else {echo $natureSum;} ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="numlup">NUMBER OF LUPONS:</label>
-                        <input type="number" class="form-control" id="numlup" name="numlup" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_numlup; // Display the selected month's value
-        } else {echo $numlup;} ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="male">MALE:</label>
-                        <input type="number" class="form-control" id="male" name="male" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_male; // Display the selected month's value
-        } else {echo $male;} ?>">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="female">FEMALE:</label>
-                        <input type="number" class="form-control" id="female" name="female" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_female; // Display the selected month's value
-        } else {echo $female;} ?>">
-                    </div>
- <div class="row">
-    <div class="col-md-6">
-        <b>Nature of Cases</b>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="criminal">Criminal:</label>
-                <input type="number" class="form-control" id="criminal" name="criminal" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_criminal; // Display the selected month's value
-        } else {echo $criminalCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="civil">Civil:</label>
-                <input type="number" class="form-control" id="civil" name="civil" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_civil; // Display the selected month's value
-        } else {echo $civilCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="others">Others:</label>
-                <input type="number" class="form-control" id="others" name="others" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_others; // Display the selected month's value
-        } else {echo $othersCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="totalNature">Total:</label>
-                <input type="number" class="form-control" id="totalNature" name="totalNature" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_totalNature; // Display the selected month's value
-        } else {echo $natureSum;} ?>">
-            </div>
-
-        </div>
-    </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-6">
-        <b>Action Taken - Settled</b>
-        <div class="row">   
-            <div class="col-md-4">
-                <label for="mediation">Mediation:</label>
-               <input type="number" class="form-control" id="mediation" name="mediation" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_mediation; // Display the selected month's value
-        } else {echo $mediationCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="conciliation">Conciliation:</label>
-                <input type="number" class="form-control" id="conciliation" name="conciliation" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_conciliation; // Display the selected month's value
-        } else {echo $conciliationCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="arbit">Arbitration:</label>
-                <input type="number" class="form-control" id="arbit" name="arbit" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_arbit; // Display the selected month's value
-        } else {echo $arbitrationCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="totalSet">Total:</label>
-                <input type="number" class="form-control" id="totalSet" name="totalSet" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_totalSet; // Display the selected month's value
-        } else {echo $totalSettledCount;} ?>">
-            </div>
-        <b>Outside the Jurisdiction of Barangay</b>
-            <div class="col-md-2">
-                <label for="outside"></label>
-                <input type="number" class="form-control" id="outside" name="outside" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_outside; // Display the selected month's value
-        } else {echo $totalOutsideCount;} ?>">
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6">
-        <b>Action Taken - Unsettled</b>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="pending">Pending:</label>
-                <input type="number" class="form-control" id="pending" name="pending" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_pending; // Display the selected month's value
-        } else {echo $pendingCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="dismissed">Dismissed:</label>
-                <input type="number" class="form-control" id="dismissed" name="dismissed" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_dismissed; // Display the selected month's value
-        } else {echo $dismissedCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="repudiated">Repudiated:</label>
-                <input type="number" class="form-control" id="repudiated" name="repudiated" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_repudiated; // Display the selected month's value
-        } else {echo $repudiatedCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="certified">Certified to Court:</label>
-                <input type="number" class="form-control" id="certified" name="certified" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_certified; // Display the selected month's value
-        } else {echo $certifiedCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="dropped">Dropped/Withdrawn:</label>
-                <input type="number" class="form-control" id="dropped" name="dropped" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_dropped; // Display the selected month's value
-        } else {echo $droppedCount;} ?>">
-            </div>
-            <div class="col-md-4">
-                <label for="totalUnset">Total:</label>
-                <input type="number" class="form-control" id="totalUnset" name="totalUnset" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
-            echo $s_totalUnset; // Display the selected month's value
-        } else {echo $totalUnsetCount;} ?>">
-            </div>
-                            <input type="submit" name="submit" value="Update">
-                        </div>
-        </form>
-        </div>
-  
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reportModal">
+    <div class="leftcolumn">
+        <div class="card">
+            <h3>Report Overview</h3>
+            <br>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reportModal">
   View Report
-</button>
+</button><br>
+            <table>
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td><b>MAYOR:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_mayor : $mayor; ?></td>
+                    <td><b>REGION:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_region : $region; ?></td>
+                </tr>
+                <tr>
+                    <td><b>BUDGET ALLOCATED:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_budget : $budget; ?></td>
+                    <td><b>POPULATION:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_population : $population; ?></td>
+                </tr>
+                <tr>
+                    <td><b>LAND AREA:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_landarea : $landarea; ?></td>
+                    <td><b>TOTAL NO. OF CASES:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_totalc : $natureSum; ?></td>
+                </tr>
+                <tr>
+                    <td><b>NUMBER OF LUPONS:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_numlup : $numlup; ?></td>
+                    <td><b>MALE:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_male : $male; ?></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <!-- Add similar rows for other fields -->
+                    <td><b>FEMALE:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_female : $female; ?></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><b>Criminal:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_criminal : $criminalCount; ?></td>
+                    <td><b>Civil:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_civil : $civilCount; ?></td>
+                </tr>
+                <tr>
+                    <td><b>Others:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_others : $othersCount; ?></td>
+                    <td><b>Total:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_totalNature : $natureSum; ?></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><b>Mediation:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_mediation : $mediationCount; ?></td>
+                    <td><b>Conciliation:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_conciliation : $conciliationCount; ?></td>
+                </tr>
+                <tr>
+                    <td><b>Arbitration:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_arbit : $arbitrationCount; ?></td>
+                    <td><b>Total:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_totalSet : $totalSettledCount; ?></td>
+                </tr>
+                <tr>
+                    <td><b>Outside the Jurisdiction:</b></td>
+                    <td colspan="3"><?php echo $selected_month && $selected_month !== date('F Y') ? $s_outside : $totalOutsideCount; ?></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><b>Pending:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_pending : $pendingCount; ?></td>
+                    <td><b>Dismissed:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_dismissed : $dismissedCount; ?></td>
+                </tr>
+                <tr>
+                    <td><b>Repudiated:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_repudiated : $repudiatedCount; ?></td>
+                    <td><b>Certified to Court:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_certified : $certifiedCount; ?></td>
+                </tr>
+                <tr>
+                    <td><b>Dropped/Withdrawn:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_dropped : $droppedCount; ?></td>
+                    <td><b>Total:</b></td>
+                    <td><?php echo $selected_month && $selected_month !== date('F Y') ? $s_totalUnset : $totalUnsetCount; ?></td>
+                </tr>
+                <!-- You can also add a loop for dynamic generation of rows if you have many fields -->
 
-<div class="modal fade" id="reportModal" name="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+            </table>
+            <br>
+            <form method="post" action="">
+                <!-- Your form elements here -->
+                <input type="submit" name="submit" value="Update">
+                
+            </form>
+            <div class="modal fade" id="reportModal" name="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered custom-modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -336,15 +247,10 @@ body, html {
     </div>
   </div>
 </div>
-
-
-
+            
+        </div>
+    </div>
 </div>
-</div>
-</div>
-
-
-
 
 </body>
 </html>

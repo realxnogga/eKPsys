@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             document.querySelector('input[name="settlementStatus"]:checked').checked = false;
         } else {
             // If outsideJurisdiction checkbox is unchecked, enable options
-            settledMethod.disabled = (settlementStatus !== "settled");
+            settledMethod.disabled = (settlementStatus !== "unsettled");
             unsettledMethod.disabled = (settlementStatus !== "unsettled");
         }
     }

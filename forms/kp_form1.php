@@ -1,6 +1,6 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
+$apptNames = $_SESSION['apptNames'] ?? [];
 ?>
 
 <!DOCTYPE html>
@@ -87,14 +87,14 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
     <div style="flex: 1; margin-left: 145px;">
         <?php for ($i = 1; $i <= 10; $i++): ?>
             <?php $nameKey = "name$i"; ?>
-            <p style="margin: 0;"><?php echo $i; ?>. <input type="text" name="appointed_lupon_<?php echo $i; ?>" value="<?php echo $linkedNames[$nameKey] ?? ''; ?>" style="width: 210px; margin-bottom: 5px;"></p>
+            <p style="margin: 0;"><?php echo $i; ?>. <input type="text" name="appointed_lupon_<?php echo $i; ?>" value="<?php echo $apptNames[$nameKey] ?? ''; ?>" style="width: 210px; margin-bottom: 5px;"></p>
         <?php endfor; ?>
     </div>
 
         <div style="flex: 1;">
         <?php for ($i = 11; $i <= 20; $i++): ?>
             <?php $nameKey = "name$i"; ?>
-            <p style="margin: 0;"><?php echo $i; ?>. <input type="text" name="appointed_lupon_<?php echo $i; ?>" value="<?php echo $linkedNames[$nameKey] ?? ''; ?>" style="width: 210px; margin-bottom: 5px;"></p>
+            <p style="margin: 0;"><?php echo $i; ?>. <input type="text" name="appointed_lupon_<?php echo $i; ?>" value="<?php echo $apptNames[$nameKey] ?? ''; ?>" style="width: 210px; margin-bottom: 5px;"></p>
         <?php endfor; ?>
     </div>
 </div>
@@ -111,7 +111,7 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
     }
 
     document.getElementById('open-kp-form1').addEventListener('click', function() {
-        openAndLoadForm('forms/kp_form1.php', '<?= strtoupper($linkedNames['punong_barangay'] ?? '') ?>', '<?= strtoupper($linkedNames['lupon_chairman'] ?? '') ?>');
+        openAndLoadForm('forms/kp_form1.php', '<?= strtoupper($apptNames['punong_barangay'] ?? '') ?>', '<?= strtoupper($apptNames['lupon_chairman'] ?? '') ?>');
     });
 
 				function resetFields() {
@@ -166,7 +166,7 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
     <canvas id="canvas" width="190" height="80"></canvas>
     <script src="signature.js"></script>
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
+    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?= strtoupper($apptNames['punong_barangay'] ?? 'Punong Barangay') ?>">
     Punong Barangay
 </p>
 

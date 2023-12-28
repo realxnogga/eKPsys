@@ -53,38 +53,46 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             ?>
 
 
-            <div class="form-group" style="text-align: right;">
-
 <div class="form-group" style="text-align: right;">
-    
-    <div class="input-field">
-        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
-    </div>
+
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
-    <br><p> — against —</p>
+<div class="label"></div>
+<div class="input-field">
+    <p> Complainants:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> — against —</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
-    </div>
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondents:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
 </div>
+</div>
+
 
 <h3 style="text-align: center;"><b>ARBITRATION AWARD</b></h3>
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">   After hearing the testimonies given and careful examination of the evidence presented in this case, award is hereby made as
 follows:             
     </div>
-    <div class="a"><br><input type="text" id="abtr" name="abtr" size="40" > <br><input type="text" id="abtr" name="abtr" size="40" ><br><input type="text" id="abtr" name="abtr" size="40" >
+    <div class="a">
+  <textarea id="name" name="name" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
+  <br>
+</div>
 </div>
 <br>
 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Made this <input type="text" name="day" placeholder="day" size="1" required>  day of
@@ -99,7 +107,7 @@ follows:
 </div>
 <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
-   <br> Punong Barangay/Pangkat Chairman *
+   <br> Punong Barangay/Pangkat Chairman 
 </p>
 
     <div class="a">

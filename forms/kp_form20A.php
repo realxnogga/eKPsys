@@ -53,28 +53,38 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             $currentYear = date('Y');
             ?>
 
-           
+<div class="form-group" style="text-align: right;">
 
-                <script>
-                    var yearInput = document.getElementById('year');
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
+</div>
 
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 38) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year + 1;
-                        }
-                    });
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p> Complainants:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> — against —</p>
+</div>
+</div>
 
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 40) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year - 1;
-                        }
-                    });
-                </script>
+<div>
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondents:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
+</div>
+</div>
+      
 
+             
                 <h3 style="text-align: center;"><b> CERTIFICATION TO FILE ACTION</b> </h3>
 
   <div style="text-align: left;">
@@ -82,13 +92,13 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             <!-- <p style="text-align: justify; text-indent: 1.5em;">1. There has been a personal confrontation between the parties before the Punong Barangay/Pangkat ng Tagapagkasundo; </p> -->
             <div class="form-group" style="text-align: justify;">
    <div class="checkbox"style="text-align: left;text-indent: 1.5em;">
-        <input type="checkbox" id="checkbox1" name="confrontationCheckbox">
+        
         <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;">
         1. There has been a personal confrontation between the parties before the Punong Barangay but mediation failed; </label>
     </p></div>
 </div>
  <div class="checkbox"style="text-align: left;text-indent: 1.5em;">
-        <input type="checkbox" id="checkbox1" name="confrontationCheckbox">
+        
         <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;">
         2. The Pangkat ng Tagapagkasundo was constituted but the personal confrontation before the Pangkat likewise did not
 result into a settlement; and </label>
@@ -122,20 +132,21 @@ result into a settlement; and </label>
             </ul>
         <?php endif; ?>
 
-    <div style="position: relative;">
-        <br>
-        <br>
-        <br>
-        <hr style="border-top: 1px solid black; width: 25%; margin-left: 580px;">
-        <p style="text-align: center; margin-left: 570px; margin-right: auto;">Pangkat Secretary</p>
-        <br>
+        <div style="position: relative;"><br>
+   
+
+   <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
+   <input type="text" id="luponSec"  name="luponSec" style="text-align: center;style="border: none; border-bottom: 1px solid black; outline: none; size="25">
+   Pangkat Secretary
+   </p>
+   <br>
+</div>
        ATTESTED:
 <br>
 <br>
-       <br>
-       <hr style="border-top: 1px solid black; width: 30%; margin-right: 580px;"> 
-        <p style="text-align: left; margin-right: 560px; margin-right: auto;">Pangkat Chairman</p>
-        <br>
+<p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 50px;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: left;">Lupon Chairman</label>
+</p>
                 </div>
          
            </div>
@@ -148,27 +159,6 @@ result into a settlement; and </label>
 </p>
 </div>
 <br>
-        <!-- New arrow buttons -->
-        <div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column;">
-        <!-- Button to go to the top of the form -->
-        <button class="btn btn-dark arrow-button" onclick="goToTop()">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        <!-- Button to go to the bottom of the form -->
-        <button class="btn btn-secondary arrow-button" onclick="goToBottom()">
-            <i class="fas fa-arrow-down"></i>
-        </button>
-        </div>
-        <script>
-        // Function to scroll to the top of the form
-        function goToTop() {
-            window.scrollTo(0, 0);
-        }
-        
-        // Function to scroll to the bottom of the form
-        function goToBottom() {
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-    </script>
+       
   </body>
 </html>

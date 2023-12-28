@@ -54,67 +54,48 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             ?>
 
 <div class="form-group" style="text-align: right;">
-    
-    <div class="input-field">
-        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
-    </div>
+
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
-    <br><p> — against —</p>
+<div class="label"></div>
+<div class="input-field">
+    <p> Complainants:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> — against —</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
-    </div>
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondents:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
 </div>
-           
-
-                <script>
-                    var yearInput = document.getElementById('year');
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 38) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year + 1;
-                        }
-                    });
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 40) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year - 1;
-                        }
-                    });
-                </script>
+</div>
 
                 <h3 style="text-align: center;"><b> NOTICE OF HEARING <br>
 (RE: FAILURE TO APPEAR)</b> </h3>
-   <div style="margin-left: 20px; text-align: left;">
-    <div>
-      To:
-      <br>
-     <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-   
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+    <div class="label"></div>
     <div class="input-field">
-      <input type="text" name="complainant" id="complainant" size="30"><br><input type="text" name="complainant" id="complainant" size="30"> 
-      <br>
-      <br>
-       <label style=" text-align: left; font-weight: normal;"> Complainants </label>
-  </div>
-                  
-  </div>
+        <p> &nbsp;&nbsp;&nbsp;TO:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $cNames; ?><br></p>
 </div>
+</div>
+
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complainant/s</p>                 
+                </div>
+
 </div>
     <div>
      <p style="text-indent: 2.8em; text-align: justify; ">
@@ -168,12 +149,11 @@ Tagapagkasundo.
 <div id="nameInput" style="display: none;">
   <input type="text" id="name" name="name" placeholder="Enter Name" oninput="updateOptionText(this.value)" onkeydown="checkEnterKey(event)">
 </div>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 555px; margin-right: auto;">
-    <input type="text" id="luponSec"  name="luponSec" style="text-align: center;style="border: none; border-bottom: 1px solid black; outline: none; size="25">
-    Punong Barangay/Pangkat Chairman    
-    </p>
+<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay/Pangkat Chairman</label>
+</p>
  
-
+                    </div></div>
 <div>  
 Notified this <input type="text" name="day" placeholder="day" size="1" required>  of
                 <select name="month" required>
@@ -187,21 +167,14 @@ Notified this <input type="text" name="day" placeholder="day" size="1" required>
               
     </div>
 
-      <h3 style="text-align:left">Complainant/s</h3>
-    <div style="text-align:left;" >
-        <input type="text" placeholder=" " value="<?php echo $cNames; ?>">
-        <br>
-        <input type="text" placeholder=" ">
-    </div>
-
-    <h3 style="text-align:left">Respondent/s</h3>
-    <div style="text-align:left;">
-        <input type="text" placeholder=" " value="<?php echo $rspndtNames; ?>">
-        <br>
-        <input type="text" placeholder=" ">
-    </div>
- <br>
-  </div>      
+    <div class="d">
+    <div style="text-align: left; font-size: 12px; margin-left: 50px;"><br>
+    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+    <p>Respondent/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $rspndtNames; ?> <br>_____________________
+            <id="rspndt" name="rspndt" size="25"  style="text-align: left;"></p><br><br>
+  </div>
  </div>
 </p>
                 </div>

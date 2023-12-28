@@ -52,30 +52,21 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             $currentYear = date('Y');
             ?>
 
-            <script>
-                function downloadPDF() {
-                    removePlaceholdersForPrinting();
-                }
-
-                function saveChanges() {
-
-                    alert("Changes have been saved!");
-                }
-            </script>
+         
 
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> TO: <br><input type="text" name="to" id="to" size="25" value="<?php echo $cNames; ?>" > <input type="text" name="to" id="to" size="25"value="<?php echo $rspndtNames; ?>"> <br> <input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"> </p>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complainant/s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Respondent/s</p>
+        <p> TO: <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $cNames; ?>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $rspndtNames; ?> <br> </p>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complainant/s&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Respondent/s</p>
 </div>
 </div>
 
                 <div style="text-align: center; text-indent: 0em; margin-left: 20.5px;">
                 <p><b>NOTICE OF HEARING<br> (CONCILIATION PROCEEDINGS)</b></p> 
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> You are hereby required to appear before me on the <input type="text" name="day" placeholder="day" size="6" required>  of
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> You are hereby required to appear before me on the <input type="text" name="day" placeholder="day" size="2" required>  of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -89,7 +80,7 @@ hearing of the above-entitled case.
                </div> 
                <br>
             <form method="POST">
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> This <input type="text" name="day" placeholder="day" size="6" required>  of
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> This <input type="text" name="day" placeholder="day" size="2" required>  of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -101,12 +92,11 @@ hearing of the above-entitled case.
                 </div>
        <div style="position: relative;">
                     <br>
-<div class="e">
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25"value ="<?php echo $punong_barangay; ?>"> <br> Pangkat Chairman</p>
-  </div>
+                    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Pangkat Chairman</label>
 
        
-        <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Notified this <input type="text" name="day" placeholder="day" size="6" required>  of
+        <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Notified this <input type="text" name="day" placeholder="day" size="2" required>  of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -128,10 +118,12 @@ hearing of the above-entitled case.
                 <?php endif; ?>
 
     <div class="d">
-  <p><br>Complainant/s <br> <input type="text" id="cmplnsts" name="cmplnsts" size="30" > <br>
-  <input type="text" id="cmplnsts1" name="cmplnsts1" size="30"> </p>
-  <p><br>Respondent/s <br> <input type="text" id="cmplnsts" name="cmplnsts" size="30" > <br>
-  <input type="text" id="cmplnsts1" name="cmplnsts1" size="30"> </p>
+    <div style="text-align: left; font-size: 12px; margin-left: 100px;"><br>
+    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+    <p>Respondent/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $rspndtNames; ?> <br>_____________________
+            <id="rspndt" name="rspndt" size="25"  style="text-align: left;"></p><br><br><br><br>
   </div>
             </div>
         </div>

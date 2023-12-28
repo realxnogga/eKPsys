@@ -52,38 +52,22 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             $currentYear = date('Y');
             ?>
 
-<div class="form-group" style="text-align: right;">
 
-    <div class="input-field">
-        Barangay Case No.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
-    </div>
-</div>
-
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
-    <br><p> — against —</p>
-</div>
-</div>
-
-<div>
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
-    </div>
-</div>
-
+<br><br><br>
 <h3 style="text-align: center;"> 
 NOTICE FOR CONSTITUTION OF PANGKAT
 </h3>
-
+<br>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> TO: Complainant/s & Respondent/s <br><input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"> <br><input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"></p>
+        <p> TO:  <br><?php echo $cNames; ?>
+<input type="text" name="to" id="to" size="25" style="border: none; margin-left: 10px;">
+<?php echo $rspndtNames; ?><br>
+Complainant
+<input type="text" name="to" id="to" size="35" style="border: none; margin-left: 20px;">
+Respondent
+
 </div>
 </div>
 
@@ -111,12 +95,16 @@ drawing lots.
                 20
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.              
 </div> 
+<br><br><br>
+
+<p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 0; margin-right: auto;">
+    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?php echo $punong_barangay;?>">
+    <br>
+    <span style="margin-left: 50px;">Punong Barangay</span>
+</p>
 
 
-<div class="e">
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Punong Barangay</p>
-  </div>
-
+<br><br><br>
   <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Notified this <input type="text" name="day" placeholder="day" size="5" required> day of
                 <select name="month" required>
                     <option value="">Select Month</option>
@@ -131,8 +119,12 @@ drawing lots.
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> TO: Complainant/s & Respondent/s <br><input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"> <br><input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"></p>
-</div>
+        <p> <br><?php echo $cNames; ?>
+<input type="text" name="to" id="to" size="25" style="border: none; margin-left: 10px;">
+<?php echo $rspndtNames; ?><br>
+Complainant
+<input type="text" name="to" id="to" size="35" style="border: none; margin-left: 20px;">
+Respondent
 
 </div>
 

@@ -52,41 +52,36 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             $currentYear = date('Y');
             ?>
 
-            <script>
-                function downloadPDF() {
-                    removePlaceholdersForPrinting();
-                }
-
-                function saveChanges() {
-
-                    alert("Changes have been saved!");
-                }
-            </script>
-
 <div class="form-group" style="text-align: right;">
-    
-    <div class="input-field">
-        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
-    </div>
+
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
-    <br><p> — against —</p>
+<div class="label"></div>
+<div class="input-field">
+    <p> Complainants:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> — against —</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
-    </div>
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondents:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
 </div>
-  
+</div>
+
 <h3 style="text-align: center;"><b>REPUDIATION</b></h3>
 
 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">I/WE hereby repudiate the settlement/agreement for arbitration on the ground that my/our consent was vitiated by: <br>
@@ -94,9 +89,18 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
     </div>
     <br>
 
-    <div  style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> [ ] Fraud. (State details) <input type="type" name="frd" id="frd" style="text-align: left;" size="50"> <br> <input type="type" name="frd" id="frd" style="text-align: left;" size="60"> <br><input type="type" name="frd" id="frd" style="text-align: left;" size="60"> </div> <br>
-    <div  style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> [ ] Violence. (State details) <input type="type" name="frd" id="frd " tyle="text-align: left;" size="50"> <br> <input type="type" name="vlcne" id="vlcne" style="text-align: left;" size="60"> <br><input type="type" name="frd" id="frd" style="text-align: left;" size="60"> </div> <br>
-    <div  style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> [ ] Intimidation. (State details) <input type="type" name="frd" id="frd" style="text-align: left;" size="50"> <br> <input type="type" name="intmdtn" id="intmdtn" style="text-align: left;" size="60"> <br><input type="type" name="frd" id="frd" style="text-align: left;" size="60"> </div> <br>
+    [ ] Fraud. (State details)  <div class="a">
+  <textarea id="name" name="name" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
+  <br>
+</div> 
+   [ ] Violence. (State details)  <div class="a">
+  <textarea id="name" name="name" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
+  <br>
+</div>
+     [ ] Intimidation. (State details) <div class="a">
+  <textarea id="name" name="name" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
+  <br>
+</div> <br>
 
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> This <input type="text" name="day" placeholder="day" size="1" required> day of
@@ -110,13 +114,14 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.              
 </div> 
 
-<div class="a">
-  <p><br>Complainant/s <br> <input type="text" id="cmplnsts" name="cmplnsts" size="30" > <br>
-  <input type="text" id="cmplnsts1" name="cmplnsts1" size="30"> </p>
-  <p><br>Respondent/s <br> <input type="text" id="cmplnsts" name="cmplnsts" size="30" > <br>
-  <input type="text" id="cmplnsts1" name="cmplnsts1" size="30"> </p>
-                    </div>
-
+<div class="d">
+    <div style="text-align: right; font-size: 12px; margin-right: 50px;"><br>
+    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: right; font-size: 12px; margin-right: 570px; margin-right: auto;"><?php echo $cNames; ?> <br>_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: right;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+    <p>Respondent/s <br> <br><br><p class="important-warning-text" style="text-align: right; font-size: 12px; margin-right: 570px; margin-right: auto;"><?php echo $rspndtNames; ?> <br>_____________________
+            <id="rspndt" name="rspndt" size="25"  style="text-align: right;"></p><br>
+  </div>
 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> SUBSCRIBED AND SWORN TO before me this <input type="text" name="day" placeholder="day" size="1" required> day of
                 <select name="month" required>
                     <option value="">Select Month</option>
@@ -127,9 +132,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 20
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.              
 </div><br>
-<div class="z">
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Punong Barangay/Pangkat Chairman </p> 
-</div>
+<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay/Pangkat Chairman</label>
+</p>
 
 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Received and filed * this <input type="text" name="day" placeholder="day" size="1" required> day of
                 <select name="month" required>
@@ -142,13 +147,10 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.              
 </div><br>
 
-<canvas id="canvas1" width="190" height="60"></canvas>
-      
-        <script src="signature.js"></script>
-<div class="z">
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Punong Barangay</p> 
-</div>
 
+        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay</label>
+</p>
   <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">* Failure to repudiate the settlement or the arbitration agreement within the time limits respectively set (ten [10] days from the date of settlement and five[5] days from the date of arbitration agreement) shall be deemed a waiver of the right to challenge on
 said grounds.
     </div>       

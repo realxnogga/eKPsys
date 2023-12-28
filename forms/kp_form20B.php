@@ -1,6 +1,18 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
+
+$day = $_SESSION['day'] ?? '';
+$month = $_SESSION['month'] ?? '';
+$year = $_SESSION['year'] ?? '';
+
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+
 ?>
 
 <!DOCTYPE html>
@@ -41,27 +53,38 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
             $currentYear = date('Y');
             ?>
 
-          
+<div class="form-group" style="text-align: right;">
 
-                <script>
-                    var yearInput = document.getElementById('year');
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
+</div>
 
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 38) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year + 1;
-                        }
-                    });
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p> Complainants:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> — against —</p>
+</div>
+</div>
 
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 40) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year - 1;
-                        }
-                    });
-                </script>
+<div>
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondents:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
+</div>
+</div>
+
+
+              
 
                 <h3 style="text-align: center;"><b>CERTIFICATION TO FILE ACTION </b></h3>
         <div style="text-align: left;">
@@ -69,7 +92,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
             <!-- <p style="text-align: justify; text-indent: 1.5em;">1. There has been a personal confrontation between the parties before the Punong Barangay/Pangkat ng Tagapagkasundo; </p> -->
                     <div class="form" style="text-align: left;">
     <div class="checkbox" style="text-align: left;text-indent: 1.5em;">
-        <input type="checkbox" id="checkbox1" name="confrontationCheckbox">
+        
         <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;">
      1. There was a personal confrontation between the parties before the Punong Barangay but mediation failed;
 
@@ -77,7 +100,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 </div>
             <div class="form" style="text-align: left;">
     <div class="checkbox" style="text-align: left;text-indent: 1.5em;">
-        <input type="checkbox" id="checkbox1" name="confrontationCheckbox">
+        
         <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;">
         2. The Punong Barangay set the meeting of the parties for the constitution of the Pangkat;
 
@@ -85,7 +108,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 </div>
                     <div class="form" style="text-align: left;">
     <div class="checkbox" style="text-align: left;text-indent: 1.5em;">
-        <input type="checkbox" id="checkbox1" name="confrontationCheckbox">
+        
         <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;">3. The respondent willfully failed or refused to appear without justifiable reason at the conciliation proceedings before the
 Pangkat; and
 </p>
@@ -118,17 +141,7 @@ Pangkat; and
         <?php endif; ?>
 
     <div style="position: relative;"><br>
-    <style>
-        #canvas {
-            border: 1px solid lightgray;
-            float: right;
-        }
-        #canvas1{
-           border: 1px solid lightgray;
-            float: left;  
-        }
-    </style>
-  <canvas id="canvas" width="190" height="80"></canvas>
+   
 
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="luponSec"  name="luponSec" style="text-align: center;style="border: none; border-bottom: 1px solid black; outline: none; size="25">
@@ -140,15 +153,11 @@ Pangkat; and
 <br>
     <p style="text-align: justify; margin-top: 0;">
         ATTESTED:</p>
-    <br>
-    <br>
-    <div style="position: relative; text-align: left;"><br>
-  
-  <canvas id="canvas1" width="190" height="80"></canvas>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
-    <input type="text" id="luponChair" name="luponChair" style="text-align: center;style="border: none; border-bottom: 1px solid black; outline: none;size="25">
-    Pangkat Chairman
-    </p>
+  <div>
+        <p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 50px;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: left;">Lupon Chairman</label>
+</p>
+                </div>
 <br>
    <br>
 <br>
@@ -160,116 +169,7 @@ Pangkat; and
             </div>
         </div><br>
        
-    </div>
-<br><!-- New arrow buttons -->
-        <div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column;">
-        <!-- Button to go to the top of the form -->
-        <button class="btn btn-dark arrow-button" onclick="goToTop()">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        <!-- Button to go to the bottom of the form -->
-        <button class="btn btn-secondary arrow-button" onclick="goToBottom()">
-            <i class="fas fa-arrow-down"></i>
-        </button>
-        </div>
-        <script>
-        // Function to scroll to the top of the form
-        function goToTop() {
-            window.scrollTo(0, 0);
-        }
-        
-        // Function to scroll to the bottom of the form
-        function goToBottom() {
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-    </script>
+  
 
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get the canvas elements and buttons
-        var canvas = document.getElementById("canvas");
-        var canvas1 = document.getElementById("canvas1");
-        var clearBtn = document.getElementById("clearBtn");
-        var saveBtn = document.getElementById("saveBtn");
-        var ctx = canvas.getContext("2d");
-        var ctx1 = canvas1.getContext("2d");
-
-        // Set initial drawing states
-        var isDrawing = false;
-        var isDrawing1 = false;
-
-        // Set drawing styles
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "#000";
-        ctx1.lineWidth = 2;
-        ctx1.strokeStyle = "#000";
-
-        // Function to start drawing
-        function startDrawing(e) {
-            if (e.target === canvas) {
-                isDrawing = true;
-                ctx.beginPath();
-                ctx.moveTo(e.offsetX, e.offsetY);
-            } else if (e.target === canvas1) {
-                isDrawing1 = true;
-                ctx1.beginPath();
-                ctx1.moveTo(e.offsetX, e.offsetY);
-            }
-        }
-
-        // Function to draw
-        function draw(e) {
-            if (isDrawing) {
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.stroke();
-            } else if (isDrawing1) {
-                ctx1.lineTo(e.offsetX, e.offsetY);
-                ctx1.stroke();
-            }
-        }
-
-        // Function to stop drawing
-        function stopDrawing() {
-            isDrawing = false;
-            isDrawing1 = false;
-        }
-
-        // Function to clear the canvases
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
-        }
-
-        // Function to save the signatures as images
-        function saveSignature(canvas, fileName) {
-            var imgData = canvas.toDataURL();
-            var link = document.createElement("a");
-            link.href = imgData;
-            link.download = fileName;
-            link.click();
-        }
-
-        // Event listeners for both canvases
-        canvas.addEventListener("mousedown", startDrawing);
-        canvas1.addEventListener("mousedown", startDrawing);
-
-        canvas.addEventListener("mousemove", draw);
-        canvas1.addEventListener("mousemove", draw);
-
-        canvas.addEventListener("mouseup", stopDrawing);
-        canvas1.addEventListener("mouseup", stopDrawing);
-
-        canvas.addEventListener("mouseout", stopDrawing);
-        canvas1.addEventListener("mouseout", stopDrawing);
-
-        // Event listeners for buttons
-        clearBtn.addEventListener("click", clearCanvas);
-
-        saveBtn.addEventListener("click", function() {
-            saveSignature(canvas, "signature.png");
-            saveSignature(canvas1, "signature1.png");
-        });
-    });
-</script>
   </body>
 </html>

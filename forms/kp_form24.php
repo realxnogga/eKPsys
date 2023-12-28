@@ -51,9 +51,36 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             $currentYear = date('Y');
             ?>
 
-            <div class="form-group" style="text-align: right;">
+<div class="form-group" style="text-align: right;">
 
-    <div class="input-field">
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
+</div>
+
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p> Complainants:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> — against —</p>
+</div>
+</div>
+
+<div>
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondents:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
+</div>
+</div>
+
 
                 <h3 style="text-align: center;"><b> NOTICE OF HEARING<br>
                 (RE: MOTION FOR EXECUTION) </b> </h3>
@@ -64,25 +91,18 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
   <div style="margin-left: 20px; text-align: left;">
     <div>
-      TO: 
-      <br>
-      <div class="form-group" style="text-align: left;"></div>
-    </div>
     <div class="label"></div>
     <div class="input-field">
-    <p><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
-    </div>
-  </div>
+        <p> TO:  <br><?php echo $cNames; ?>
+<input type="text" name="to" id="to" size="25" style="border: none; margin-left: 10px;">
+<?php echo $rspndtNames; ?><br>
+Complainant
+<input type="text" name="to" id="to" size="35" style="border: none; margin-left: 20px;">
+Respondent
 
-  <div style="margin-left: 20px;">
-    <div>
+</div>
+</div>
     
-      <br>
-      <div class="form-group" style="text-align: left;"></div>
-    </div>
-    <div class="label"></div>
-    <div class="input-field">
-    <p><input type="text" name="complainant" id="complainant" size="30"> </p>
     </div>
   </div>
 </div>
@@ -138,11 +158,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
         <br>
         <br>
         <br>
-        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
-   <br> Punong Barangay/Lupon Chairman
+        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay/Lupon Chairman</label>
 </p>
-
 
 <br>
 <div style="text-align: left; text-indent: 0em; ">
@@ -160,7 +178,14 @@ Notified this <input type="text" name="day" placeholder="day" size="1" required>
             </p>
 
 </div>
-
+<div class="d">
+    <div style="text-align: left; font-size: 12px; margin-left: 50px;"><br>
+    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+    <p>Respondent/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $rspndtNames; ?> <br>_____________________
+            <id="rspndt" name="rspndt" size="25"  style="text-align: left;"></p><br><br>
+  </div>
 
   </body>
 </html>

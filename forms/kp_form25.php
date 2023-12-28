@@ -58,29 +58,37 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <form method="post" action="<?php ($_SERVER["PHP_SELF"]);?>"> 
 
 
+
 <div class="form-group" style="text-align: right;">
-    
-    <div class="input-field">
-        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
-    </div>
+
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
-    <br><p> — against —</p>
+<div class="label"></div>
+<div class="input-field">
+    <p> Complainants:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> — against —</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
-    </div>
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondents:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
 </div>
+</div>
+
 
                 <h3 style="text-align: center;"><b> NOTICE OF EXECUTION</b><br>
 
@@ -109,7 +117,10 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 arbitration award was rendered by the Punong Barangay/Pangkat ng Tagapagkasundo];
 
                 <br> <p style="text-indent: 2.0em; text-align: justify;"> WHEREAS, the terms and conditions of the settlement, the dispositive portion of the award. read:
-<br><input type="text" name="sumusunod1" id="sumusunod1" size="50"><br><input type="text" name="sumusunod" id="sumusunod" size="50"><br><input type="text" name="sumusunod2" id="sumusunod2" size="50"><br><input type="text" name="sumusunod3" id="sumusunod3" size="50">
+<br> <div class="a">
+  <textarea id="name" name="name" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
+  <br>
+</div>
 
  <p style="text-indent: 2.0em; text-align: justify;">
  The said settlement/award is now final and executory; <br>
@@ -173,9 +184,8 @@ adjudged.
         <br>
         <br>
         <br>
-     <<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
-    <br>Punong Barangay
+        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay</label>
 </p>
         <br>
       
@@ -183,24 +193,14 @@ adjudged.
  <p style="text-indent: 2.0em; text-align: justify;">
  Copy finished: </p>
   <br>
- 
-
-  <div style="display: flex; justify-content: center;">
-  <div style="margin-right: 50px; flex: 1;">
-  
-      <br>
-     <input type="text" name="complainant" id="complainant" size="50" value="<?php echo $cNames; ?>">
-    <p style="text-align: center;">Complainant/s</p>
+  <div class="d">
+    <div style="text-align: left; font-size: 12px; margin-left: 100px;"><br>
+    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+    <p>Respondent/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $rspndtNames; ?> <br>_____________________
+            <id="rspndt" name="rspndt" size="25"  style="text-align: left;"></p><br><br><br><br>
   </div>
-  <div style="margin-left: 50px; flex: 1;">
-    
-    <br>   
-     <input type="text" name="complainant" id="complainant" size="50"value="<?php echo $rspndtNames; ?>">
-    <p style="text-align: center;">Respondent/s
-</p>
-    <br>
-  </div>  
-<br>
 
   </body>
 </html>

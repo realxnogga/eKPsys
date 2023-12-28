@@ -58,12 +58,12 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> TO:<br><input type="text" name="to" id="to" value="<?php echo $cNames; ?>" size="30"><br></p>
+        <p> &nbsp;&nbsp;&nbsp;TO:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $cNames; ?><br></p>
 </div>
 </div>
 
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"></div>
-                <p>Complainant/s</p> 
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complainant/s</p> 
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> You are hereby required to appear before me on the <input type="text" name="day" placeholder="day" size="6" required> day  of
                 <select name="month" required>
                     <option value="">Select Month</option>
@@ -93,7 +93,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
   
 
     <br><br><br><br>
-                    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="pngbrgy" name="pngbrgy" size="25">Punong Barangay/Lupon Chairman </p>
+    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay/Lupon Chairman</label>
+</p>
         </div>
        
         <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Notified this <input type="text" name="day" placeholder="day" size="3" value="<?php echo $day; ?>">  of
@@ -113,7 +115,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 <?php endif; ?>
 
     <div style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><br>
-    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-left: auto;">_____________________
+    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
             <id="cmplnts" name="cmplnts" size="25"  style="text-align: center;"></p><br><br><br><br>
      
     </div>

@@ -54,18 +54,21 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             $currentYear = date('Y');
             ?>
 
-<div class="form-group" style="text-align: right;">
+<div class="form-group" style="text-align: right;"><br>
     
     <div class="input-field">
-        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+                <!-- ForTitle here -->
+                 <?php echo $forTitle; ?> <br> 
+        </div>
     </div>
-</div>
 
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
+    <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+        <div class="label"></div>
+        <div class="input-field">
+            <p> Complainants:
+                <!-- CNames here -->
+                <br><?php echo $cNames; ?><br> </p>
     <br><p> — against —</p>
 </div>
 </div>
@@ -74,7 +77,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
+        <p> Respondents:<br><?php echo $rspndtNames; ?></p>
     </div>
 </div>
 
@@ -85,7 +88,7 @@ SUMMONS
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> TO:<br><input type="text" name="to" id="to" size="25" value="<?php echo $rspndtNames; ?>"> <input type="text" name="to" id="to" size="25"> <br><input type="text" name="to" id="to" size="25"> <input type="text" name="to" id="to" size="25"></p>
+        <p> TO: <?php echo $rspndtNames; ?> </p>
 </div>
 </div>
 
@@ -137,7 +140,7 @@ Respondents
                     <?php endforeach; ?>
                 </select> ,
                 20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>, and upon respondent <input type="rspndnts" name="rspndnts" size="20"> on the day  <input type="text" name="day" placeholder="day" size="5" required>  of
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>, and upon respondent <?php echo $rspndtNames; ?> on the day  <input type="text" name="day" placeholder="day" size="5" required>  of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>
@@ -153,9 +156,9 @@ Respondents
     <p style="text-indent: 0em; margin-left: 18px;"> <input type="text" id="smmons" name="smmons" size="15">
     1. handing to him/them said summons in person, or <br> <input type="text" id="smmons" name="smmons" size="15">
     2. handing to him/them said summons and he/they refused to receive it, or <br> <input type="text" id="smmons" name="smmons" size="15">
-    3. leaving said summons at his/their dwelling with <input type="text" id="name" name="name" size="10"> (name) a person of suitable age and discretion residing therein, or <br> 
+    3. leaving said summons at his/their dwelling with <input type="text" id="name" name="name" size="15"> (name) a person of suitable age and discretion residing therein, or <br> 
     <input type="text" id="smmons" name="smmons" size="15">
-    4. leaving said summons at his/their office/place of business with <input type="text" id="name1" name="name1" size="10">, ( name) a competent person in charge thereof.
+    4. leaving said summons at his/their office/place of business with <input type="text" id="name1" name="name1" size="15">, ( name) a competent person in charge thereof.
     </p>
 </div>
 

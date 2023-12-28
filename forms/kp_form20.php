@@ -52,50 +52,36 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             ?>
 
          
-                <script>
-                    var yearInput = document.getElementById('year');
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 38) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year + 1;
-                        }
-                    });
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 40) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year - 1;
-                        }
-                    });
-                </script>
-
+             
 <div class="form-group" style="text-align: right;">
-    
-    <div class="input-field">
-        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
-    </div>
+
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
-    <br><p> — against —</p>
+<div class="label"></div>
+<div class="input-field">
+    <p> Complainants:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> — against —</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
-    </div>
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondents:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
 </div>
-
+</div>
                 <h3 style="text-align: center;"><b> CERTIFICATION TO FILE ACTION</b> </h3>
 
 <div style="text-align: left;">
@@ -103,14 +89,14 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
           
             <div class="form" style="text-align: left;">
     <div class="checkbox" style="text-align: left;text-indent: 1.5em;">
-        <input type="checkbox" id="checkbox1" name="confrontationCheckbox">
+       
         <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;"> 1. There has been a personal confrontation between the parties before the Punong Barangay/Pangkat ng Tagapagkasundo;</label>
     </div>
 
 </div>
  <div class="form" style="text-align: left;">
     <div class="checkbox"style="text-align: left;text-indent: 1.5em;">
-        <input type="checkbox" id="checkbox1" name="confrontationCheckbox">
+       
         <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;">  2. A settlement was reached; </label>
     </div>
 <p style="text-align: justify; text-indent: 0em; margin-left: 38.5px;"> 3. The settlement has been repudiated in a statement sworn to before the Punong Barangay by <input type="text" name="name" id="name" placeholder=" "required> on ground of <input type="text" name="name" id="name" placeholder=" "required>; and </p>
@@ -139,12 +125,11 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 </div>
 </p>
 <br>
-    <p style="text-align: justify; margin-top: 0;">
+    <p style="text-align: left; margin-top: 0;">
         Attested:</p>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
-    <input type="text" id="luponChair" name="luponChair" style="text-align: center; style="border: none; border-bottom: 1px solid black; outline: none; size="25">
-    Lupon Chairman
-    </p>
+    <p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 50px;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: left;">Lupon Chairman</label>
+</p>
 <br>
    <br>
 <br>

@@ -183,12 +183,11 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
   
     <div class="form-group" style="text-align: right;">
 
-        <div class="input-field"> 
+        <div class="input-field"> <br>
             <!-- case num here -->
-            Barangay Case No.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" placeholder="Case No. - Blotter No. - MMYY" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>For: 
+            <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
                 <!-- ForTitle here -->
-                 <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle; ?>"> <br> 
+                 <?php echo $forTitle; ?> <br> 
         </div>
     </div>
 
@@ -197,7 +196,7 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
         <div class="input-field">
             <p> Complainants:
                 <!-- CNames here -->
-                <br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br> </p>
+                <br><?php echo $cNames; ?><br> </p>
         <br><p> — against —</p>
     </div>
     </div>
@@ -208,7 +207,7 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
         <div class="input-field">
             <p> Respondents:<br>
                 <!-- RspndtNames here -->
-                <input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br> </p>
+               <?php echo $rspndtNames; ?><br> </p>
         </div>
     </div>
 
@@ -217,9 +216,17 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
                     <h3 style="text-align: center;"><b>COMPLAINT</b></h3>
 
                     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 
-                    <p>I/WE hereby complain against above named respondent/s for violating my/our rights and interests in the following manner: <input type="text" id="complain" name="complain" style="text-align: left;" size="110" value="<?php echo $cDesc; ?>"></p>
-                    <p>THEREFORE, I/WE pray that the following relief/s be granted to me/us in accordance with law and/or equity: <input type="text" id="petition" name="petition" style="text-align: left;" size="110" value="<?php echo $petition; ?>"></p>
-                    </div>
+                    <p>I/WE hereby complain against above named respondent/s for violating my/our rights and interests in the following manner: 
+                        <div class="a">
+  <textarea id="name" name="name" style="width: 700px; box-sizing: border-box; overflow-y: hidden;"><?php echo $cDesc; ?></textarea>
+  <br>
+</div>
+
+                </p>
+                    <p>THEREFORE, I/WE pray that the following relief/s be granted to me/us in accordance with law and/or equity: <div class="a">
+  <textarea id="name" name="name" style="width: 700px; box-sizing: border-box; overflow-y: hidden;"><?php echo $petition; ?></textarea>
+  <br>
+</div>
 
 <form id="formId" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
@@ -236,9 +243,13 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
     </div>
     <div style="position: relative;">
         <br>
-        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-            <!-- CName here but All Capital Letters --><br><br><br><p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">_____________________
-            <id="cmplnts" name="cmplnts" size="25"  style="text-align: center;">Complainant/s</p>
+        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;" >
+            <!-- CName here but All Capital Letters --><br><br><br><p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
+    <?php echo $cNames; ?><br>
+     _________________
+    <label id="cmplnts" name="cmplnts" size="25" style="text-align: center;">Complainant/s</label>
+</p>
+
     </div>
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
         Received and filed this
@@ -259,8 +270,9 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
 </form>
 <br>
 <br>
-                    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">_____________________<input type="text" id="pngbrgy" name="pngbrgy" size="25" value="<?php echo $punong_barangay; ?>" style="text-align: center;">
-                    Punong Barangay</p>
+                    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay</label>
+</p>
                 </div>
             </div>
         </div> <br>

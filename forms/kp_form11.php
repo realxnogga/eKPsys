@@ -63,18 +63,20 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 }
             </script>
 
-<div class="form-group" style="text-align: right;">
-    
-    <div class="input-field">
-        Barangay Case No.<<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>For: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>">
-    </div>
-</div>
+<div class="form-group" style="text-align: right;"> <br>
 
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Complainants:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
+<div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+                <!-- ForTitle here -->
+                 <?php echo $forTitle; ?> <br> 
+        </div>
+    </div>
+
+    <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+        <div class="label"></div>
+        <div class="input-field">
+            <p> Complainants:
+                <!-- CNames here -->
+                <br><?php echo $cNames; ?><br> </p>
     <br><p> — against —</p>
 </div>
 </div>
@@ -83,24 +85,25 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> Respondents:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"></p>
+        <p> Respondents:<br><?php echo $rspndtNames; ?></p>
     </div>
 </div>
-
    
 
                 <h3 style="text-align: center;"><b>NOTICE TO CHOSEN PANGKAT MEMBER</b></h3>
-                <div class="e">   <input type="text" name="day" placeholder="Day" size="6" required>  of
-                
-                <select name="month" required>
-                    <option value="">Select Month</option>
-                    <?php foreach ($months as $month): ?>
-                        <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
-                    <?php endforeach; ?>
-                </select>,
-                20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>. 
-            </div>
+
+               <div class="e" style="text-align: right;">
+    <input type="text" name="day" placeholder="Day" size="2" required> of
+    <select name="month" required>
+        <option value="">Select Month</option>
+        <?php foreach ($months as $month): ?>
+            <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
+        <?php endforeach; ?>
+    </select>,
+    20
+    <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.
+</div>
+
 
             <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
                 <div class="label"></div>
@@ -113,20 +116,17 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 
                 <p>Notice is hereby given that you have been chosen member of the Pangkat ng Tagapagkasundo amicably conciliate the dispute between the par in the above-entitled case. </p>
                 </div>
+                <br><br>
 
 
-
-        <canvas id="canvas" width="190" height="60"></canvas>
-      
-        <script src="signature.js"></script>
-<div class="e">
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Punong Barangay/Lupon Secretary</p>
-  </div>
+    
+                <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay</label>
 
 
 
             <form method="POST">
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Received this<input type="text" name="day" placeholder="day" size="6" required>  of
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Received this<input type="text" name="day" placeholder="day" size="2" required>  of
                 <select name="month" required>
                     <option value="">Select Month</option>
                     <?php foreach ($months as $month): ?>

@@ -3,37 +3,37 @@ $successMessage = "";
 $userID = $_SESSION['user_id'];
 $barangayID = $_SESSION['barangay_id'];
 
+
 // Get the last used Case Number
-$query = "SELECT MAX(CNum) AS lastCaseNumber FROM complaints WHERE UserID = :userID";
+$query = "SELECT CNum AS lastCaseNumber FROM complaints WHERE UserID = :userID ORDER BY Mdate DESC LIMIT 1";
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
 $stmt->execute();
 
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-$lastCaseNumber = $row['lastCaseNumber'];
+$lastCaseNumber = $row ? $row['lastCaseNumber'] : null;
 
 // If no Case Number exists, start with "01"
 if (!$lastCaseNumber) {
     $caseNum = date('my') . '-01';
 } else {
-    // Extract the Year and Case Number parts
-    $lastYearCase = explode('-', $lastCaseNumber);
-    $lastYear = $lastYearCase[0];
-    $lastCase = $lastYearCase[1];
+    // Extract the parts of the last case number
+    $parts = explode('-', $lastCaseNumber);
+    
+    if (count($parts) === 2) {
+        $lastMonthYear = $parts[0];
+        $lastCase = intval($parts[1]);
 
-    // Check if the Year part matches the current year
-    $currentYear = date('my');
-    if ($lastYear === $currentYear) {
-        // Increment the Case Number part
-        $caseNumber = intval($lastCase);
-        $caseNumber++;
-        $caseNum = $lastYear . '-' . sprintf('%02d', $caseNumber);
+        $currentMonthYear = date('my');
+        $currentCase = ($lastMonthYear === $currentMonthYear) ? $lastCase + 1 : 1;
+
+        // Format the case number with leading zeros
+        $caseNum = $currentMonthYear . '-' . sprintf('%02d', $currentCase);
     } else {
-        // Start with "01" for the new year
-        $caseNum = $currentYear . '-01';
+        // Handle unexpected format of $lastCaseNumber
+        $caseNum = date('my') . '-01';
     }
 }
-
 
 if (isset($_POST['submit'])) {
  

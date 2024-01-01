@@ -1,6 +1,8 @@
 <?php
 session_start();
 $apptNames = $_SESSION['apptNames'] ?? [];
+$linkedNames = $_SESSION['linkedNames'] ?? [];
+
 ?>
 
 <!DOCTYPE html>
@@ -140,7 +142,7 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
 	<body>
     <br>
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?= strtoupper($apptNames['punong_barangay'] ?? 'Punong Barangay') ?>">
+    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
     Punong Barangay
 </p>
 

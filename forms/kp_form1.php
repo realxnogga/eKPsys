@@ -56,25 +56,6 @@ $apptNames = $_SESSION['apptNames'] ?? [];
                 <label for="day">,</label>
                 <input type="text" id="year" name="year" required style="width: 50px; border: none;" value="<?php echo $currentYear; ?>">
 
-                <script>
-                    var yearInput = document.getElementById('year');
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 38) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year + 1;
-                        }
-                    });
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 40) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year - 1;
-                        }
-                    });
-                </script>
 
                 <h3 style="text-align: center;"><b>NOTICE TO CONSTITUTE THE LUPON</b></h3>
 
@@ -155,28 +136,15 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
                     </ul>
                 <?php endif; ?>
 
-    <div style="position: relative;"><br>
-    <style>
-        #canvas {
-            float: right;
-            
-        }
-    </style>
+    
 	<body>
-    <canvas id="canvas" width="190" height="80"></canvas>
-    <script src="signature.js"></script>
+    <br>
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?= strtoupper($apptNames['punong_barangay'] ?? 'Punong Barangay') ?>">
     Punong Barangay
 </p>
 
-<script>
 
-    const positionInput = document.getElementById('positionInput');
-    positionInput.addEventListener('click', function() {
-        this.select();
-    });
-</script>
 					<div><br><br>
                     <p class="important-warning-text" style="text-align: justify; font-size: 12px; text-indent: 1.5em;">
                     IMPORTANT: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

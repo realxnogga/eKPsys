@@ -110,16 +110,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 </select>,
                 20
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>
-             at <label for="timeInput"> </label>
-        <input type="time" id="timeInput">
-        
-
-    <script>
-        function getTime() {
-            var selectedTime = document.getElementById("timeInput").value;
-            alert("Selected Time: " + selectedTime);
-        }
-    </script> o'clock in the morning/afternoon/evening to explain why you failed to appear for mediation/conciliation scheduled on
+             at <input type="time" id="time" name="time" size="5" style="border: none;"> o'clock in the morning/afternoon/evening to explain why you failed to appear for mediation/conciliation scheduled on
 <input type="text" name="day" placeholder="day" size="1" required>  of
                 <select name="month" required>
                     <option value="">Select Month</option>

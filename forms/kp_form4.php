@@ -55,25 +55,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                 <label for="day">,</label>
                 <input type="text" id="year" name="year" required style="width: 50px; border: none;" value="<?php echo $currentYear; ?>">
 
-                <script>
-                    var yearInput = document.getElementById('year');
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 38) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year + 1;
-                        }
-                    });
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 40) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year - 1;
-                        }
-                    });
-                </script>
+              
 
                 <h3 style="text-align: center;"><b>LIST OF APPOINTED LUPON MEMBERS</b></h3>
 
@@ -101,20 +83,6 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
         </div><br><br>
 				</div>
 
-			<script>
-				function resetFields() {
-				// Clear the value of the day input field
-			document.getElementById('day').value = "";
-        
-				// Get all input elements within the specified div
-			var inputs = document.querySelectorAll('.paper div[style="display: flex;"] input[type="text"]');
-        
-				// Clear the value of each input field
-				inputs.forEach(function(input) {
-            input.value = "";
-				});
-			}
-			</script>
 
                 <?php if (!empty($errors)): ?>
                     <ul>
@@ -124,23 +92,9 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                     </ul>
                 <?php endif; ?>
 
-    <div style="position: relative;"><br>
-    <style>
-        #canvas {
-            border: 1px solid lightgray;
-            float: right;
-            
-        }
-		
-		#canvas1 {
-            border: 1px solid lightgray;
-            float: right;
-            
-        }
-    </style>
+    
 	<body>
-    <canvas id="canvas" width="190" height="80"></canvas>
-    <script src="signature.js"></script>
+    <br>
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
     Punong Barangay

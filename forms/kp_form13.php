@@ -103,7 +103,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                         <?php endforeach; ?>
                     </select> ,
                     20
-                    <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required> at <input type="time" name="time" size="10"> o'clock, then and there to testify in the hearing of the above-captioned case.  
+                    <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required> at <input type="time" id="time" name="time" size="5" style="border: none;"> o'clock, then and there to testify in the hearing of the above-captioned case.  
                   
     </div>
 

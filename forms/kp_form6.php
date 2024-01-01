@@ -137,35 +137,14 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                     </ul>
                 <?php endif; ?>
 
-    <div style="position: relative;">
-    <style>
-        #canvas {
-            border: 1px solid lightgray;
-            float: right;
-            
-        }
-		
-		#canvas1 {
-            border: 1px solid lightgray;
-            float: right;
-            
-        }
-    </style>
 	<body>
-    <canvas id="canvas" width="190" height="80"></canvas>
-    <script src="signature.js"></script>
+   
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
     Punong Barangay/Lupon Chairman
 </p>
 
-<script>
-    // Function to select the text when clicked
-    const positionInput = document.getElementById('positionInput');
-    positionInput.addEventListener('click', function() {
-        this.select();
-    });
-</script><br><br>
+<br><br>
 			<p style="text-align: justify; text-indent: 4em;">CONFORME (Signatures): </p>
 					<div style="display: flex;">
                 <div style="flex: 1; margin-left: 95px;">
@@ -184,20 +163,6 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
         </div><br><br>
 				</div>
 
-			<script>
-				function resetFields() {
-				// Clear the value of the day input field
-			document.getElementById('day').value = "";
-        
-				// Get all input elements within the specified div
-			var inputs = document.querySelectorAll('.paper div[style="display: flex;"] input[type="text"]');
-        
-				// Clear the value of each input field
-				inputs.forEach(function(input) {
-            input.value = "";
-				});
-			}
-			</script>
 			
 			<form method="POST">
 			 <p style="text-align: justify; text-indent: 4em;">
@@ -214,8 +179,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                     </p>
                 </form>
 	
-	<canvas id="canvas1" width="190" height="80" style="float: right";></canvas>
-    <script src="signature.js"></script>
+	
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
 	Signature
@@ -228,147 +192,6 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
     </body>
         </div><br><br><br><br><br><br><br><br>
 		
-		<!-- New arrow buttons -->
-		<div style="position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column;">
-        <!-- Button to go to the top of the form -->
-        <button class="btn btn-dark arrow-button" onclick="goToTop()">
-            <i class="fas fa-arrow-up"></i>
-        </button>
-        <!-- Button to go to the bottom of the form -->
-        <button class="btn btn-secondary arrow-button" onclick="goToBottom()">
-            <i class="fas fa-arrow-down"></i>
-        </button>
-		</div>
-		<script>
-        // Function to scroll to the top of the form
-        function goToTop() {
-            window.scrollTo(0, 0);
-        }
-        
-        // Function to scroll to the bottom of the form
-        function goToBottom() {
-            window.scrollTo(0, document.body.scrollHeight);
-        }
-    </script>
-	
-	<script>
- document.addEventListener('DOMContentLoaded', function() {
-        const recipientInput = document.getElementById('recipient');
-        const nameList = document.getElementById('nameList'); // The datalist element
-        const namesArray = <?php echo json_encode($linkedNames); ?>; // Your PHP array of names
-        
-        // Function to update the datalist with matching names
-        function updateNameList() {
-            const inputValue = recipientInput.value.toLowerCase();
-            nameList.innerHTML = ''; // Clear the existing options
-            
-            // Filter the names array for matches
-            const matchingNames = namesArray.filter(name => name.toLowerCase().includes(inputValue));
-            
-            // Create and append options to the datalist
-            matchingNames.forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                nameList.appendChild(option);
-            });
-        }
-        
-        // Event listener for input changes
-        recipientInput.addEventListener('input', updateNameList);
-        
-        // Trigger the update when the page loads
-        updateNameList();
-    });
-
-
-        
-    document.addEventListener("DOMContentLoaded", function() {
-        // Get the canvas elements and buttons
-        var canvas = document.getElementById("canvas");
-        var canvas1 = document.getElementById("canvas1");
-        var clearBtn = document.getElementById("clearBtn");
-        var saveBtn = document.getElementById("saveBtn");
-        var ctx = canvas.getContext("2d");
-        var ctx1 = canvas1.getContext("2d");
-
-        // Set initial drawing states
-        var isDrawing = false;
-        var isDrawing1 = false;
-
-        // Set drawing styles
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "#000";
-        ctx1.lineWidth = 2;
-        ctx1.strokeStyle = "#000";
-
-        // Function to start drawing
-        function startDrawing(e) {
-            if (e.target === canvas) {
-                isDrawing = true;
-                ctx.beginPath();
-                ctx.moveTo(e.offsetX, e.offsetY);
-            } else if (e.target === canvas1) {
-                isDrawing1 = true;
-                ctx1.beginPath();
-                ctx1.moveTo(e.offsetX, e.offsetY);
-            }
-        }
-
-        // Function to draw
-        function draw(e) {
-            if (isDrawing) {
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.stroke();
-            } else if (isDrawing1) {
-                ctx1.lineTo(e.offsetX, e.offsetY);
-                ctx1.stroke();
-            }
-        }
-
-        // Function to stop drawing
-        function stopDrawing() {
-            isDrawing = false;
-            isDrawing1 = false;
-        }
-
-        // Function to clear the canvases
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
-        }
-
-        // Function to save the signatures as images
-        function saveSignature(canvas, fileName) {
-            var imgData = canvas.toDataURL();
-            var link = document.createElement("a");
-            link.href = imgData;
-            link.download = fileName;
-            link.click();
-        }
-
-        // Event listeners for both canvases
-        canvas.addEventListener("mousedown", startDrawing);
-        canvas1.addEventListener("mousedown", startDrawing);
-
-        canvas.addEventListener("mousemove", draw);
-        canvas1.addEventListener("mousemove", draw);
-
-        canvas.addEventListener("mouseup", stopDrawing);
-        canvas1.addEventListener("mouseup", stopDrawing);
-
-        canvas.addEventListener("mouseout", stopDrawing);
-        canvas1.addEventListener("mouseout", stopDrawing);
-
-        // Event listeners for buttons
-        clearBtn.addEventListener("click", clearCanvas);
-
-        saveBtn.addEventListener("click", function() {
-            saveSignature(canvas, "signature.png");
-            saveSignature(canvas1, "signature1.png");
-        });
-    });
-</script>
-	<div class="bottom-right-buttons">
-             <button id="clearBtn"class="btn btn-danger clear-button">Clear signature</button></div><br><br>
+		
 </body>
 </html>	

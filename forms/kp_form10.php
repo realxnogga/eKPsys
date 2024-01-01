@@ -57,7 +57,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <h3 style="text-align: center;"> 
 NOTICE FOR CONSTITUTION OF PANGKAT
 </h3>
-<br>
+<br>        
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
@@ -79,7 +79,7 @@ Respondent
                     <?php endforeach; ?>
                 </select>,
                 20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required> at <input type="time" id="time" name="time" size="5"> o'clock in the morning/afternoon
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required> at <input type="time" id="time" name="time" size="5" style="border: none;"> o'clock in the morning/afternoon
 for the constitution of the Pangkat ng Tagapagkasundo which shall conciliate your dispute. Should you fail to agree on the Pangkat membership or to appear on the aforesaid date for the constitution of the Pangkat, I shall determine the membership thereof by
 drawing lots.
 </div>

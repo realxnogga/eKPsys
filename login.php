@@ -1,24 +1,22 @@
- <?php 
-    
-    include 'connection.php';
-     session_start();
-     include 'functions.php';
-     if (isset($_SESSION['user_id']) && $_SESSION['user_type'] === 'admin') {
-    header("Location: admin_dashboard.php");
-    exit; 
-  }
+<?php 
+session_start();
 
-    elseif (isset($_SESSION['user_id']) && $_SESSION['user_type'] === 'user') {
-    header("Location: user_dashboard.php");
-    exit;
-  }
+include 'connection.php';
+include 'functions.php';
 
-    elseif (isset($_SESSION['user_id']) && $_SESSION['user_type'] === 'superadmin') {
-    header("Location: superadmin_dashboard.php");
-    exit;
-  }
-
-
+// Check if the session key exists before accessing its value
+if (isset($_SESSION['user_id'])) {
+    if ($_SESSION['user_type'] === 'admin') {
+        header("Location: admin_dashboard.php");
+        exit;
+    } elseif ($_SESSION['user_type'] === 'user') {
+        header("Location: user_dashboard.php");
+        exit;
+    } elseif ($_SESSION['user_type'] === 'superadmin') {
+        header("Location: superadmin_dashboard.php");
+        exit;
+    }
+}
      ?>
 
 <!DOCTYPE html>
@@ -336,10 +334,10 @@ body {
              <br>
              <p>Don't have an account? <a href="registration.php">Sign up here</a>.</p>
 
-				<p><a href="javascript:void(0);" onclick="location.href='forgot_pass.php';"  style="font-size:16px;">Forgot Password?</a></div>
+                <p><a href="javascript:void(0);" onclick="location.href='forgot_pass.php';"  style="font-size:16px;">Forgot Password?</a></div>
         </div>
     </div>
-	
+    
 
     </div>
   </div>

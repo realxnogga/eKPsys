@@ -22,15 +22,24 @@ $linkedNamesQuery = "SELECT
                         COUNT(NULLIF(name19, '')) + 
                         COUNT(NULLIF(name20, '')) AS count_values
                     FROM lupons
-                    WHERE user_id = :user_id";
+                    WHERE user_id = :user_id AND appoint = 0";
+
+if (isset($_POST['submit_monthly'])) {
+    $linkedNamesQuery .= " AND MONTH(created_at) = MONTH(:selected_date)";
+}
+
 
 $linkedNamesStmt = $conn->prepare($linkedNamesQuery);
 $linkedNamesStmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+if (isset($_POST['submit_monthly'])) {
+    $selectedDate = date('Y-m-d', strtotime($_POST['selected_month']));
+    $linkedNamesStmt->bindParam(':selected_date', $selectedDate, PDO::PARAM_STR);
+}
+
 $linkedNamesStmt->execute();
 $countValues = $linkedNamesStmt->fetchColumn();
 
 // Store the count in a session variable
 $_SESSION['linkedNamesCount'] = $countValues;
-
-
  ?>

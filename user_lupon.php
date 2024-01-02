@@ -13,6 +13,7 @@ $user_id = $_SESSION['user_id'];
 
 include 'lupon_handler.php';
 
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,6 +49,10 @@ include 'lupon_handler.php';
     overflow: auto;
     padding-bottom: 20px; /* Add some padding to the bottom */
     transition: height 0.3s ease; /* Add a smooth transition effect for height changes */
+}
+
+input {
+    width: 240px;
 }
 </style>
 <body>

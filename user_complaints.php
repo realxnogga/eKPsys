@@ -70,55 +70,53 @@ $result = $conn->query($query);
         </tr>
     </thead>
         
-        <tbody>
-    <?php
-while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-    echo "<tr>";
-    echo "<td>" . $row['CNum'] . "</td>";
-    echo "<td>" . $row['ForTitle'] . "</td>";
-    echo "<td>" . $row['CNames'] . "</td>";
-    echo "<td>" . $row['RspndtNames'] . "</td>";
-    echo "<td>" . date('Y-m-d', strtotime($row['Mdate'])) . "</td>";
-    echo "<td>" . $row['CMethod'] . "</td>";
+<tbody>
+    <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
+        <tr>
+            <td><?= $row['CNum'] ?></td>
+            <td><?= $row['ForTitle'] ?></td>
+            <td><?= $row['CNames'] ?></td>
+            <td><?= $row['RspndtNames'] ?></td>
+            <td><?= date('Y-m-d', strtotime($row['Mdate'])) ?></td>
+            <td><?= $row['CMethod'] ?></td>
 
-    // Fetch case progress based on complaint ID
-    $complaintId = $row['id'];
-    $caseProgressQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = $complaintId";
-    $caseProgressResult = $conn->query($caseProgressQuery);
-    $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
+            <?php
+            $complaintId = $row['id'];
+            $caseProgressQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = $complaintId";
+            $caseProgressResult = $conn->query($caseProgressQuery);
+            $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
+            ?>
 
-    echo "<td>";
-    if ($caseProgressRow) {
-        switch ($caseProgressRow['current_hearing']) {
-            case '0':
-                echo "Not Set";
-                break;
-            case '1st':
-                echo "1st Hearing";
-                break;
-            case '2nd':
-                echo "2nd Hearing";
-                break;
-            case '3rd':
-                echo "3rd Hearing";
-                break;
-            default:
-                echo "Unknown";
-                break;
-        }
-    } else {
-        echo "Not Set";
-    }
-    echo "</td>";
-    echo "<td>";
+            <td>
+                <?php if ($caseProgressRow): ?>
+                    <?php switch ($caseProgressRow['current_hearing']):
+                        case '0': ?>
+                            Not Set
+                            <?php break; ?>
+                        <?php case '1st': ?>
+                            1st Hearing
+                            <?php break; ?>
+                        <?php case '2nd': ?>
+                            2nd Hearing
+                            <?php break; ?>
+                        <?php case '3rd': ?>
+                            3rd Hearing
+                            <?php break; ?>
+                        <?php default: ?>
+                            Unknown
+                    <?php endswitch; ?>
+                <?php else: ?>
+                    Not Set
+                <?php endif; ?>
+            </td>
 
-    echo '<a href="edit_complaint.php?id=' . $row['id'] . '" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a> ';
-    echo '<a href="archive_complaint.php?id=' . $row['id'] . '" class="btn btn-sm btn-danger"><i class="fa fa-file-o"></i></a> ';
-    echo '<a href="manage_case.php?id=' . $row['id'] . '" class="btn btn-sm btn-warning"><i class="fa fa-folder-open"></i></a> ';
-    echo "</td>";
-    echo "</tr>";
-}
-    ?>
+            <td>
+                <a href="edit_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
+                <a href="archive_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger"><i class="fa fa-file-o"></i></a>
+                <a href="manage_case.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-warning"><i class="fa fa-folder-open"></i></a>
+            </td>
+        </tr>
+    <?php endwhile; ?>
 </tbody>
 
     </table>

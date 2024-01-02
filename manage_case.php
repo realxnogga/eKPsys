@@ -64,10 +64,13 @@ if ($currentHearing === '0') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Handle form submission to update the hearing progress
+   // Handle form submission to update the hearing progress
     $selectedHearing = $_POST['hearing'];
 
-    if ($selectedHearing !== '0') {
+    // Ensure the selected value is valid before updating
+    $validHearings = ['1st', '2nd', '3rd'];
+
+    if (in_array($selectedHearing, $validHearings)) {
         // Update the case_progress table with the selected hearing value
         $updateHearingQuery = "UPDATE case_progress SET current_hearing = :selectedHearing WHERE complaint_id = :complaintId";
         $stmt = $conn->prepare($updateHearingQuery);
@@ -78,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $currentHearing = $selectedHearing;
             $currentHearingText = $selectedHearing . ' Hearing';
         } else {
-         echo $currentHearingText = "Data not found. Please go back to the Complaints table.";
+            echo $currentHearingText = "Data not found. Please go back to the Complaints table.";
         }
     }
 }
@@ -99,22 +102,33 @@ $_SESSION['current_hearing'] = $currentHearing;
     padding: 0;
     height: 100%;
 }
+.hearing-button {
+    /* Your button styles here */
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.active {
+    /* Define styles for the active button */
+    background-color: #ffcc00; /* Change to your preferred active color */
+    color: #fff;
+}
     </style>
 </head>
 <link rel="stylesheet" type="text/css" href="style copy.css">
 <link rel="stylesheet" type="text/css" href="manage.css">   
 <body>
-    <!-- Adding the select dropdown for managing hearing progress -->
-<form method="POST">
-    <label for="hearing">Select Hearing Progress:</label>
-    <select name="hearing" id="hearing">
-        <option value="0" <?php if ($currentHearing === '0') echo 'selected'; ?>>Not Set</option>
-        <option value="1st" <?php if ($currentHearing === '1st') echo 'selected'; ?>>1st Hearing</option>
-        <option value="2nd" <?php if ($currentHearing === '2nd') echo 'selected'; ?>>2nd Hearing</option>
-        <option value="3rd" <?php if ($currentHearing === '3rd') echo 'selected'; ?>>3rd Hearing</option>
-    </select>
-    <input type="submit" value="Set Hearing">
-</form>
+<!-- Set Hearing Progress Section -->
+<div class="hearing-buttons">
+    <form method="POST">
+        <button type="submit" name="hearing" value="1st" class="hearing-button <?php echo ($currentHearing === '1st') ? 'active' : ''; ?>">1st Hearing</button>
+        <button type="submit" name="hearing" value="2nd" class="hearing-button <?php echo ($currentHearing === '2nd') ? 'active' : ''; ?>">2nd Hearing</button>
+        <button type="submit" name="hearing" value="3rd" class="hearing-button <?php echo ($currentHearing === '3rd') ? 'active' : ''; ?>">3rd Hearing</button>
+    </form>
+</div>
   <div class="row">
         <div class="leftcolumn">
             <div class="card">
@@ -129,54 +143,31 @@ $_SESSION['current_hearing'] = $currentHearing;
 
 <div class="form-buttons">
     <h5>Forms Used</h5>
+
     <?php
+    $formButtons = [
+        'KP 7', 'KP 8', 'KP 9', 'KP 10', 'KP 11', 'KP 12', 'KP 13', 'KP 14', 'KP 15', 'KP 16', 'KP 17',
+        'KP 18', 'KP 19', 'KP 20', 'KP 20 - A', 'KP 20 - B', 'KP 21', 'KP 22', 'KP 23', 'KP 24', 'KP 25'
+    ];
 
-    $currentHearing = $_SESSION['current_hearing'];
-    $complaintId = $_SESSION['current_complaint_id'];
-    // Assuming $complaintId is your current complaint ID and $currentHearing is the selected hearing
-    $formButtons = array(
-        'KP 7' => 7, // Map the button text to the form_used value
-        'KP 8' => 8, 
-        'KP 9' => 9, 
-        'KP 10' => 10, 
-        'KP 11' => 11, 
-        'KP 12' => 12, 
-        'KP 13' => 13, 
-        'KP 14' => 14, 
-        'KP 15' => 15, 
-        'KP 16' => 16, 
-        'KP 17' => 17, 
-        'KP 18' => 18, 
-        'KP 19' => 19, 
-        'KP 20' => 20, 
-        'KP 20 - A' => '20 - A', 
-        'KP 20 - B' => '20 - B', 
-        'KP 21' => 21, 
-        'KP 22' => 22, 
-        'KP 23' => 23, 
-        'KP 24' => 24, 
-        'KP 25' => 25
-    );
+     foreach ($formButtons as $buttonText) {
+        $formUsed = array_search($buttonText, $formButtons) + 7; // Assuming a sequential mapping starting from 7
 
-     $formCount = array();
-
-    foreach ($formButtons as $buttonText => $formUsed) {
         // Query to fetch the forms with the same complaint_id, form_used, and hearing_number
-        $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND hearing_number = :currentHearing AND form_used = :formUsed";
+        $query = "SELECT id FROM hearings WHERE complaint_id = :complaintId AND hearing_number = :currentHearing AND form_used = :formUsed";
         $stmt = $conn->prepare($query);
-        $stmt->bindParam(':complaintId', $complaintId);
+        $stmt->bindParam(':complaintId', $_GET['id']);
         $stmt->bindParam(':currentHearing', $currentHearing);
         $stmt->bindParam(':formUsed', $formUsed);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Count the occurrences of each form type
-        $formCount[$formUsed] = count($results);
-
         // Display buttons with proper naming for multiple occurrences
-        for ($i = 1; $i <= $formCount[$formUsed]; $i++) {
-            $formIdentifier = ($formCount[$formUsed] > 1) ? " ($i)" : "";
-            echo '<button class="open-form" data-form="kp_form' . $formUsed . '.php"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button>';
+        foreach ($results as $result) {
+            $formID = $result['id'];
+            $formIdentifier = count($results) > 1 ? " ($formID)" : "";
+            $formFileName = 'kp_form' . $formUsed . '.php';
+            echo '<a href="forms/' . $formFileName . '?formID=' . $formID . '"><button class="open-form"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button></a>';
         }
     }
     ?>

@@ -129,7 +129,7 @@ body, html {
         <option value="<?php echo $year['year']; ?>"><?php echo $year['year']; ?></option>
     <?php endforeach; ?>
 </select>
-    <input type="submit" name="submit_annual" value="Select Annual Report">
+    <input type="submit" name="submit_annual" value="View Annual Report">
 
 <h2>Monthly Report (<?php echo isset($selected_month) ? $selected_month : date('F, Y'); ?>)</h2>
 
@@ -140,7 +140,7 @@ body, html {
         <option value="<?php echo $month['month_year']; ?>"><?php echo $month['month_year']; ?></option>
     <?php endforeach; ?>
 </select>
-    <input type="submit" name="submit_monthly" value="Select Monthly Report">
+    <input type="submit" name="submit_monthly" value="View Monthly Report">
 
             <div class="row">
                 <div class="col-md-6">

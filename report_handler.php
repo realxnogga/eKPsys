@@ -321,7 +321,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $landarea = $report_data['landarea'];
         $male = $report_data['male'];
         $female = $report_data['female'];
-        $numlup = $report_data['numlupon'];
+        $numlup = $_SESSION['linkedNamesCount'];
 
         
         $criminalCount = $annual_report_data['criminal_sum'] ?? '';

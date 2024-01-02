@@ -18,7 +18,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form25</title>
+    <title>KP. FORM 25</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
@@ -48,7 +48,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
             <?php
             $months = [
-                'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'November', 'Disyembre'
+              'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
             ];
 
             $currentYear = date('Y');
@@ -58,37 +58,37 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <form method="post" action="<?php ($_SERVER["PHP_SELF"]);?>"> 
 
 
+
 <div class="form-group" style="text-align: right;">
 
-
-    <div class="input-field"> 
-        <!-- case num here -->
-        Usaping Barangay Blg. <input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-        value="<?php echo $cNum; ?>"> <br><br> <p>Ukol sa : 
-            <!-- ForTitle here -->
-             <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"> <br> 
-    </div>
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Usaping Barangay Blg.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">Ukol sa: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> (Mga) Maysumbong	
-            <!-- CNames here -->
-            <br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br> </p>
-    <br><p> — laban kay/kina —</p>
+<div class="label"></div>
+<div class="input-field">
+    <p>(Mga) Maysumbong	
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p>— laban kay/kina —</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> (Mga) Ipinagsusumbong<br>
-            <!-- RspndtNames here -->
-            <input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br> </p>
-    </div>
+<div class="label"></div>
+<div class="input-field">
+    <p>(Mga) Ipinagsusumbong<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
 </div>
+</div>
+
 
                 <h3 style="text-align: center;"><b> PAABISO  UKOL SA PAGPAPATUPAD</b><br>
 
@@ -104,30 +104,31 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <div>
     <p style="text-indent: 2.0em; text-align: justify;">
     SAPAGKAT,   noong 
-
-    <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
-                <select name="month" required style="width: 60px;">
+    <input type="text" name="day" placeholder="day" size="1" required> araw ng
+                <select name="month" required>
                     <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
                 </select>,
-                20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>
-                isang matiwasay na pag-aayos ang nilagdaan ng mga panig sa usaping binabanggit sa itaas  (o isang gawad ng paghahatol ang ibinigay ng Punong Barangay / Pangkat  ng Tagapagkasundo);; <br> <br>
-SAPAGKAT, ang mga tuntunin at mga kondisyon ng pag-aayos, ang bahaging nagbibigay desisyon ng gawad ay mababasa tulad ng sumusunod:
-<br><input type="text" name="sumusunod1" id="sumusunod1" size="50"><br><input type="text" name="sumusunod" id="sumusunod" size="50"><br><input type="text" name="sumusunod2" id="sumusunod2" size="50"><br><input type="text" name="sumusunod3" id="sumusunod3" size="50">
+                20 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>
+                isang matiwasay na pag-aayos ang nilagdaan ng mga panig sa usaping binabanggit sa itaas  (o isang gawad ng paghahatol ang ibinigay ng Punong Barangay / Pangkat  ng Tagapagkasundo);;
+
+                <br> <p style="text-indent: 2.0em; text-align: justify;"> SAPAGKAT, ang mga tuntunin at mga kondisyon ng pag-aayos, ang bahaging nagbibigay desisyon ng gawad ay mababasa tulad ng sumusunod:
+<br> <div class="a">
+  <textarea id="name" name="name" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
+  <br>
+</div>
 
  <p style="text-indent: 2.0em; text-align: justify;">
- SAPAGKAT, ang mga tuntunin at mga kondisyon ng pag-aayos, ang bahaging nagbibigay desisyon ng gawad ay mababasa tulad ng sumusunod:
- SAPAGKAT, ang obligadong panig
-
-<select id="ComplainantRespondent" name="ComplainantRespondent" onchange="toggleInputField()" required>
-  <option value="" disabled selected>Complainant/s/Respondent/s</option>
+ SAPAGKAT, ang mga tuntunin at mga kondisyon ng pag-aayos, ang bahaging nagbibigay desisyon ng gawad ay mababasa tulad ng sumusunod: <br>
+ <p style="text-indent: 2.0em; text-align: justify;">
+ SAPAGKAT, ang obligadong panig <select id="ComplainantRespondent" name="ComplainantRespondent" onchange="toggleInputField()" required>
+ <option value="" disabled selected>Complainant/s/Respondent/s</option>
   <option value="Complainant">Complainant/s Name</option>
   <option value="Respondent">Respondent/s Name</option>
-</select>
-ay hindi pa kusang-loob na tumutupad sa binanggit na pag-aayos/gawad ng paghahatol, sa loob ng limang (5) araw mula sa petsa ng pagdinig sa panukala sa pagpapatupad;
+</select> ay hindi pa kusang-loob na tumutupad sa binanggit na pag-aayos/gawad ng paghahatol, sa loob ng limang (5) araw mula sa petsa ng pagdinig sa panukala sa pagpapatupad;
+
 <div id="nameInput" style="display: none;">
   <input type="text" id="name" name="name" placeholder="Enter Name" oninput="updateOptionText(this.value)" onkeydown="checkEnterKey(event)">
 </div>
@@ -137,13 +138,11 @@ ay hindi pa kusang-loob na tumutupad sa binanggit na pag-aayos/gawad ng paghahat
 
  <p style="text-indent: 2.0em; text-align: justify;">
  DAHIL DITO, sa pangalan ng Lupong Tagapamayapa at sa kapangyarihang ibinigay sa akin at ng Lupon sa pamamagitan ng 
- Batas  at mga Alintuntunin  ng Katarungang Pambarangay, akin  gagawin  upang maisakatuparan mula  sa mga kalakal at mga personal na ari-arian  ni    
-<select id="ComplainantRespondent" name="ComplainantRespondent" onchange="toggleInputField()" required>
+ Batas  at mga Alintuntunin  ng Katarungang Pambarangay, akin  gagawin  upang maisakatuparan mula  sa mga kalakal at mga personal na ari-arian  ni     <select id="ComplainantRespondent" name="ComplainantRespondent" onchange="toggleInputField()" required>
   <option value="" disabled selected>Complainant/s/Respondent/s</option>
   <option value="Complainant">Complainant/s Name</option>
   <option value="Respondent">Respondent/s Name</option>
-</select>
-ang halagang   _________________ pinagkasunduan sa nasabing 
+</select> ang halagang   _________________ pinagkasunduan sa nasabing 
 	(Ilahad ang halaga ng pag-aayos o gawad)
 nasabing  matiwasay na pag-aayos  (o sa inihatol sa nasabing gawad sa paghahatol),  maliban kung ang kusang-loob na pagtupad  sa nasabing pag-aayos o gawad ay ginawa sa
   sandaling matanggap ito.
@@ -153,14 +152,12 @@ nasabing  matiwasay na pag-aayos  (o sa inihatol sa nasabing gawad sa paghahatol
 </div>
 
 <p id="selectedOptionLabel" style="display: none;"></p>
-
             </p>
-
     </p></div>
 </div>
 
-            <div style="text-align: justify; text-indent: 0em; margin-left: 30px;"> Nilagdaan ngayong ika <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
-                <select name="month" required style="width: 60px;">
+            <div style="text-align: justify; text-indent: 0em; margin-left: 30px;">  Nilagdaan ngayong ika  <input type="text" name="day" placeholder="day" size="1" required>  araw ng
+                <select name="month" required>
                     <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
@@ -186,9 +183,8 @@ nasabing  matiwasay na pag-aayos  (o sa inihatol sa nasabing gawad sa paghahatol
         <br>
         <br>
         <br>
-     <<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
-    <br>Punong Barangay
+        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay</label>
 </p>
         <br>
       
@@ -196,23 +192,14 @@ nasabing  matiwasay na pag-aayos  (o sa inihatol sa nasabing gawad sa paghahatol
  <p style="text-indent: 2.0em; text-align: justify;">
  Binigyan  ng sipi: </p>
   <br>
- 
-
-  <div style="display: flex; justify-content: center;">
-  <div style="margin-right: 50px; flex: 1;">
-  
-      <br>
-     <input type="text" name="complainant" id="complainant" size="50" value="<?php echo $cNames; ?>">
-    <p style="text-align: center;">(Mga) Maysumbong</p>
+  <div class="d">
+    <div style="text-align: left; font-size: 12px; margin-left: 100px;"><br>
+    <p><br>(Mga) Maysumbong <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+    <p>(Mga) Ipinagsusumbong <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $rspndtNames; ?> <br>_____________________
+            <id="rspndt" name="rspndt" size="25"  style="text-align: left;"></p><br><br><br><br>
   </div>
-  <div style="margin-left: 50px; flex: 1;">
-    
-    <br>   
-     <input type="text" name="complainant" id="complainant" size="50"value="<?php echo $rspndtNames; ?>">
-    <p style="text-align: center;">(Mga) Ipinagsusumbong</p>
-    <br>
-  </div>  
-<br>
 
   </body>
 </html>

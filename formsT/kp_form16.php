@@ -14,26 +14,28 @@ $year = $_SESSION['year'] ?? '';
 $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kpform_16</title>
+    <title>KP. FORM 16</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
+    
 </head>
 <body>
-
     <br>
-<div class="container">
+    <div class="container">
         <div class="paper">
-            <div class="top-right-buttons">
+                <div class="top-right-buttons">
+                <!-- Print button -->
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
                 </button>
+               
             </div>
-
-
+            
             <div style="text-align: left;">
             <h5>Pormularyo ng KP Blg. 16</h5>
                 <h5 style="text-align: center;">Republika ng Pilipinas</h5>
@@ -46,52 +48,66 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
             <?php
             $months = [
-                'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'November', 'Disyembre'
+              'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
             ];
 
             $currentYear = date('Y');
             ?>
 
-
 <div class="form-group" style="text-align: right;">
 
-    <div class="input-field">
-    Usaping Barangay Blg.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-> <br><br> <p>Ukol sa: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"> <br>
-    </div>
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Usaping Barangay Blg.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">Ukol sa: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p>(Mga) Maysumbong:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
-    <br><p>  -laban kay/kina-</p>
+<div class="label"></div>
+<div class="input-field">
+    <p> (Mga) Maysumbong:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> -laban kay/kina-</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> (Mga) Ipinagsusumbong:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
+<div class="label"></div>
+<div class="input-field">
+    <p> (Mga) Ipinagsusumbong:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
+</div>
+</div>
+        </div>
+
+<h3 style="text-align: center;"><b>KASUNDUANG PAG-AAYOS </b></h3>
+
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Kami, ang (mga) maysumbong at (mga) ipinagsusumbong sa usaping isinasaad sa itaas, ay nagkakasundo sa pamamagitan nito na aayusin ang aming alitan tulad ng sumusunod:            
     </div>
+
+    <div class="a">
+  <textarea id="name" name="name" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
+  <br>
 </div>
 
-   
 
-<h3 style="text-align: center;"> <b>KASUNDUANG PAG-AAYOS </b></h3>
+  
 
 
-    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">   Kami, ang (mga) maysumbong at (mga) ipinagsusumbong sa usaping isinasaad sa itaas, ay nagkakasundo sa pamamagitan nito na aayusin ang aming alitan tulad ng sumusunod:            
-    </div>
 
-    <div class="a"><br><br> <input type="text" id="abtr" name="abtr" size="40" > <br><input type="text" id="abtr" name="abtr" size="40" ><br><input type="text" id="abtr" name="abtr" size="40" >
-    </div><br>
+  
+</div>
 
-<p> at nangangako na aming tutuparin ng may katapatan ang mga alituntunin ng pag-aayos.</p>
 
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Pinagkasunduan ngayong ika-<input type="text" name="day" placeholder="araw" size="1" required> araw ng
-                <select name="month" required style="width: 60px;">
+<p> at nangangako na aming tutuparin ng may katapatan ang mga alituntunin ng pag-aayos. </p>
+
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Pinagkasunduan ngayong ika-<input type="text" name="day" placeholder="day" size="1" required> araw ng
+                <select name="month" required>
                     <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
@@ -101,24 +117,38 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.              
 </div>
 
-<div class="a">
-  <p><br>(Mga) Maysumbong   <br> <input type="text" id="cmplnsts" name="cmplnsts" size="30" value="<?php echo $cNames; ?>" > <br>
-  <input type="text" id="cmplnsts1" name="cmplnsts1" size="30"> </p>
-  <p><br>(Mga) Ipinagsusumbong <br> <input type="text" id="cmplnsts" name="cmplnsts" size="30" value="<?php echo $rspndtNames; ?>"> <br>
-  <input type="text" id="cmplnsts1" name="cmplnsts1" size="30"> </p>
-  </div>
-
+<div class="d">
+    <div style="text-align: left; font-size: 12px; margin-left: 100px;">
+    <p><br>(Mga) Maysumbong <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+    <p>(Mga) Ipinagsusumbong<br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $rspndtNames; ?> <br>_____________________
+            <id="rspndt" name="rspndt" size="25"  style="text-align: left;"></p><br>
+                    </div>
   <div class="e">
-    <p><b>PAGPAPATUNAY</b></p>
-    <p> Pinatutunayan ko sa pamamagitan nito na ang sinusundang kasunduan ng pag-aayos ay pinagkasunduan ng mga panig nang Malaya at kusang-loob, matapos kong maipaliwanag sa kanila kung ano ang pag-aayos na ito at ang mga kahihinatnan nito.</p>
-  </div>
-
-<br>
-  <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
-   <br> Punong Barangay/Tagapangulo ng Pangkat
+    <p>PAGPAPATUNAY</p>
+    <p>Pinatutunayan ko sa pamamagitan nito na ang sinusundang kasunduan ng pag-aayos ay pinagkasunduan ng mga panig nang Malaya at kusang-loob, matapos kong maipaliwanag sa kanila kung ano ang pag-aayos na ito at ang mga kahihinatnan nito.</p>
+  </div><br><br>
+  <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay/Tagapangulo ng Pangkat</label>
 </p>
-          <br>
-          <br>      
+
+
+                <?php if (!empty($errors)): ?>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+
+                
+            </div>
+        </div>
+
 </body>
+<br>
+<div class="blank-page">        
+       
+</div>
 </html>

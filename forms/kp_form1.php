@@ -1,6 +1,7 @@
 <?php
 session_start();
 $apptNames = $_SESSION['apptNames'] ?? [];
+
 $linkedNames = $_SESSION['linkedNames'] ?? [];
 
 ?>
@@ -66,7 +67,8 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 					<p style="text-align: justify; font-size: 12px; text-indent: 1.5em;">In compliance with Section 1(a), Chapter 7, Title One, Book III, Local Government Code of 1991 (Republic Act No. 7160), of the
 					<i>Katarungang Pambarangay Law</i>, notice is hereby given to constitute the <i>Lupong Tagapamayapa</i> of this Barangay.
 					The persons I am considering for appointment are the following:</p>
-						<div style="display: flex;">
+
+<div style="display: flex;">
     <div style="flex: 1; margin-left: 145px;">
         <?php for ($i = 1; $i <= 10; $i++): ?>
             <?php $nameKey = "name$i"; ?>

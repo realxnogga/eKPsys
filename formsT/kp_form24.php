@@ -45,41 +45,45 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
             <?php
             $months = [
-                'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'November', 'Disyembre'
+              'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
             ];
 
             $currentYear = date('Y');
             ?>
 
-            <div class="form-group" style="text-align: right;">
+<div class="form-group" style="text-align: right;">
 
-    <div class="input-field">
-    Usaping Barangay Blg.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-> <br><br> <p>Ukol sa: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"
-> <br>
-    </div>
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Usaping Barangay Blg.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">Ukol sa: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p>(Mga) Maysumbong:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
-    <br><p>  -laban kay/kina-</p>
+<div class="label"></div>
+<div class="input-field">
+    <p> (Mga) Maysumbong:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> -laban kay/kina-</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> (Mga) Ipinagsusumbong:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
-    </div>
+<div class="label"></div>
+<div class="input-field">
+    <p>(Mga) Ipinagsusumbong:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
 </div>
-        
+</div>
 
 
-                <h3 style="text-align: center;"><b> PAABISO  NG  PAGDINIG<br>
-(Ukol sa: Panukala sa Pagpapatupad) </b> </h3>
+                <h3 style="text-align: center;"><b>PAABISO  NG  PAGDINIG<br>
+                (Ukol sa: Panukala sa Pagpapatupad)  </b> </h3>
 
         <div style="display: flex;">
   <div style="text-align: left;">
@@ -87,25 +91,18 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
   <div style="margin-left: 20px; text-align: left;">
     <div>
-      KAY: 
-      <br>
-      <div class="form-group" style="text-align: left;"></div>
-    </div>
     <div class="label"></div>
     <div class="input-field">
-    <p><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"> </p>
-    </div>
-  </div>
+        <p>   KAY:  <br><?php echo $cNames; ?>
+<input type="text" name="to" id="to" size="25" style="border: none; margin-left: 10px;">
+<?php echo $rspndtNames; ?><br>
+May Sumbong
+<input type="text" name="to" id="to" size="35" style="border: none; margin-left: 20px;">
+Isinumbong
 
-  <div style="margin-left: 20px;">
-    <div>
+</div>
+</div>
     
-      <br>
-      <div class="form-group" style="text-align: left;"></div>
-    </div>
-    <div class="label"></div>
-    <div class="input-field">
-    <p><input type="text" name="complainant" id="complainant" size="30"> </p>
     </div>
   </div>
 </div>
@@ -116,19 +113,16 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
     <br>
 
     <p style="text-indent: 2.8em; text-align: justify; ">
-    Sa pamamagitan nito’y inaatasan kang humarap sa sakin sa ika
-
-    <input type="text" name="day" placeholder="araw" size="1" required>  araw  ng
-                <select name="month" required style="width: 60px;">
+    Sa pamamagitan nito’y inaatasan kang humarap sa sakin sa ika <input type="text" name="day" placeholder="day" size="1" required> araw  ng
+                <select name="month" required>
                     <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
                 </select>,
                 20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>,
-             , sa ganap ng ika <input type="time" name="time" size="10" style="border:none"> ng umaga/hapon/gabi para sa pagdinig ng panukala sa pagpapatupad, na kung saan ang sipi ay kalakip dito, na inihain ni
-<select id="ComplainantRespondent" name="ComplainantRespondent" onchange="toggleInputField()" required>
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required> , sa ganap ng ika <input type="time" name="time" size="10" style="border:none">
+                ng umaga/hapon/gabi para sa pagdinig ng panukala sa pagpapatupad, na kung saan ang sipi ay kalakip dito, na inihain ni <select id="ComplainantRespondent" name="ComplainantRespondent" onchange="toggleInputField()" required>
   <option value="" disabled selected>Mga may sumbong/Mga Ipinagsusumbong</option>
   <option value="Complainant">Complainant/s Name</option>
   <option value="Respondent">Respondent/s Name</option>
@@ -140,8 +134,8 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 <p id="selectedOptionLabel" style="display: none;"></p>
 
-           <p style="text-align: justify; text-indent: 0em; margin-left: 38.5px;">(Petsa) <input type="text" name="day" placeholder="araw" size="1" required>  araw ng
-                <select name="month" required style="width: 60px;">
+           <p style="text-align: justify; text-indent: 0em; margin-left: 38.5px;">(Petsa) <input type="text" name="day" placeholder="day" size="1" required>  araw ng
+                <select name="month" required>
                     <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
@@ -164,18 +158,16 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
         <br>
         <br>
         <br>
-        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
-   <br> Tagapagpangulo ng Pangkat/Lupon
+        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Tagapagpangulo ng Pangkat/Lupon</label>
 </p>
-
 
 <br>
 <div style="text-align: left; text-indent: 0em; ">
 
 <br>
-    Pinaabisuhan ngayong ika <input type="text" name="day" placeholder="araw" size="1" required>  araw  ng 
-                <select name="month" required style="width: 60px;">
+Pinaabisuhan ngayong ika <input type="text" name="day" placeholder="day" size="1" required> araw ng
+                <select name="month" required>
                     <option value="">Buwan </option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
@@ -186,7 +178,14 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             </p>
 
 </div>
-
+<div class="d">
+    <div style="text-align: left; font-size: 12px; margin-left: 50px;"><br>
+    <p><br>(Mga) May Sumbong <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+    <p>(Mga) Isinumbong <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $rspndtNames; ?> <br>_____________________
+            <id="rspndt" name="rspndt" size="25"  style="text-align: left;"></p><br><br>
+  </div>
 
   </body>
 </html>

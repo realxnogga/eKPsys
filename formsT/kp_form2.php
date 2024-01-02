@@ -24,17 +24,17 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                
             </div>
             
-              <div style="text-align: left;">
-                <h5>Pormularyo ng KP Blg. 2</h5>
+             <div style="text-align: left;">
+             <h5>Pormularyo ng KP Blg. 2</h5>
                 <h5 style="text-align: center;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center;">Lalawigan ng Laguna</h5>
                 <h5 style="text-align: center;">Bayan ng <?php echo $_SESSION['municipality_name']; ?></h5>
                 <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
                 <h5 style="text-align: center;">TANGGAPAN NG PUNONG BARANGAY</h5>
             </div>
-              <?php
+            <?php
             $months = [
-                'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'November', 'Disyembre'
+                'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
             ];
 
             $currentYear = date('Y');
@@ -55,12 +55,12 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                 <label for="day">,</label>
                 <input type="text" id="year" name="year" required style="width: 50px; border: none;" value="<?php echo $currentYear; ?>">
 
-               
+             
 
                 <h3 style="text-align: center;"><b>PAGHIRANG</b></h3>
 
                 <div style="text-align: left;">
-				<br><p style="text-align: justify; font-size: 12px; margin-top: 0;">PARA KAY: 
+				<br><p style="text-align: justify; font-size: 12px; margin-top: 0;">PARA KAY:
     <input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px;">
     <datalist id="nameList">
         <?php foreach ($linkedNames as $name): ?>
@@ -72,7 +72,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 				</p><br><br><br><br>
 				</div>
 
-			
+		
 
                 <?php if (!empty($errors)): ?>
                     <ul>
@@ -83,20 +83,23 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                 <?php endif; ?>
 
 	<body>
-    
+
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
-   <br> Punong Barangay
+    Punong Barangay
 </p>
 
+
 	<p style="text-align: justify; margin-left: 0;">Pinatunayan:</p>
-	
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;">
-    <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;" size="30">
-	      <br> Kalihim ng Barangay
+    <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
+	Kalihim ng Barangay
 	</p>
     </div>
     </div>
-	
+    <div class="blank-page"></div>
+    </body>
+        </div><br><br><br><br><br> 
+
 </body>
 </html>	

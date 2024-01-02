@@ -44,7 +44,7 @@ $message = '';
         $existingMadeDay = date('d');
         $existingMadeMonth = date('F');
         $existingMadeYear = date('Y');
-        
+
         $existingReceivedMonth = date('F');
         $existingReceivedYear = date('Y');
     }
@@ -59,8 +59,27 @@ $receivedDay = $_POST['received_day'];
 $receivedMonth = $_POST['received_month'];
 $receivedYear = $_POST['received_year'];
 
-$madeDate = null;
-$receivedDate = null;
+// Check if day, month, and year are non-empty before constructing the date
+    if (!empty($madeDay) && !empty($madeMonth) && !empty($madeYear)) {
+        $monthNum = date('m', strtotime("$madeMonth 1"));
+        $madeDate = date('Y-m-d', mktime(0, 0, 0, $monthNum, $madeDay, $madeYear));
+    } else {
+        // If any of the date components are empty, set $madeDate to a default value or handle as needed
+        // For example, setting it to the current date:
+        $madeDate = date('Y-m-d');
+    }
+
+    // Check if day, month, and year are non-empty before constructing the date
+    if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
+        $monthNum = date('m', strtotime("$receivedMonth 1"));
+        $receivedDate = date('Y-m-d', mktime(0, 0, 0, $monthNum, $receivedDay, $receivedYear));
+    } else {
+        // If any of the date components are empty, set $receivedDate to a default value or handle as needed
+        // For example, setting it to the current date:
+        $receivedDate = date('Y-m-d');
+    }
+
+
 
 // Check if day, month, and year are non-empty before constructing the date
 if (!empty($madeDay) && !empty($madeMonth) && !empty($madeYear)) {
@@ -114,7 +133,21 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
+<style>
+    /* Hide the number input arrows */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 
+    /* Hide the number input arrows for Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+        border: none;
+
+    }
+</style>
 </head>
 <body>
     <br>
@@ -125,35 +158,36 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
                 </button>
-               
+                <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>"><button class="btn common-button">
+                    <i class="button-icon"></i> Back
+                </button></a>
+
             </div>
             
-            <div style="text-align: left;">
-                <h5>Pormularyo ng KP Blg. 7</h5>
+             <div style="text-align: left;">
+             <h5>Pormularyo ng KP Blg. 7</h5>
                 <h5 style="text-align: center;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center;">Lalawigan ng Laguna</h5>
                 <h5 style="text-align: center;">Bayan ng <?php echo $_SESSION['municipality_name']; ?></h5>
                 <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
                 <h5 style="text-align: center;">TANGGAPAN NG PUNONG BARANGAY</h5>
             </div>
-            <?php
-            $months = [
-                'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'November', 'Disyembre'
-            ];
+                <?php
+                $months = [
+                    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-            $currentYear = date('Y');
-            ?>
-
-
+                $currentYear = date('Y');
+                ?>
+   
+                
+  
     <div class="form-group" style="text-align: right;">
 
-
-        <div class="input-field"> 
+        <div class="input-field"> <br>
             <!-- case num here -->
-            Usaping Barangay Blg. <input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-            value="<?php echo $cNum; ?>"> <br><br> <p>Ukol sa : 
+            <div style="text-align: right; margin-right: 180px;">  Usaping Barangay Blg.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">Ukol sa : 
                 <!-- ForTitle here -->
-                 <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"> <br> 
+                 <?php echo $forTitle; ?> <br> 
         </div>
     </div>
 
@@ -162,8 +196,8 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
         <div class="input-field">
             <p> (Mga) Maysumbong	
                 <!-- CNames here -->
-                <br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br> </p>
-        <br><p> — laban kay/kina —</p>
+                <br><?php echo $cNames; ?><br> </p>
+        <br><p>  — laban kay/kina —</p>
     </div>
     </div>
 
@@ -173,7 +207,7 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
         <div class="input-field">
             <p> (Mga) Ipinagsusumbong<br>
                 <!-- RspndtNames here -->
-                <input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br> </p>
+               <?php echo $rspndtNames; ?><br> </p>
         </div>
     </div>
 
@@ -182,52 +216,68 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
                     <h3 style="text-align: center;"><b>SUMBONG</b></h3>
 
                     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 
-                    <p>AKO/KAMI, ay nagrereklamo laban sa mga ipinagsusumbong na binanggit sa itaas dahil sa paglabag ng aking/aming mga karapatan at kapakanan sa sumusunod na pamamaraan: <input type="text" id="complain" name="complain" style="text-align: left;" size="110" value="<?php echo $cDesc; ?>"></p>
-                    <p>DAHIL DITO, AKO/KAMI, na nakikiusap na ipagkakaloob sa akin/amin ang sumusunod na (mga) kalunasan nang naaalinsunod sa batas at/o pagkamakatuwiran: <input type="text" id="petition" name="petition" style="text-align: left;" size="110" value="<?php echo $petition; ?>"></p>
-                    </div>
-
-                <form method="POST">
-                    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">Ginawa ngayong ika-  
-                    <input type="text" name="day" placeholder="araw" size="1" required> araw ng 
-                    <select name="month" required style="width: 60px;">
-                    <option value="" >Buwan</option>
-                    <?php foreach ($months as $month): ?>
-                        <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
-                    <?php endforeach; ?>
-                </select>
-,20
-<input type="text" name="year" placeholder="taon" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.
-                
+                    <p>AKO/KAMI, ay nagrereklamo laban sa mga ipinagsusumbong na binanggit sa itaas dahil sa paglabag ng aking/aming mga karapatan at kapakanan sa sumusunod na pamamaraan: 
+                        <div class="a">
+  <textarea id="name" name="name" style="width: 700px; box-sizing: border-box; overflow-y: hidden;"><?php echo $cDesc; ?></textarea>
+  <br>
 </div>
 
-           <div style="position: relative;">
-                        <br>
-                        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-                        <!-- CName here but All Capital Letters -->
-                        <input type="text" id="cmplnts" name="cmplnts" size="25" value="<?php echo $cNames; ?>" style="text-align: center;"><br>(mga) Maysumbong</p>
-            </div>
-           
-            <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> 	Tinanggap at inihain ngayong  
-                    <input type="text" name="day" placeholder="araw" size="1" required> araw ng 
-                    <select name="month" required style="width: 60px;">
-                    <option value="">Buwan</option>
-                    <?php foreach ($months as $month): ?>
-                        <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
-                    <?php endforeach; ?>
-                </select>
-,20
-<input type="text" name="year" placeholder="taon" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.
-                
+                </p>
+                    <p>DAHIL DITO, AKO/KAMI, na nakikiusap na ipagkakaloob sa akin/amin ang sumusunod na (mga) kalunasan nang naaalinsunod sa batas at/o pagkamakatuwiran: <div class="a">
+  <textarea id="name" name="name" style="width: 700px; box-sizing: border-box; overflow-y: hidden;"><?php echo $petition; ?></textarea>
+  <br>
+</div>
 
-<br>
-<br>
-
- 
-
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
-   <br> Punong Barangay/Kalihim ng Lupon
+<form id="formId" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+    Ginawa ngayong ika- 
+        <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo isset($existingMadeDay) ? $existingMadeDay : ''; ?>">
+        araw ng 
+        <select name="made_month">
+            <option value="">Buwan</option>
+            <?php foreach ($months as $m): ?>
+                <option value="<?php echo $m; ?>" <?php echo isset($existingMadeMonth) && $existingMadeMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <?php endforeach; ?>
+        </select>,
+        <input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : ''; ?>">
+    </div>
+    <div style="position: relative;">
+        <br>
+        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;" >
+            <!-- CName here but All Capital Letters --><br><br><br><p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
+    <?php echo $cNames; ?><br>
+     _________________
+    <label id="cmplnts" name="cmplnts" size="25" style="text-align: center;">(mga) Maysumbong</label>
 </p>
-              
+
+    </div>
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+    Tinanggap at inihain ngayong  
+<input type="number" name="received_day" placeholder="day" min="1" max="31" value="<?php echo isset($existingReceivedDay) ? $existingReceivedDay : ''; ?>">
+araw ng 
+        <select name="received_month">
+            <option value="">Buwan</option>
+            <?php foreach ($months as $m): ?>
+                <option value="<?php echo $m; ?>" <?php echo isset($existingReceivedMonth) && $existingReceivedMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <?php endforeach; ?>
+        </select>,
+        <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : ''; ?>">
+    </div>
+    <?php if (!empty($message)) : ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
+</form>
+<br>
+<br>
+                    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
+                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay/Kalihim ng Lupon</label>
+</p>
+                </div>
+            </div>
+        </div> <br>
+   </div>     
     </body>
+</div> 
+
 </html>

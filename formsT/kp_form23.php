@@ -46,7 +46,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
             <?php
             $months = [
-                'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'November', 'Disyembre'
+              'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
             ];
 
             $currentYear = date('Y');
@@ -54,28 +54,34 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 <div class="form-group" style="text-align: right;">
 
-    <div class="input-field">
-    Usaping Barangay Blg.<input type="text" name="barangayCaseNo" pattern="\d{3}-\d{3}-\d{4}" maxlength="15" value ="<?php echo $cNum; ?>" style="width: 30%;"
-> <br><br> <p>Ukol sa: <input type="text" name="for" id="for" size="30" value="<?php echo $forTitle;?>"> <br> 
-    </div>
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;">Usaping Barangay Blg.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;"> Ukol sa: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p>(Mga) Maysumbong:<br><input type="text" name="complainant" id="complainant" size="30" value="<?php echo $cNames; ?>"><br><input type="text" name="complainant" id="complainant" size="30"> </p>
-    <br><p>  -laban kay/kina-</p>
+<div class="label"></div>
+<div class="input-field">
+    <p> (Mga) Maysumbong:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> -laban kay/kina-</p>
 </div>
 </div>
 
 <div>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> (Mga) Ipinagsusumbong:<br><input type="text" name="respondent" id="respondent" size="30" value="<?php echo $rspndtNames; ?>"><br><input type="text" name="respondent" id="respondent" size="30"> </p>
-    </div>
+<div class="label"></div>
+<div class="input-field">
+    <p> (Mga) Ipinagsusumbong:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
 </div>
-           
+</div>
+
 
                 <h3 style="text-align: center;"><b>PANUKALA SA PAGPAPATUPAD</b>
  </h3>
@@ -84,8 +90,8 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 <p> Ang (mga) maysumbong/ipinagsusumbong ay nagpahayag ng mga sumusunod: </p>
     <div>
 
-   <div style="text-align: justify; text-indent: 0em; margin-left: 38.5px;"> 1. Noong <input type="text" name="day" placeholder="araw" size="1" required>
-                <select name="month" required style="width: 60px;">
+   <div style="text-align: justify; text-indent: 0em; margin-left: 38.5px;"> 1. Noong <input type="text" name="day" placeholder="day" size="1" required>
+                <select name="month" required>
                     <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
@@ -93,15 +99,14 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 </select>,
                 20
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>
-            ng mga panig sa usaping ito ay (petsa) lumagda sa isang  matiwasay na pag-aayos/ tumanggap ng gawad ng paghahatol na ibinigay ng Tagapangulo ng Lupon/Pangkat ng Tagapagkasundo; 
+                ng mga panig sa usaping ito ay (petsa) lumagda sa isang  matiwasay na pag-aayos/ tumanggap ng gawad ng paghahatol na ibinigay ng Tagapangulo ng Lupon/Pangkat ng Tagapagkasundo; 
            
 </div>
 <br>
 
 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <p style="text-indent: 0em; margin-left: 18px;">
-       2. Ang sampung (araw) na taning mula sa petsang binanggit sa itaas ay natapos ng  wala sa sinumang panig ang naghain ng sinumpaang salaysay ng pagtanggi sa pag-aayos sa harap ng Tagapangulo ng Lupon ng petisyon na nagpapawalang-saysay sa  gawad ng paghahatol sa  hukuman;  at
-
+    2. Ang sampung (araw) na taning mula sa petsang binanggit sa itaas ay natapos ng  wala sa sinumang panig ang naghain ng sinumpaang salaysay ng pagtanggi sa pag-aayos sa harap ng Tagapangulo ng Lupon ng petisyon na nagpapawalang-saysay sa  gawad ng paghahatol sa  hukuman;  at
 
     </p>
 </div>
@@ -109,7 +114,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <br>
            <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <p style="text-indent: 0em; margin-left: 18px;">
-       3. Ang matiwasay na pag-aayos/gawad ng paghahatol ay pinal at ngayon ay nararapat lang ipatupad.
+    3. Ang matiwasay na pag-aayos/gawad ng paghahatol ay pinal at ngayon ay nararapat lang ipatupad.
 
     </p>
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
@@ -119,7 +124,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 <br>
 <br>
 <br>
-             <input type="text" name="year" placeholder="Petsa" size="15" value="">
+             <input type="text" name="year" placeholder="Date" size="15" value="">
         
 
     <div style="position: relative;">

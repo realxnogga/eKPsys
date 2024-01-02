@@ -24,22 +24,20 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                
             </div>
             
-              <div style="text-align: left;">
-                <h5>Pormularyo ng KP Blg. 3</h5>
+             <div style="text-align: left;">
+             <h5>Pormularyo ng KP Blg. 3</h5>
                 <h5 style="text-align: center;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center;">Lalawigan ng Laguna</h5>
                 <h5 style="text-align: center;">Bayan ng <?php echo $_SESSION['municipality_name']; ?></h5>
                 <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
                 <h5 style="text-align: center;">TANGGAPAN NG PUNONG BARANGAY</h5>
-            </div>
-              <?php
+            </div>            <?php
             $months = [
-                'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'November', 'Disyembre'
+                'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
             ];
 
             $currentYear = date('Y');
             ?>
-
 
             <div style="text-align: right;">
                 <select id="monthInput" name="month" required style="width: 93px; height: 19px; border: 1px solid black;">
@@ -56,6 +54,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                 <label for="day">,</label>
                 <input type="text" id="year" name="year" required style="width: 50px; border: none;" value="<?php echo $currentYear; ?>">
 
+               
 
                 <h3 style="text-align: center;"><b>PAABISO NG PAGHIHIRANG</b></h3>
 
@@ -79,7 +78,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 				</p><br><br><br><br>
 				</div>
 
-
+		
                 <?php if (!empty($errors)): ?>
                     <ul>
                         <?php foreach ($errors as $error): ?>
@@ -88,17 +87,21 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                     </ul>
                 <?php endif; ?>
 
-    
-        
-    </style>
+    <div style="position: relative;"><br>
+
 		<p style="text-align: center; margin-left: 570px; margin-right: auto;">Tapat na Sumasainyo, </p>
 	<body>
-    
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
-     <br>  Kalihim ng Barangay
+	Kalihim ng Barangay
 	</p>
     </div>
     </div>
+    <div class="blank-page"></div>
+    </body>
+        </div><br><br><br><br><br> 
+		
+
+
 </body>
 </html>	

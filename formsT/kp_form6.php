@@ -25,17 +25,17 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
             </div>
             
 			
-             <div style="text-align: left;">
-                <h5>Pormularyo ng KP Blg. 6</h5>
+            <div style="text-align: left;">
+            <h5>Pormularyo ng KP Blg. 6</h5>
                 <h5 style="text-align: center;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center;">Lalawigan ng Laguna</h5>
                 <h5 style="text-align: center;">Bayan ng <?php echo $_SESSION['municipality_name']; ?></h5>
                 <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
                 <h5 style="text-align: center;">TANGGAPAN NG PUNONG BARANGAY</h5>
             </div>
-              <?php
+            <?php
             $months = [
-                'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'November', 'Disyembre'
+                'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
             ];
 
             $currentYear = date('Y');
@@ -56,10 +56,12 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                 <label for="day">,</label>
                 <input type="text" id="year" name="year" required style="width: 50px; border: none;" value="<?php echo $currentYear; ?>">
 
+            
+
                 <h3 style="text-align: center;"><b>PAGBAWI NG PAGHIRANG</b></h3>
 
                 <div style="text-align: left;">
-				<br><p style="text-align: justify; font-size: 12px; margin-top: 0;">KAY:
+				<br><p style="text-align: justify; font-size: 12px; margin-top: 0;">TO:
     <input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px;">
     <datalist id="nameList">
         <?php foreach ($linkedNames as $name): ?>
@@ -67,35 +69,47 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
         <?php endforeach; ?>
     </datalist>
 </p>
-				<p style="text-align: justify; font-size: 12px; text-indent: 0em;">
-    Matapos ang karampatang pagdinig at sa pagsang-ayon ng nakararami sa lahat ng mga Kasapi ng Lupong Tagapamayapa ng Barangay na ito, ang paghirang sa iyo bilang Kasapi nito ay binabawi na magkakabisa sa sandaling tanggapin ito, batay sa sumusunod na kadahilanan/mga kadahilanan:
-</p>
+				<p style="text-align: justify; font-size: 12px; text-indent: 1.5em;"> Matapos ang karampatang pagdinig at sa pagsang-ayon ng nakararami sa lahat ng mga Kasapi ng Lupong Tagapamayapa ng Barangay na ito, ang paghirang sa iyo bilang Kasapi nito ay binabawi na magkakabisa sa sandaling tanggapin ito, batay sa sumusunod na kadahilanan/mga kadahilanan: </p>
 				
 				<!-- Use PHP to set the checkbox status based on some condition -->
         <?php
             $isChecked = false; // Replace this with your own condition to determine if the checkbox should be checked or not
         ?>
-       
-
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-         <div><input type="checkbox" name="my_checkbox" <?php if ($isChecked) echo "checked"; ?>>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		 kawalan ng kakayahan sa pagtupad ng mga tungkulin ng inyong tanggapan na 
-                  ipinakita sa pamamagitan ng <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- <input type="text" id="day" name="day" required style="width:330px; height: 20px; size="1" required>.</p> </div>
+        <!-- Create the checkbox with PHP -->
+        <input type="checkbox" name="my_checkbox" <?php if ($isChecked) echo "checked"; ?>>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        kawalan ng kakayahan sa pagtupad ng mga tungkulin ng inyong tanggapan na 
+                  ipinakita sa pamamagitan ng
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="text" id="day" name="day" required style="width:330px; height: 20px; size="1" required>.</p>
 		
 		<!-- Use PHP to set the checkbox status based on some condition -->
         <?php
             $isChecked = false; // Replace this with your own condition to determine if the checkbox should be checked or not
         ?>
         <!-- Create the checkbox with PHP -->
-       <div><input type="checkbox" name="my_checkbox" <?php if ($isChecked) echo "checked"; ?>>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-         hindi naangkop sa dahilan ng  <input type="text" id="day" name="day" required style="width:330px; height: 20px; size="1" required>.
-         <br>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Markahan kung alin ang angkop at ipaliwanag o tiyakin ang kilos/mga kilos o 
-      pagkukulang/mga  pagkukulang  na  siyang  <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; kadahilanan/mga  kadahilanan sa 
-      pagbawi.) 
-</p> </div>
+        <input type="checkbox" name="my_checkbox" <?php if ($isChecked) echo "checked"; ?>>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		hindi naangkop sa dahilan ng  <input type="text" id="day" name="day" required style="width:330px; height: 20px; size="1" required>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		(Markahan kung alin ang angkop at ipaliwanag o tiyakin ang kilos/mga kilos o 
+      pagkukulang/mga  pagkukulang  na  siyang 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		kadahilanan/mga  kadahilanan sa 
+      pagbawi.) <br><br><br>
 
                 <?php if (!empty($errors)): ?>
                     <ul>
@@ -105,11 +119,11 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                     </ul>
                 <?php endif; ?>
 
-    
 	<body>
+   
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
-    <br>Punong Barangay/ Kalihim ng Lupon
+    Punong Barangay/ Kalihim ng Lupon
 </p>
 
 <br><br>
@@ -130,12 +144,13 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
             </div>
         </div><br><br>
 				</div>
+
 			
 			<form method="POST">
 			 <p style="text-align: justify; text-indent: 4em;">
-                    Tinanggap ngayong ika - 
+             Tinanggap ngayong ika - 
                     <input type="text" id="day" name="day" required style="width:32px; height: 20px; size="1" required>
-					araw ng  <select name="month" required style="width: 93px; required>
+					araw ng <select name="month" required style="width: 93px; required>
                             <option value="">Pumili ng buwan</option>
                             <?php foreach ($months as $month): ?>
                                 <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
@@ -146,16 +161,18 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                     </p>
                 </form>
 	
+	
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
     <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
-	<br>(Lagda)
+	(Lagda)
 	</p><br><br><br><br><br><br>
 	<p style="text-align: justify; font-size: 12px; margin-top: 0;"> BIGYAN – PANSIN:
-	<p style="text-align: justify; font-size: 12px; text-indent: 1.5em;">  Ang mga kasapi ng lupon na sumasang-ayon sa pagbawi ay kailangang personal na lumagda p magkintal ng hinlalaki  sa kinauukulang  mga patlang sa itaas.  Ang pagbawi ay dapat sang-ayunan ng mahigit sa kalahati ng kabuuang bilag ng mga kasapi ng lupon kabilang ang Punong Barangay at ang kinauukulang kasapi.</p>
+	<p style="text-align: justify; font-size: 12px; text-indent: 1.5em;"> Ang mga kasapi ng lupon na sumasang-ayon sa pagbawi ay kailangang personal na lumagda p magkintal ng hinlalaki  sa kinauukulang  mga patlang sa itaas.  Ang pagbawi ay dapat sang-ayunan ng mahigit sa kalahati ng kabuuang bilag ng mga kasapi ng lupon kabilang ang Punong Barangay at ang kinauukulang kasapi.</p>
 	
     <div class="blank-page"></div>
     </body>
         </div><br><br><br><br><br><br><br><br>
-	
+		
+		
 </body>
 </html>	

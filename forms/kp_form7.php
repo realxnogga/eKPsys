@@ -32,16 +32,16 @@ $message = '';
 
         // Use existing values as placeholders
         // Parse dates to extract day, month, and year
-        $existingMadeDay = date('d', strtotime($existingMadeDate));
+        $existingMadeDay = date('j', strtotime($existingMadeDate));
         $existingMadeMonth = date('F', strtotime($existingMadeDate));
         $existingMadeYear = date('Y', strtotime($existingMadeDate));
 
-        $existingReceivedDay = date('d', strtotime($existingReceivedDate));
+        $existingReceivedDay = date('j', strtotime($existingReceivedDate));
         $existingReceivedMonth = date('F', strtotime($existingReceivedDate));
         $existingReceivedYear = date('Y', strtotime($existingReceivedDate));
     } else {
         // If no row found, populate with present date as placeholders
-        $existingMadeDay = date('d');
+        $existingMadeDay = date('j');
         $existingMadeMonth = date('F');
         $existingMadeYear = date('Y');
 

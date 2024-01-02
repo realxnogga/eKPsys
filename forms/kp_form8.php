@@ -10,10 +10,9 @@ $cNum = $_SESSION['cNum'] ?? '';
 
 $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
- $complaintId = $_SESSION['current_complaint_id'] ?? '';
+$complaintId = $_SESSION['current_complaint_id'] ?? '';
 $currentHearing = $_SESSION['current_hearing'] ?? '';
 $formUsed = 8;
-
 
 
 // Fetch existing row values if the form has been previously submitted
@@ -24,15 +23,56 @@ $stmt->bindParam(':formUsed', $formUsed);
 $stmt->execute();
 $rowCount = $stmt->rowCount();
 
-if ($rowCount > 0) {
-    // Fetch existing row data
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $existingMadeDate = $row['made_date'];
-    $existingReceivedDate = $row['received_date'];
-} else {
-    // Set defaults for date inputs
-    $existingMadeDate = date('Y-m-d');
-    $existingReceivedDate = date('Y-m-d');
+$currentYear = date('Y'); // Get the current year
+
+// Array of months
+$months = array(
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+);
+
+$currentMonth = date('F'); 
+$currentDay = date('j');
+
+$id = $_GET['formID'] ?? '';
+
+// Check if formID exists in the URL
+if (!empty($id)) {
+    // Fetch data based on the provided formID
+    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $rowCount = $stmt->rowCount();
+
+    if ($rowCount > 0) {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      // Extract and format the timestamp values
+        $appearDate = new DateTime($row['appear_date']);
+        $appear_day = $appearDate->format('j');
+
+        $appear_month = $appearDate->format('F');
+        $appear_year = $appearDate->format('Y');
+        $appear_time = $appearDate->format('H:i'); // Format for the time input
+
+        $madeDate = new DateTime($row['made_date']);
+        $receivedDate = new DateTime($row['received_date']);
+
+        // Populate form inputs with the extracted values
+        $currentDay = $appearDate->format('j');
+        $currentMonth = $appearDate->format('F');
+        $currentYear = $appearDate->format('Y');
+
+        $existingMadeDay = $madeDate->format('j');
+        $existingMadeMonth = $madeDate->format('F');
+        $existingMadeYear = $madeDate->format('Y');
+
+        $existingReceivedDay = $receivedDate->format('j');
+        $existingReceivedMonth = $receivedDate->format('F');
+        $existingReceivedYear = $receivedDate->format('Y');
+    }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -44,18 +84,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $receivedMonth = $_POST['received_month'] ?? '';
     $receivedYear = $_POST['received_year'] ?? '';
 
-  $day = $_POST['day'] ?? '';
+    $day = $_POST['day'] ?? '';
     $month = $_POST['month'] ?? '';
     $year = $_POST['year'] ?? '';
     $time = $_POST['time'] ?? '';
 
-    // Assuming $year, $month, $day, and $time contain user inputs
-    $appearTimestamp = "$year-$month-$day $time";
+$dateTimeString = "$year-$month-$day $time";
+$appearTimestamp = DateTime::createFromFormat('Y-F-j H:i', $dateTimeString);
+
+
+if ($appearTimestamp !== false) {
+    $appearTimestamp = $appearTimestamp->format('Y-m-d H:i:s');
 
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
-    $appearTimestamp = date('Y-m-d H:i:s', strtotime("$year-$month-$day $time -1 hour"));
 
     // Insert or update the appear_date in the hearings table
     $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
@@ -82,6 +125,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "Form submit failed.";
     }
 }
+else {
+        // Handle case where DateTime object creation failed
+        $message ="Invalid date/time format! Input: ". $dateTimeString;
+    }
+}
 
 // Function to create a date from day, month, and year inputs
 function createDateFromInputs($day, $month, $year) {
@@ -97,7 +145,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
     if (!empty($day) && !empty($month) && !empty($year) && !empty($time)) {
         return date('Y-m-d H:i:s', strtotime("$year-$month-$day $time"));
     } else {
-        return null; // You may want to handle this differently based on your requirements
+        return null; 
     }
 }
 
@@ -160,7 +208,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
             ?>
 
             
-<h3 style="text-align: center;"><b>NOTICE OF HEARING <br> (MEDIATION PROCEEDING)</b></h3>
+
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
@@ -174,28 +222,28 @@ function createTimestampFromInputs($day, $month, $year, $time) {
 <form method="POST">
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
         You are hereby required to appear before me on the
-        <input type="number" name="day" placeholder="day" min="1" max="31" required> day of
+        <input type="number" name="day" placeholder="day" min="1" max="31" value="<?php echo $appear_day; ?>" required> day of
         <select name="month" required>
-            <option value="">Select Month</option>
-            <?php foreach ($months as $month): ?>
-                <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
-            <?php endforeach; ?>
-        </select>,
+        <option value="">Select Month</option>
+        <?php foreach ($months as $m): ?>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endforeach; ?>
+    </select>,
         <input type="number" name="year" placeholder="year" min="<?php echo date('Y'); ?>" max="<?php echo date('Y') + 100; ?>" value="<?php echo date('Y'); ?>" required> at
-        <input type="time" id="time" name="time" size="5" style="border: none;" required> o'clock in the morning/afternoon for the hearing of your complaint.
+        <input type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required> o'clock in the morning/afternoon for the hearing of your complaint.
     </div>
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
         This
-        <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay ?? ''; ?>">
+        <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $currentDay; ?>">
         of
-        <select name="made_month">
-            <option value="">Select Month</option>
-            <?php foreach ($months as $m): ?>
-                <option value="<?php echo $m; ?>" <?php echo isset($existingMadeMonth) && $existingMadeMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
-            <?php endforeach; ?>
-        </select>,
-        <input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? ''; ?>">
+        <select name="made_month" required>
+        <option value="">Select Month</option>
+        <?php foreach ($months as $m): ?>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endforeach; ?>
+    </select>,
+        <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">
         <div style="position: relative;">
             <br>
             <br>
@@ -211,13 +259,13 @@ function createTimestampFromInputs($day, $month, $year, $time) {
             Notified this
             <input type="number" name="received_day" placeholder="day" min="1" max="31" value="<?php echo $existingReceivedDay ?? ''; ?>">
             of
-            <select name="received_month">
-                <option value="">Select Month</option>
-                <?php foreach ($months as $m): ?>
-                    <option value="<?php echo $m; ?>" <?php echo isset($existingReceivedMonth) && $existingReceivedMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
-                <?php endforeach; ?>
-            </select>,
-            <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingReceivedYear ?? ''; ?>">.
+            <select name="received_month" required>
+        <option value="">Select Month</option>
+        <?php foreach ($months as $m): ?>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endforeach; ?>
+    </select>,
+            <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
         </div>
 
         <?php if (!empty($message)) : ?>

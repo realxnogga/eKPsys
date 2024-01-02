@@ -173,9 +173,10 @@ function createTimestampFromInputs($day, $month, $year, $time) {
     input[type=number] {
         -moz-appearance: textfield;
         border: none;
-        width: 35px;
+        width: 30px;
 
     }
+    
 </style>
 
 <body>
@@ -225,11 +226,14 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         You are hereby required to appear before me on the
         <input type="number" name="day" placeholder="day" min="1" max="31" value="<?php echo $appear_day; ?>" required> day of
         <select name="month" required>
-        <option value="">Select Month</option>
-        <?php foreach ($months as $m): ?>
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
+        <?php else: ?>
             <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endforeach; ?>
-    </select>,
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>,
         <input type="number" name="year" placeholder="year" min="<?php echo date('Y'); ?>" max="<?php echo date('Y') + 100; ?>" value="<?php echo date('Y'); ?>" required> at
         <input type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required> o'clock in the morning/afternoon for the hearing of your complaint.
     </div>
@@ -239,11 +243,14 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>">
         of
         <select name="made_month" required>
-        <option value="">Select Month</option>
-        <?php foreach ($months as $m): ?>
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+        <?php else: ?>
             <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endforeach; ?>
-    </select>,
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>,
         <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">
         <div style="position: relative;">
             <br>
@@ -261,11 +268,14 @@ function createTimestampFromInputs($day, $month, $year, $time) {
             <input type="number" name="received_day" placeholder="day" min="1" max="31" value="<?php echo $existingReceivedDay ?? ''; ?>">
             of
             <select name="received_month" required>
-        <option value="">Select Month</option>
-        <?php foreach ($months as $m): ?>
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+        <?php else: ?>
             <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endforeach; ?>
-    </select>,
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>,
             <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
         </div>
 

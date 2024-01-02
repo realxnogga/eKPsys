@@ -37,12 +37,12 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             </div>
             
              <div style="text-align: left;">
-                <h5>KP Form No. 8</h5>
-                <h5 style="text-align: center;">Republic of the Philippines</h5>
-                <h5 style="text-align: center;">Province of Laguna</h5>
-                <h5 style="text-align: center;">CITY/MUNICIPALITY OF <?php echo $_SESSION['municipality_name']; ?></h5>
+             <h5>Pormularyo ng KP Blg. 8</h5>
+                <h5 style="text-align: center;">Republika ng Pilipinas</h5>
+                <h5 style="text-align: center;">Lalawigan ng Laguna</h5>
+                <h5 style="text-align: center;">Bayan ng <?php echo $_SESSION['municipality_name']; ?></h5>
                 <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-                <h5 style="text-align: center;">OFFICE OF THE PUNONG BARANGAY</h5>
+                <h5 style="text-align: center;">TANGGAPAN NG PUNONG BARANGAY</h5>
             </div>
 
             <?php
@@ -53,32 +53,32 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
             ?>
 
             
-<h3 style="text-align: center;"><b>NOTICE OF HEARING <br> (MEDIATION PROCEEDING)</b></h3>
+
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> &nbsp;&nbsp;&nbsp;TO:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $cNames; ?><br></p>
+        <p> &nbsp;&nbsp;&nbsp;KAY:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $cNames; ?><br></p>
 </div>
 </div>
 
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"></div>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complainant/s</p> 
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> You are hereby required to appear before me on the <input type="text" name="day" placeholder="day" size="6" required> day  of
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Mga) Maysumbong</p> 
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">  Ikaw  ay inuutusan na humarap sa akin sa <input type="text" name="day" placeholder="day" size="6" required>araw ng
                 <select name="month" required>
-                    <option value="">Select Month</option>
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
                 </select>,
                 20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required> at <input type="time" id="time" name="time" size="5" style="border: none;"> o'clock in the morning/afternoon for the hearing of your complaint.             
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>sa ganap ng ika <input type="time" id="time" name="time" size="5" style="border: none;">  ng umaga/ hapon para sa pagdinig ng iyong sumbong.          
 </div>  
 
             <form method="POST">
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> This <input type="text" name="day" placeholder="day" size="6" required>  of
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">  Ngayong ika- <input type="text" name="day" placeholder="day" size="6" required> araw ng
                 <select name="month" required>
-                    <option value="">Select Month</option>
+                    <option value="">Buwan</option>
                     <?php foreach ($months as $month): ?>
                         <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
                     <?php endforeach; ?>
@@ -98,7 +98,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 </p>
         </div>
        
-        <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Notified this <input type="text" name="day" placeholder="day" size="3" value="<?php echo $day; ?>">  of
+        <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Pinaabisuhan ngayong ika <input type="text" name="day" placeholder="day" size="3" value="<?php echo $day; ?>">  ng
                 <input type="text" size="5" value="<?php echo $month; ?>">,
                 20
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.
@@ -115,7 +115,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 <?php endif; ?>
 
     <div style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><br>
-    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
+    <p><br>(Mga)  Maysumbong<br> <br><br><p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
             <id="cmplnts" name="cmplnts" size="25"  style="text-align: center;"></p><br><br><br><br>
      
     </div>

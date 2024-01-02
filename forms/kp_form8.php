@@ -173,6 +173,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
     input[type=number] {
         -moz-appearance: textfield;
         border: none;
+        width: 35px;
 
     }
 </style>
@@ -235,7 +236,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
         This
-        <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $currentDay; ?>">
+        <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>">
         of
         <select name="made_month" required>
         <option value="">Select Month</option>

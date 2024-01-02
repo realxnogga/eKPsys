@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'connection.php';
 $forTitle = $_SESSION['forTitle'] ?? '';
 $cNames = $_SESSION['cNames'] ?? '';
 $rspndtNames = $_SESSION['rspndtNames'] ?? '';
@@ -7,23 +8,119 @@ $cDesc = $_SESSION['cDesc'] ?? '';
 $petition = $_SESSION['petition'] ?? '';
 $cNum = $_SESSION['cNum'] ?? '';
 
-$day = $_SESSION['day'] ?? '';
-$month = $_SESSION['month'] ?? '';
-$year = $_SESSION['year'] ?? '';
-
 $punong_barangay = $_SESSION['punong_barangay'] ?? '';
+$message = '';
 
+$complaintId = $_SESSION['current_complaint_id'];
+$currentHearing = $_SESSION['current_hearing'];
+$formUsed = 16;
+
+// Array of months
+$months = array(
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+);
+
+// Check if the form has been previously submitted for this complaint ID and form type
+$query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':complaintId', $complaintId);
+$stmt->bindParam(':formUsed', $formUsed);
+$stmt->execute();
+$rowCount = $stmt->rowCount();
+
+if ($rowCount > 0) {
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $existingMadeDate = $row['made_date'];
+    $existingSettlement = $row['settlement']; // Fetch existing settlement value
+
+    // Use existing values as placeholders
+    // Parse dates to extract day, month, and year
+    $existingMadeDay = date('j', strtotime($existingMadeDate));
+    $existingMadeMonth = date('F', strtotime($existingMadeDate));
+    $existingMadeYear = date('Y', strtotime($existingMadeDate));
+
+} else {
+    // If no row found, populate with present date as placeholders
+    $existingMadeDay = date('j');
+    $existingMadeMonth = date('F');
+    $existingMadeYear = date('Y');
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // After getting form inputs
+    $madeDay = $_POST['made_day'];
+    $madeMonth = $_POST['made_month'];
+    $madeYear = $_POST['made_year'];
+    $settlement = $_POST['settle']; // Get the 'settle' textarea input
+
+    // Check if day, month, and year are non-empty before constructing the date
+    if (!empty($madeDay) && !empty($madeMonth) && !empty($madeYear)) {
+        $monthNum = date('m', strtotime("$madeMonth 1"));
+        $madeDate = date('Y-m-d', mktime(0, 0, 0, $monthNum, $madeDay, $madeYear));
+    } else {
+        // If any of the date components are empty, set $madeDate to a default value or handle as needed
+        // For example, setting it to the current date:
+        $madeDate = date('Y-m-d');
+    }
+
+    // Validation before submission
+    if ($rowCount > 0) {
+        $message = "Form already submitted for this complaint ID and form type.";
+    } else {
+        $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, settlement)
+                  VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :settlement)
+                  ON DUPLICATE KEY UPDATE
+                  hearing_number = VALUES(hearing_number),
+                  form_used = VALUES(form_used),
+                  made_date = VALUES(made_date),
+                  settlement = VALUES(settlement)";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':complaintId', $complaintId);
+        $stmt->bindParam(':currentHearing', $currentHearing);
+        $stmt->bindParam(':formUsed', $formUsed);
+        $stmt->bindParam(':madeDate', $madeDate);
+        $stmt->bindParam(':settlement', $settlement);
+
+        if ($stmt->execute()) {
+            $message = "Form submit successful.";
+            // Update 'CStatus' and 'CMethod' in 'complaints' table
+            $updateQuery = "UPDATE complaints SET CStatus = 'Settled', CMethod = 'Mediation' WHERE id = :complaintId";
+            $updateStmt = $conn->prepare($updateQuery);
+            $updateStmt->bindParam(':complaintId', $complaintId);
+            $updateStmt->execute();
+        } else {
+            $message = "Form submit failed.";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KP. FORM 16</title>
+    <title>KP FORM 16</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
     
 </head>
+<style>
+    /* Hide the number input arrows */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Hide the number input arrows for Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+        border: none;
+
+    }
+</style>
 <body>
     <br>
     <div class="container">
@@ -33,7 +130,9 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
                 </button>
-               
+               <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>"><button class="btn common-button">
+                    <i class="button-icon"></i> Back
+                </button></a>
             </div>
             
             <div style="text-align: left;">
@@ -85,39 +184,31 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 </div>
         </div>
 
-<h3 style="text-align: center;"><b>AMMICABLE SETTLEMENT</b></h3>
-
-    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">We, complainant/s and respondent/s in the above-captioned case, do hereby agree to settle our dispute as follows:            
+<h3 style="text-align: center;"><b>AMICABLE SETTLEMENT</b></h3>
+<form method="POST">
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+        We, complainant/s and respondent/s in the above-captioned case, do hereby agree to settle our dispute as follows:            
     </div>
-
-    <div class="a">
-  <textarea id="name" name="name" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
-  <br>
-</div>
-
-
-  
-
-
-
-  
-</div>
-
-
-<p> and bind ourselves to comply honestly and faithfully with the above terms of settlement. </p>
-
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Enter into this <input type="text" name="day" placeholder="day" size="1" required> day of
-                <select name="month" required>
-                    <option value="">Select Month</option>
-                    <?php foreach ($months as $month): ?>
-                        <option value="<?php echo $month; ?>"><?php echo $month; ?></option>
-                    <?php endforeach; ?>
-                </select> ,
-                20
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo substr($currentYear, -2); ?>" pattern="[0-9]{2}" required>.              
-</div>
-
-<div class="d">
+<textarea name="settle" style="width: 760px; box-sizing: border-box; overflow-y: hidden;" required><?php echo isset($existingSettlement) ? $existingSettlement : ''; ?></textarea>
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+    <p> and bind ourselves to comply honestly and faithfully with the above terms of settlement. </p>
+        Enter into this
+        <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo isset($existingMadeDay) ? $existingMadeDay : ''; ?>">
+        day of
+        <select name="made_month">
+            <option value="">Select Month</option>
+            <?php foreach ($months as $m): ?>
+                <option value="<?php echo $m; ?>" <?php echo isset($existingMadeMonth) && $existingMadeMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <?php endforeach; ?>
+        </select>,
+        <input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : ''; ?>">
+    </div>
+    <?php if (!empty($message)) : ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
+</form>
+<div>
     <div style="text-align: left; font-size: 12px; margin-left: 100px;">
     <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
             <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -149,7 +240,6 @@ explained to them the nature and consequence of such settlement.</p>
 
 </body>
 <br>
-<div class="blank-page">        
        
 </div>
 </html>

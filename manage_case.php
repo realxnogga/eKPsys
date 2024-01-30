@@ -213,38 +213,7 @@ $_SESSION['current_hearing'] = $currentHearing;
 <!-- // left column end -->
 
 
-    <script>
-    const openFormButtons = document.querySelectorAll('.open-form');
-    const modalContainer = document.getElementById('modal-container');
-    const formIframe = document.getElementById('form-iframe');
 
-    openFormButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-            const formSrc = 'forms/' + button.getAttribute('data-form');
-            modalContainer.style.display = 'flex';
-            formIframe.src = formSrc;
-
-            // Add an event listener to close the modal when clicking outside
-            modalContainer.addEventListener('click', (event) => {
-                if (event.target === modalContainer) {
-                    closeFormView();
-                }
-            });
-        });
-    });
-
-    // Close the document view when pressing the "Esc" key
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape') {
-            closeFormView();
-        }
-    });
-
-    function closeFormView() {
-        modalContainer.style.display = 'none';
-        formIframe.src = '';
-    }
-</script>
             
 
 </body>

@@ -8,8 +8,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: login.php");
     exit;
 }
-
 include 'count_lupon.php';
+
 include 'report_handler.php';
 
 
@@ -20,14 +20,11 @@ include 'report_handler.php';
 
     <title>Reports</title>
     <link rel="stylesheet" type="text/css" href="style copy.css">
+    
 </head>
 
 <style>
-    .custom-modal-dialog {
-    max-width: 800px; /* Adjust the width as needed */
-    width: 90%; /* Adjust to your preference */
-  }
-
+ 
 
 body, html {
     margin: 0;
@@ -129,7 +126,7 @@ body, html {
         <option value="<?php echo $year['year']; ?>"><?php echo $year['year']; ?></option>
     <?php endforeach; ?>
 </select>
-    <input type="submit" name="submit_annual" value="View Annual Report">
+    <input type="submit" name="submit_annual" value="Select Annual Report">
 
 <h2>Monthly Report (<?php echo isset($selected_month) ? $selected_month : date('F, Y'); ?>)</h2>
 
@@ -140,56 +137,37 @@ body, html {
         <option value="<?php echo $month['month_year']; ?>"><?php echo $month['month_year']; ?></option>
     <?php endforeach; ?>
 </select>
-    <input type="submit" name="submit_monthly" value="View Monthly Report">
+    <input type="submit" name="submit_monthly" value="Select Monthly Report">
 
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="mayor">MAYOR:</label>
-                        <input type="text" class="form-control" id="mayor" name="mayor" value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $mayor;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
-            // Display the selected month's value if it's not the annual report submission
-            echo $s_mayor;
-        } else {
-            // Display default value when neither annual nor specific month is selected
-            echo $mayor;
-        } ?>">
+                        <input type="text" class="form-control" id="mayor" name="mayor" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
+            echo $s_mayor; // Display the selected month's value
+        } else {echo $mayor;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="region">REGION:</label>
-                        <input type="text" class="form-control" id="region" name="region" value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $region;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="text" class="form-control" id="region" name="region" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_region; // Display the selected month's value
         } else {echo $region;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="budget">BUDGET ALLOCATED:</label>
-                        <input type="text" class="form-control" id="budget" name="budget" value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $budget;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="text" class="form-control" id="budget" name="budget" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_budget; // Display the selected month's value
         } else {echo $budget;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="popul">POPULATION:</label>
-                        <input type="text" class="form-control" id="popul" name="population" value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $population;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="text" class="form-control" id="popul" name="population" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_population; // Display the selected month's value
         } else {echo $population;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="landarea">LAND AREA:</label>
-                        <input type="text" class="form-control" id="landarea" name="landarea" value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $landarea;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="text" class="form-control" id="landarea" name="landarea" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_landarea; // Display the selected month's value
         } else {echo $landarea;} ?>" >
                     </div>
@@ -198,38 +176,26 @@ body, html {
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="totalc">TOTAL NO. OF CASES:</label>
-                        <input type="number" class="form-control" id="totalc" name="totalc" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $natureSum;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="number" class="form-control" id="totalc" name="totalc" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_totalc; // Display the selected month's value
         } else {echo $natureSum;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="numlup">NUMBER OF LUPONS:</label>
-                        <input type="number" class="form-control" id="numlup" name="numlup" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $numlup;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="number" class="form-control" id="numlup" name="numlup" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_numlup; // Display the selected month's value
         } else {echo $numlup;} ?>">
                     </div>
                     <div class="form-group">
                         <label for="male">MALE:</label>
-                        <input type="number" class="form-control" id="male" name="male" value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $male;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="number" class="form-control" id="male" name="male" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_male; // Display the selected month's value
         } else {echo $male;} ?>">
                     </div>
 
                     <div class="form-group">
                         <label for="female">FEMALE:</label>
-                        <input type="number" class="form-control" id="female" name="female" value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $female;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                        <input type="number" class="form-control" id="female" name="female" value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_female; // Display the selected month's value
         } else {echo $female;} ?>">
                     </div>
@@ -239,37 +205,25 @@ body, html {
         <div class="row">
             <div class="col-md-4">
                 <label for="criminal">Criminal:</label>
-                <input type="number" class="form-control" id="criminal" name="criminal" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $criminalCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="criminal" name="criminal" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_criminal; // Display the selected month's value
         } else {echo $criminalCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="civil">Civil:</label>
-                <input type="number" class="form-control" id="civil" name="civil" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $civilCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="civil" name="civil" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_civil; // Display the selected month's value
         } else {echo $civilCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="others">Others:</label>
-                <input type="number" class="form-control" id="others" name="others" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $othersCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="others" name="others" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_others; // Display the selected month's value
         } else {echo $othersCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="totalNature">Total:</label>
-                <input type="number" class="form-control" id="totalNature" name="totalNature" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $natureSum;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="totalNature" name="totalNature" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_totalNature; // Display the selected month's value
         } else {echo $natureSum;} ?>">
             </div>
@@ -285,47 +239,32 @@ body, html {
         <div class="row">   
             <div class="col-md-4">
                 <label for="mediation">Mediation:</label>
-               <input type="number" class="form-control" id="mediation" name="mediation" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $mediationCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+               <input type="number" class="form-control" id="mediation" name="mediation" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_mediation; // Display the selected month's value
         } else {echo $mediationCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="conciliation">Conciliation:</label>
-                <input type="number" class="form-control" id="conciliation" name="conciliation" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $conciliationCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="conciliation" name="conciliation" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_conciliation; // Display the selected month's value
         } else {echo $conciliationCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="arbit">Arbitration:</label>
-                <input type="number" class="form-control" id="arbit" name="arbit" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $arbitrationCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="arbit" name="arbit" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_arbit; // Display the selected month's value
         } else {echo $arbitrationCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="totalSet">Total:</label>
-                <input type="number" class="form-control" id="totalSet" name="totalSet" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $totalSettledCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="totalSet" name="totalSet" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_totalSet; // Display the selected month's value
         } else {echo $totalSettledCount;} ?>">
             </div>
         <b>Outside the Jurisdiction of Barangay</b>
             <div class="col-md-2">
                 <label for="outside"></label>
-                <input type="number" class="form-control" id="outside" name="outside" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $totalOutsideCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="outside" name="outside" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_outside; // Display the selected month's value
         } else {echo $totalOutsideCount;} ?>">
             </div>
@@ -337,55 +276,37 @@ body, html {
         <div class="row">
             <div class="col-md-4">
                 <label for="pending">Pending:</label>
-                <input type="number" class="form-control" id="pending" name="pending" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $pendingCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="pending" name="pending" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_pending; // Display the selected month's value
         } else {echo $pendingCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="dismissed">Dismissed:</label>
-                <input type="number" class="form-control" id="dismissed" name="dismissed" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $dismissedCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="dismissed" name="dismissed" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_dismissed; // Display the selected month's value
         } else {echo $dismissedCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="repudiated">Repudiated:</label>
-                <input type="number" class="form-control" id="repudiated" name="repudiated" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $repudiatedCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="repudiated" name="repudiated" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_repudiated; // Display the selected month's value
         } else {echo $repudiatedCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="certified">Certified to Court:</label>
-                <input type="number" class="form-control" id="certified" name="certified" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $certifiedCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="certified" name="certified" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_certified; // Display the selected month's value
         } else {echo $certifiedCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="dropped">Dropped/Withdrawn:</label>
-                <input type="number" class="form-control" id="dropped" name="dropped" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $droppedCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="dropped" name="dropped" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_dropped; // Display the selected month's value
         } else {echo $droppedCount;} ?>">
             </div>
             <div class="col-md-4">
                 <label for="totalUnset">Total:</label>
-                <input type="number" class="form-control" id="totalUnset" name="totalUnset" readonly value="<?php if (isset($_POST['submit_annual'])) {
-            // Display the value when the annual report is submitted
-            echo $totalUnsetCount;
-        } elseif ($selected_month && $selected_month !== date('F Y')) {
+                <input type="number" class="form-control" id="totalUnset" name="totalUnset" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_totalUnset; // Display the selected month's value
         } else {echo $totalUnsetCount;} ?>">
             </div>
@@ -393,25 +314,9 @@ body, html {
                         </div>
         </form>
         </div>
-  
+ 
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reportModal">
-  View Report
-</button>
-
-<div class="modal fade" id="reportModal" name="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered custom-modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="reportModalLabel" name="reportModalLabel">Monthly Report</h5>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <?php include 'reports_table.php'; ?>
-      </div>
-    </div>
-  </div>
-</div>
+<a href="report-print.php" class="btn btn-primary">View Report</a>
 
 
 

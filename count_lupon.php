@@ -1,5 +1,26 @@
 <?php 
 
+// Fetch 'brgy_name,' 'punong_brgy,' and 'munic_name' values for the punong_barangay's row with appoint = 1 and current month
+$fetchBrgyInfoQuery = "SELECT b.barangay_name AS brgy_name, m.municipality_name AS munic_name, l.punong_barangay AS punong_brgy
+                       FROM users u
+                       JOIN barangays b ON u.barangay_id = b.id
+                       JOIN municipalities m ON b.municipality_id = m.id
+                       JOIN lupons l ON u.id = l.user_id
+                       WHERE u.id = :user_id
+                       AND l.appoint = 1
+                       AND MONTH(l.created_at) = MONTH(NOW())";
+
+$fetchBrgyInfoStmt = $conn->prepare($fetchBrgyInfoQuery);
+$fetchBrgyInfoStmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+$fetchBrgyInfoStmt->execute();
+$brgyInfo = $fetchBrgyInfoStmt->fetch(PDO::FETCH_ASSOC);
+
+// Store 'brgy_name,' 'punong_brgy,' and 'munic_name' in session variables
+$_SESSION['brgy_name'] = $brgyInfo['brgy_name'];
+$_SESSION['munic_name'] = $brgyInfo['munic_name'];
+$_SESSION['punong_brgy'] = $brgyInfo['punong_brgy'];
+
+
 $linkedNamesQuery = "SELECT 
                         COUNT(NULLIF(name1, '')) + 
                         COUNT(NULLIF(name2, '')) + 
@@ -40,6 +61,10 @@ if (isset($_POST['submit_monthly'])) {
 $linkedNamesStmt->execute();
 $countValues = $linkedNamesStmt->fetchColumn();
 
+
+
 // Store the count in a session variable
 $_SESSION['linkedNamesCount'] = $countValues;
+
+
  ?>

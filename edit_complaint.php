@@ -10,7 +10,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     exit;
 }
 
-include 'edit_handler.php';
 
 // Step 1: Query the user's "lupons" table
 $userID = $_SESSION['user_id'];

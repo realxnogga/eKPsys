@@ -147,6 +147,10 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
         border: none;
 
     }
+    h5 {
+        margin: 0;
+        padding: 0;
+    }
 </style>
 </head>
 <body>
@@ -158,6 +162,25 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
                 </button>
+                            <!-- Download button -->
+    <button class="btn btn-success download-button common-button" onclick="downloadPage()">
+            <i class="fas fa-download button-icon"></i> Download
+                </button>
+                <script>
+function downloadPage() {
+    var pageContent = document.documentElement.outerHTML;
+    var blob = new Blob([pageContent], { type: 'text/html' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'page.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+</script>
+</body>
                 <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>"><button class="btn common-button">
                     <i class="button-icon"></i> Back
                 </button></a>
@@ -165,12 +188,12 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
             </div>
             
              <div style="text-align: left;">
-             <h5>Pormularyo ng KP Blg. 7</h5>
+             <h5 style="font-size: 8px;">Pormularyo ng KP Blg. 7</h5>
                 <h5 style="text-align: center;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center;">Lalawigan ng Laguna</h5>
                 <h5 style="text-align: center;">Bayan ng <?php echo $_SESSION['municipality_name']; ?></h5>
-                <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-                <h5 style="text-align: center;">TANGGAPAN NG PUNONG BARANGAY</h5>
+                <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5><br>
+                <h5 style="text-align: center;"><b>TANGGAPAN NG LUPONG TAGAPAMAYAPA</b></h5>
             </div>
                 <?php
                 $months = [
@@ -183,11 +206,12 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
   
     <div class="form-group" style="text-align: right;">
 
-        <div class="input-field"> <br>
+        <div class="input-field"> <br><br>
             <!-- case num here -->
-            <div style="text-align: right; margin-right: 180px;">  Usaping Barangay Blg.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">Ukol sa : 
-                <!-- ForTitle here -->
-                 <?php echo $forTitle; ?> <br> 
+            <div style="text-align: right;">  Usaping Barangay Blg.<?php echo $cNum; ?> </div>
+            <p> <div style="text-align: right;">Ukol sa : 
+            <!-- ForTitle here -->
+            <?php echo $forTitle; ?> <br> 
         </div>
     </div>
 

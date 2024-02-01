@@ -348,7 +348,7 @@ input[name="clear"]:hover {
 <div class="row">
 <div class="col-md-12">
 <h3 id="mayorName"></h3>
-<canvas id="casesChart" width="500" height="200"></canvas>
+<canvas id="casesChart" width="500" height="270"></canvas>
 <div id="totalCases" style="margin-top: 20px;"></div>
 
 </div>
@@ -372,7 +372,7 @@ var totalCases = criminalCount + civilCount + othersCount;
 var data = {
 labels: ['Criminal', 'Civil', 'Others'],
 datasets: [{
-label: 'Number of Cases Unsettled/Settled',
+label: 'Case Type Unsettled/Settled',
 data: [criminalCount, civilCount, othersCount],
 backgroundColor: [
     'rgba(255, 99, 132, 0.6)',
@@ -409,72 +409,6 @@ document.getElementById('totalCases').innerHTML = '<b>Total Cases:</b> ' + total
 });
 </script>
 
-<hr>
-
-
-<!-- Add this inside the body, where you want the second chart to appear -->
-<div class="row">
-<div class="col-md-12">
-<canvas id="unsetChart"></canvas>
-</div>
-</div>
-
-<!-- Add this before the closing body tag -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-// Get the data for the chart
-var pendingCount = <?php echo $pendingCount; ?>;
-var dismissedCount = <?php echo $dismissedCount; ?>;
-var repudiatedCount = <?php echo $repudiatedCount; ?>;
-var certifiedCount = <?php echo $certifiedCount; ?>;
-var droppedCount = <?php echo $droppedCount; ?>;
-var totalUnsetCount = <?php echo $totalUnsetCount; ?>;
-
-// Prepare data for the chart
-var unsetData = {
-labels: ['Pending', 'Dismissed', 'Repudiated', 'Certified to Court', 'Dropped/Withdrawn'],
-datasets: [{
-label: 'Number of Cases Unsettled/Settled',
-data: [pendingCount, dismissedCount, repudiatedCount, certifiedCount, droppedCount],
-backgroundColor: [
-    'rgba(255, 99, 132, 0.6)',
-    'rgba(54, 162, 235, 0.6)',
-    'rgba(255, 206, 86, 0.6)',
-    'rgba(75, 192, 192, 0.6)',
-    'rgba(153, 102, 255, 0.6)',
-],
-borderColor: [
-    'rgba(255, 99, 132, 1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-],
-borderWidth: 1
-}]
-};
-
-// Get the canvas element for the second chart
-var unsetCtx = document.getElementById('unsetChart').getContext('2d');
-
-// Create the chart for the second set of data
-var unsetChart = new Chart(unsetCtx, {
-type: 'bar',
-data: unsetData,
-options: {
-scales: {
-    y: {
-        beginAtZero: true
-    }
-}
-}
-});
-
-// Display the total outside the chart
-var totalContainer = document.getElementById('totalUnset');
-totalContainer.innerHTML = 'Total: ' + totalUnsetCount;
-});
-</script>
 
 
 

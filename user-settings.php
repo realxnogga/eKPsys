@@ -47,7 +47,7 @@ if ($securityQuestions) {
     <link rel="stylesheet" type="text/css" href="style copy.css">
    
 </head>
-<hr><br>
+<br>
 
 <body>
 
@@ -55,7 +55,7 @@ if ($securityQuestions) {
     <div class="left-column">
         <div class="settings">
             <h4><b>Account Settings</b></h4><br>
-
+            <hr>
            <div class="row no-gutters row-bordered row-border-light">
                 <!-- Sidebar -->
                 <div class="col-md-3 pt-0">

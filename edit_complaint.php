@@ -192,15 +192,59 @@ input[type="submit"]:hover {
                             </div>
                         </div>
                         <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-6 flex-column d-flex">
-                                <label class="form-control-label px-3">Complainants:<span class="text-danger"> *</span></label>
-                                <input type="text" id="CNames" name="CNames" placeholder="Enter name of complainants" onblur="validate(3)" required value="<?php echo $complaint['CNames']; ?>">
-                            </div>
-                            <div class="form-group col-sm-6 flex-column d-flex">
-                                <label class="form-control-label px-3">Respondents:<span class="text-danger"> *</span></label>
-                                <input type="text" id="RspndtNames" name="RspndtNames" placeholder="Enter name of respondents" onblur="validate(4)" required value="<?php echo $complaint['RspndtNames']; ?>">
-                            </div>
-                        </div>
+                        <div class="form-group col-sm-6 flex-column d-flex">
+    <label class="form-control-label px-3">Complainants:<span class="text-danger"> *</span></label>
+    <input type="text" id="CNames" name="CNames" placeholder="Enter name of complainants" onblur="validate(3)" required value="<?php echo ucwords($complaint['CNames']); ?>" oninput="capitalizeAfterSpace(this)">
+</div>
+
+<script>
+    function capitalizeAfterSpace(input) {
+        // Get the input value
+        let inputValue = input.value;
+
+        // Split the input value by space
+        let words = inputValue.split(' ');
+
+        // Capitalize the first letter of each word
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+        }
+
+        // Join the words back together with a space
+        let capitalizedValue = words.join(' ');
+
+        // Set the input value to the capitalized value
+        input.value = capitalizedValue;
+    }
+</script>
+
+<div class="form-group col-sm-6 flex-column d-flex">
+    <label class="form-control-label px-3">Respondents:<span class="text-danger"> *</span></label>
+    <input type="text" id="RspndtNames" name="RspndtNames" placeholder="Enter name of respondents" onblur="validate(4)" required value="<?php echo ucwords($complaint['RspndtNames']); ?>" oninput="capitalizeAfterSpace(this)">
+</div>
+
+<script>
+    function capitalizeAfterSpace(input) {
+        // Get the input value
+        let inputValue = input.value;
+
+        // Split the input value by space
+        let words = inputValue.split(' ');
+
+        // Capitalize the first letter of each word
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+        }
+
+        // Join the words back together with a space
+        let capitalizedValue = words.join(' ');
+
+        // Set the input value to the capitalized value
+        input.value = capitalizedValue;
+    }
+</script>
+
+                        
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-12 flex-column d-flex">
                                 <label class="form-control-label px-3">Complain<span class="text-danger"> *</span></label>
@@ -223,15 +267,36 @@ input[type="submit"]:hover {
                                 <input type="date" id="RDate" name="RDate" onblur="validate(8)" value="<?php echo $complaint['RDate']; ?>">
                             </div>
                         </div>
-<div class="row justify-content-between text-left">
- <div class="form-group col-12 flex-column d-flex">
-  <label class="form-control-label px-3">Pangkat:<span class="text-danger"></span></label>
-  <input type="text" id="Pangkat" name="Pangkat" placeholder="Enter name of Punong Barangay" oninput="showDropdown()" value="<?php echo $complaint['Pangkat']; ?>">
-  <!-- Apply the custom class to the dropdown container -->
-  <div id="pangkatDropdown"></div>
+                        <div class="row justify-content-between text-left">
+    <div class="form-group col-12 flex-column d-flex">
+        <label class="form-control-label px-3">Pangkat:<span class="text-danger"></span></label>
+        <input type="text" id="Pangkat" name="Pangkat" placeholder="Enter name of Punong Barangay" oninput="capitalizeAfterSpace(this); showDropdown()" value="<?php echo ucwords($complaint['Pangkat']); ?>">
+        <!-- Apply the custom class to the dropdown container -->
+        <div id="pangkatDropdown"></div>
+    </div>
 </div>
 
-</div>
+<script>
+    function capitalizeAfterSpace(input) {
+        // Get the input value
+        let inputValue = input.value;
+
+        // Split the input value by space
+        let words = inputValue.split(' ');
+
+        // Capitalize the first letter of each word
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+        }
+
+        // Join the words back together with a space
+        let capitalizedValue = words.join(' ');
+
+        // Set the input value to the capitalized value
+        input.value = capitalizedValue;
+    }
+</script>
+
 <div class="row justify-content-between text-left">
 
                         <div class="row justify-content-between text-left">

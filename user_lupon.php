@@ -121,6 +121,31 @@ input {
              <input type="text" name="lupon_chairman" class='lupon-input' value="<?= strtoupper($linkedNames['lupon_chairman'] ?? '') ?>">
             Lupon Chairman
         </div>
+        <script>
+    function capitalizeAfterSpace(input) {
+        // Get the input value
+        let inputValue = input.value;
+
+        // Capitalize the first letter of each word after a space
+        let capitalizedValue = inputValue.replace(/(?:^|\s)\S/g, function (a) {
+            return a.toUpperCase();
+        });
+
+        // Set the input value to the capitalized value
+        input.value = capitalizedValue;
+    }
+
+    // Apply the capitalizeAfterSpace function to input fields with the 'lupon-input' class
+    document.addEventListener('DOMContentLoaded', function () {
+        let luponInputs = document.querySelectorAll('.lupon-input');
+        luponInputs.forEach(function (input) {
+            input.addEventListener('input', function () {
+                capitalizeAfterSpace(this);
+            });
+        });
+    });
+</script>
+
         <div>
                 <button type="submit" id="save-button" name="save">Appoint</button>
                 <button type="submit" id="save-button" name="appoint">Notice</button>

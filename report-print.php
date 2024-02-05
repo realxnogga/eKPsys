@@ -25,24 +25,32 @@ include 'report_handler.php';
     <script>
     function generatePDF() {
     var element = document.querySelector('table');
+    
     var additionalContent = `
-        <br><br>
-        <p>***Total Number of Lupons excluding Lupon Chairman and Lupon Secretary</p>
-        <p>***Please attach Form 06-A "LIST OF CASES"</p>
-        <br><br>
-    `;
+    <br><br><br><br>
+    <div style="display: flex; align-items: center; justify-content: center;">
+        <div style="text-align: center; display: flex; align-items: center;">
+            <img src="img/calamba.png" alt="Logo 1" style="width: 50px; height: 50px; margin-right: 40px; vertical-align: middle;">
+            <div class="sub-header">
+                CY LUPONG TAGAPAMAYAPA INCENTIVES AWARDS (LTIA)<br>
+                LTIA FORM 07-PERFORMANCE HIGHLIGHTS
+            </div>
+            <img src="img/cy.jpg" alt="Logo 2" style="width: 50px; height: 50px; margin-left: 40px; vertical-align: middle;">
+        </div>
+    </div><br><br>
+`;
 
-    // Create a new window with the combined content
-    var newWindow = window.open('', '_blank');
-    newWindow.document.write('<html><head><title>PDF</title></head><body>' + element.outerHTML + additionalContent + '</body></html>');
-    newWindow.document.close();
+// Create a new window with the combined content
+var newWindow = window.open('', '_blank');
+newWindow.document.write('<html><head><title>PDF</title></head><body>' + additionalContent + element.outerHTML + '</body></html>');
+newWindow.document.close();
 
-    // Use html2pdf library to generate PDF
-    html2pdf(newWindow.document.body, {
-        margin: 10,
-        filename: 'table_' + getFormattedDate() + '.pdf',
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-    });
+html2pdf(newWindow.document.body, {
+    margin: 10,
+    filename: 'table_' + getFormattedDate() + '.pdf',
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+    outputPixelRatio: 5, // Adjust the pixel ratio for better resolution
+});
 
     // Close the new window
     newWindow.close();
@@ -107,11 +115,11 @@ include 'report_handler.php';
     }
 
     table, th, td {
-        border: 1px solid black;
+        border: 0.1px solid black;
     }
 
     th, td {
-        padding: 5px;
+        padding: 4px;
         text-align: center;
     }
 
@@ -122,7 +130,6 @@ include 'report_handler.php';
     .sub-header {
     }
 
-    /* ... Your existing styles ... */
 
     @media print {
             .header, .sub-header {
@@ -134,10 +141,24 @@ include 'report_handler.php';
 <body>
 <b>
 <table>
+    <br>    <br>
+    <br>
+    <br>
+    <br>
+
     <!-- Header Section -->
-    <tr>
-        <td colspan="60" class="sub-header">CY LUPONG TAGAPAMAYAPA INCENTIVES AWARDS (LTIA)<BR>LTIA FORM 07-PERFORMANCE HIGHLIGHTS</td>
-    </tr>
+   <!-- Header Section -->
+<div style="display: flex; align-items: center; justify-content: center;">
+    <div style="text-align: center; display: flex; align-items: center;">
+        <img src="img/calamba.png" alt="Logo 1" style="width: 90px; height: 90px; margin-right: 40px; vertical-align: middle;">
+        <div class="sub-header">
+            CY LUPONG TAGAPAMAYAPA INCENTIVES AWARDS (LTIA)<br>
+            LTIA FORM 07-PERFORMANCE HIGHLIGHTS
+        </div>
+        <img src="img/cy.jpg" alt="Logo 2" style="width: 99x; height: 87px; margin-left: 40px; vertical-align: middle;">
+    </div>
+</div><br>
+
     <tr>
         <td colspan="60" class="sub-header">CATEGORY: BARANGAY</td>
     </tr>
@@ -192,8 +213,8 @@ include 'report_handler.php';
     </tr>
 
     <tr>
-        <td rowspan="2" colspan="6">NATURE OF CASES <br> (1)</td>
-        <td colspan="38">ACTION TAKEN</td>
+        <td rowspan="2" colspan="4">NATURE OF CASES <br> (1)</td>
+        <td colspan="40">ACTION TAKEN</td>
         <td rowspan="3" colspan="4">OUTSIDE THE <br> JURISDICTION <br> OF THE <br> BARANGAY <br> (4)</td>
         <td rowspan="3" colspan="4">TOTAL <br> (cases <br> filed) <br> (5)</td>
         <td rowspan="3" colspan="4">BUDGET <br> ALLO- <br>CATED <br> (6)</td>
@@ -246,12 +267,11 @@ include 'report_handler.php';
         
     </tr>
     </table>
-<br><br>
-    <p>***Total Number of Lupons excluding Lupon Chairman and Lupon Secretary</p>
-    <p>***Please attached Form 06-A "LIST OF CASES"</p>
+
     <br><br>
     <button onclick="generatePDF()">Generate PDF</button>
     <button onclick="downloadExcel()">Download Excel</button>
+
 
 </body>
 </html>

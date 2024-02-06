@@ -176,6 +176,10 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         width: 30px;
 
     }
+    input,
+        select {
+            border: none;
+        }
     
 </style>
 

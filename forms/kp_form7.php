@@ -131,7 +131,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <br>
-    <div class="container">
+    
+    
         <div class="paper">
             <div class="top-right-buttons">
                 <!-- Print button -->

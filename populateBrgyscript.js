@@ -52,7 +52,7 @@ function populateSecondDropdown() {
           secondDropdown.add(option);
         }
       } else if (selectedOption === "Calamba") {
-        var barangays = ["Bagong Kalsada", "Banadero", "Banlic", "Barandal", "Barangay 1 (Poblacion 1)", "Barangay 2 (Poblacion 2)", "Barangay 3 (Poblacion 3)", "Barangay 4 (Poblacion 4)", "Barangay 5 (Poblacion 5)", "Barangay 6 (Poblacion 6)", "Barangay 7 (Poblacion 7)", "Batino", "Bubuyan", "Bucal", "Bunggo", "Burol", "Camaligan", "Canlubang", "Halang", "Hornalan", "Kay-Anlog", "Laguerta", "La Mesa", "Lawa", "Lecheria", "Lingga", "Looc", "Mabato", "Majada Labas", "Makiling", "Mapagong", "Masili", "Maunong", "Mayapa", "Milagrosa (Tulo)", "Paciano Rizal", "Palingon", "Palo-Alto", "Pansol", "Parian", "Prinza", "Punta", "Puting Lupa", "Real", "Saimsim", "Sampiruhan", "San Cristobal", "San Jose", "San Juan", "Sirang Lupa", "Sucol", "Turbina", "Ulango", "Uwisan"];
+        var barangays = ["Bagong Kalsada", "Banadero", "Banlic", "Barandal", "1 (Poblacion 1)", "2 (Poblacion 2)", "3 (Poblacion 3)", "4 (Poblacion 4)", "5 (Poblacion 5)", "6 (Poblacion 6)", "7 (Poblacion 7)", "Batino", "Bubuyan", "Bucal", "Bunggo", "Burol", "Camaligan", "Canlubang", "Halang", "Hornalan", "Kay-Anlog", "Laguerta", "La Mesa", "Lawa", "Lecheria", "Lingga", "Looc", "Mabato", "Majada Labas", "Makiling", "Mapagong", "Masili", "Maunong", "Mayapa", "Milagrosa (Tulo)", "Paciano Rizal", "Palingon", "Palo-Alto", "Pansol", "Parian", "Prinza", "Punta", "Puting Lupa", "Real", "Saimsim", "Sampiruhan", "San Cristobal", "San Jose", "San Juan", "Sirang Lupa", "Sucol", "Turbina", "Ulango", "Uwisan"];
         
         for (var i = 0; i < barangays.length; i++) {
           var option = document.createElement("option");

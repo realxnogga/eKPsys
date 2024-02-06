@@ -16,7 +16,7 @@ include 'report_handler.php';
 <!DOCTYPE html>
 <html>
 <head>
-
+<a href="report.php">Back</a>
 <!-- Include jQuery, html2pdf.js, and xlsx libraries -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
@@ -164,41 +164,41 @@ html2pdf(newWindow.document.body, {
     </tr>
     <tr>
         <td colspan="25" class="header">FINALIST LUPONG TAGAPAMAYAPA : <?php echo strtoupper($_SESSION['brgy_name']); ?></td>
-        <td  colspan="38" class="header">POPULATION : <?php  if ($selected_month && $selected_month !== date('F Y')) {
+        <td  colspan="38" class="header">POPULATION : <?php  if ($selected_month && $selected_month !== date('F Y')){
             echo $s_population; // Display the selected month's value
         } else {echo $population;} ?></td>
     </tr>
     <tr>
         <td colspan="25" class="header">PUNONG BARANGAY : <?php echo $_SESSION['punong_brgy']; ?></td>
-        <td colspan="38" class="header">LAND AREA : <?php  if ($selected_month && $selected_month !== date('F Y')) {
+        <td colspan="38" class="header">LAND AREA : <?php  if ($selected_month && $selected_month !== date('F Y')){
             echo $s_landarea; // Display the selected month's value
         } else {echo $landarea;} ?></td>
     </tr>
     <tr>
         <td colspan="25" class="header">CITY/MUNICIPALITY : <?php echo strtoupper($_SESSION['munic_name']); ?></td>
-        <td colspan="38" class="header">TOTAL NO. OF CASES : <?php  if ($selected_month && $selected_month !== date('F Y')) {
+        <td colspan="38" class="header">TOTAL NO. OF CASES : <?php  if ($selected_month && $selected_month !== date('F Y')){
             echo $s_totalc; // Display the selected month's value
         } else {echo $natureSum;} ?></td>
     </tr>
     <tr>
-        <td colspan="25" class="header">MAYOR : <?php  if ($selected_month && $selected_month !== date('F Y')) {
+        <td colspan="25" class="header">MAYOR : <?php  if ($selected_month && $selected_month !== date('F Y')){
             echo $s_mayor; // Display the selected month's value
         } else {echo $mayor;} ?></td>
-        <td colspan="38" class="header">NUMBER OF LUPONS : <?php  if ($selected_month && $selected_month !== date('F Y')) {
+        <td colspan="38" class="header">NUMBER OF LUPONS : <?php  if ($selected_month && $selected_month !== date('F Y')){
             echo $s_numlup; // Display the selected month's value
         } else {echo $numlup;} ?></td>
     </tr>
     <tr>
         <td colspan="25"class="header">PROVINCE : LAGUNA</td>
-        <td colspan="38"class="header">MALE : <?php  if ($selected_month && $selected_month !== date('F Y')) {
+        <td colspan="38"class="header">MALE : <?php  if ($selected_month && $selected_month !== date('F Y')){
             echo $s_male; // Display the selected month's value
         } else {echo $male;} ?></td>
     </tr>
     <tr>
-        <td colspan="25"class="header">REGION : <?php  if ($selected_month && $selected_month !== date('F Y')) {
+        <td colspan="25"class="header">REGION : <?php  if ($selected_month && $selected_month !== date('F Y')){
             echo $s_region; // Display the selected month's value
         } else {echo $region;} ?></td>
-        <td colspan="38"class="header">FEMALE : <?php  if ($selected_month && $selected_month !== date('F Y')) {
+        <td colspan="38"class="header">FEMALE : <?php  if ($selected_month && $selected_month !== date('F Y')){
             echo $s_female; // Display the selected month's value
         } else {echo $female;} ?></td>
     </tr></b>

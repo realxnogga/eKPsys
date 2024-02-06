@@ -150,7 +150,7 @@ $_SESSION['current_hearing'] = $currentHearing;
         'KP 18', 'KP 19', 'KP 20', 'KP 20 - A', 'KP 20 - B', 'KP 21', 'KP 22', 'KP 23', 'KP 24', 'KP 25'
     ];
 
-     foreach ($formButtons as $buttonText) {
+    foreach ($formButtons as $buttonText) {
         $formUsed = array_search($buttonText, $formButtons) + 7; // Assuming a sequential mapping starting from 7
 
         // Query to fetch the forms with the same complaint_id, form_used, and hearing_number
@@ -163,10 +163,12 @@ $_SESSION['current_hearing'] = $currentHearing;
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Display buttons with proper naming for multiple occurrences
+        $counter = 0;
         foreach ($results as $result) {
+            $counter++;
             $formID = $result['id'];
-            $formIdentifier = count($results) > 1 ? " ($formID)" : "";
-            $formFileName = 'kp_form' . $formUsed . '.php';
+            $formIdentifier = count($results) > 1 ? " ($counter)" : "";
+            $formFileName = 'kp_form' . $formUsed . $formIdentifier . '.php';
             echo '<a href="forms/' . $formFileName . '?formID=' . $formID . '"><button class="open-form"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button></a>';
         }
     }

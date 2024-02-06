@@ -1,7 +1,6 @@
-<?php 
-
- $user_id = $_SESSION['user_id'] ?? '';
-    $barangay_id = $_SESSION['barangay_id'] ?? '';
+<?php
+$user_id = $_SESSION['user_id'] ?? ''; 
+$barangay_id = $_SESSION['barangay_id'] ?? '';
 try{
 
 if (isset($_POST['submit'])) {
@@ -321,7 +320,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $landarea = $report_data['landarea'];
         $male = $report_data['male'];
         $female = $report_data['female'];
-        $numlup = $_SESSION['linkedNamesCount'];
+        $numlup = $report_data['numlupon'];
 
         
         $criminalCount = $annual_report_data['criminal_sum'] ?? '';
@@ -344,6 +343,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $outsideJurisdictionCount = $annual_report_data['outsideBrgy_sum'] ?? '';
         
     }
+
     elseif (isset($_POST['submit_monthly'])) {
 
          $s_mayor = $report_data['mayor'] ?? '';

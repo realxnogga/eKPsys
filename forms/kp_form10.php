@@ -99,6 +99,19 @@ if ($appearTimestamp !== false) {
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
+    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':complaintId', $complaintId);
+$stmt->bindParam(':formUsed', $formUsed);
+$stmt->bindParam(':currentHearing', $currentHearing);
+$stmt->execute();
+$existingForm10Count = $stmt->rowCount();
+
+// If form_used = 10 already exists in the current hearing, prevent submission
+if ($existingForm10Count > 0) {
+    $message = "There is already an existing KP Form 10 in this current hearing.";
+}  else{
+    
     // Insert or update the appear_date in the hearings table
     $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
               VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate)
@@ -123,6 +136,7 @@ if ($appearTimestamp !== false) {
     } else {
         $message = "Form submit failed.";
     }
+}
 }
 else {
         // Handle case where DateTime object creation failed
@@ -168,7 +182,9 @@ function createTimestampFromInputs($day, $month, $year, $time) {
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
                 </button>
-               
+               <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>"><button class="btn common-button">
+                    <i class="button-icon"></i> Back
+                </button></a>
             </div>
             
              <div style="text-align: left;">
@@ -247,7 +263,7 @@ drawing lots.
 
 
 <br><br><br>
-  <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Notified this <input type="text" name="day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>"> day of
+  <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Notified this <input type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>"> day of
   <select name="received_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>

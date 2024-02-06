@@ -168,6 +168,9 @@ function createTimestampFromInputs($day, $month, $year, $time) {
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
                 </button>
+                <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>"><button class="btn common-button">
+                    <i class="button-icon"></i> Back
+                </button></a>
                
             </div>
             
@@ -217,7 +220,7 @@ Respondent
         <?php endif; ?>
     <?php endforeach; ?>
                 </select>,
-                20
+                
                 <input type="text" name="year" placeholder="year" size="1" value="<?php echo date('Y'); ?>" required> at <input type="time" id="time" name="time" size="5" style="border: none;"  value="<?php echo $appear_time; ?>"required> o'clock in the morning/afternoon
 for the constitution of the Pangkat ng Tagapagkasundo which shall conciliate your dispute. Should you fail to agree on the Pangkat membership or to appear on the aforesaid date for the constitution of the Pangkat, I shall determine the membership thereof by
 drawing lots.
@@ -234,7 +237,7 @@ drawing lots.
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                20
+                
                 <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.              
 </div> 
 <br><br><br>

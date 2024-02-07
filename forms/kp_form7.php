@@ -117,6 +117,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+// Retrieve the profile picture name of the current user
+$query = "SELECT profile_picture FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['profile_picture'])) {
+    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $profilePicture = '../profile_pictures/defaultpic.jpg';
+}
 ?>
 
 <!DOCTYPE html>
@@ -129,11 +143,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="formstyles.css">
     
 </head>
+<style>
+.profile-img{
+    width: 3cm;
+}
+
+.header {
+    text-align: center;
+    padding-inline: 4cm;
+}
+</style>
 <body>
     <br>
-    
-    
-        <div class="paper">
+    <div class="paper">
             <div class="top-right-buttons">
                 <!-- Print button -->
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
@@ -149,14 +171,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </button>
                 </a>
             </div>
-            <div style="text-align: left;">
-                <h5>KP Form No. 7</h5>
-                <h5 style="text-align: center;">Republic of the Philippines</h5>
-                <h5 style="text-align: center;">Province of Laguna</h5>
-                <h5 style="text-align: center;">CITY/MUNICIPALITY OF <?php echo $_SESSION['municipality_name']; ?></h5>
-                <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-                <h5 style="text-align: center;">OFFICE OF THE PUNONG BARANGAY</h5>
-            </div>
+
+    <h5>KP Form No. 7</h5>
+    
+    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture">
+<div style="display:inline-block;">
+        <h5 class="header">Republic of the Philippines</h5>
+        <h5 class="header">Province of Laguna</h5>
+        <h5 class="header">CITY/MUNICIPALITY OF <?php echo $_SESSION['municipality_name']; ?></h5>
+        <h5 class="header">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
+        <h5 class="header">OFFICE OF THE PUNONG BARANGAY</h5>
+</div>
+
             <?php
             $months = [
                 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

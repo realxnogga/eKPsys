@@ -103,6 +103,7 @@ else{
         $message = "Form submit failed.";
     }
 }
+
 }
 // Function to create a date from day, month, and year inputs
 function createDateFromInputs($day, $month, $year) {

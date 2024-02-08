@@ -159,6 +159,20 @@ if ($appearTimestamp !== false) {
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
     $respDate = createDateFromInputs($respDay, $respMonth, $respYear);
 
+    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':complaintId', $complaintId);
+    $stmt->bindParam(':formUsed', $formUsed);
+    $stmt->bindParam(':currentHearing', $currentHearing);
+    $stmt->execute();
+    $existingForm14Count = $stmt->rowCount();
+
+
+if ($existingForm14Count > 0) {
+    $message = "There is already an existing KP Form 9 in this current hearing.";
+}
+
+else{
     // Insert or update the appear_date in the hearings table
     $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date, resp_date, officer, scenario, scenario_info)
           VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate, :respDate, :officer, :scenario, :scenarioInfo)
@@ -192,6 +206,8 @@ if ($appearTimestamp !== false) {
     } else {
         $message = "Form submit failed.";
     }
+}
+
 }
 else {
         // Handle case where DateTime object creation failed

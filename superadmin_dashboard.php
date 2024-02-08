@@ -21,13 +21,6 @@ $stmt = $conn->prepare("SELECT u.id, u.municipality_id, u.first_name, u.last_nam
 $stmt->execute();
 $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-
-include 'count_lupon.php';
-
-include 'report_handler.php';
-
-
 $searchInput = isset($_GET['search']) ? $_GET['search'] : '';
 
 $userID = $_SESSION['user_id'];

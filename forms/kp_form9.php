@@ -7,7 +7,6 @@ $rspndtNames = $_SESSION['rspndtNames'] ?? '';
 $cDesc = $_SESSION['cDesc'] ?? '';
 $petition = $_SESSION['petition'] ?? '';
 $cNum = $_SESSION['cNum'] ?? '';
-
 $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 $complaintId = $_SESSION['current_complaint_id'] ?? '';
@@ -218,6 +217,26 @@ function createTimestampFromInputs($day, $month, $year, $time) {
     }
 }
 
+// Prepare a new query to fetch 'punong_barangay' and 'lupon_chairman' based on 'user_id'
+$luponQuery = "SELECT punong_barangay, lupon_chairman FROM lupons WHERE user_id = :user_id";
+$luponStmt = $conn->prepare($luponQuery);
+$luponStmt->bindParam(':user_id', $_SESSION['user_id']);
+$luponStmt->execute();
+
+// Fetch the lupon data
+$luponData = $luponStmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if lupon data is fetched successfully
+if ($luponData) {
+    // Extract 'punong_barangay' and 'lupon_chairman' from $luponData
+    $punong_barangay = $luponData['punong_barangay'];
+    $lupon_chairman = $luponData['lupon_chairman'];
+} else {
+    // If no data found, you can handle it accordingly (e.g., provide default values or display an error message)
+    $punong_barangay = '';
+    $lupon_chairman = '';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -398,7 +417,14 @@ Respondents
 
 
 <div class="e">
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required>Officer</p>
+<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
+
+<input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList"> Officer</p>
+<datalist id="officerList">
+    <!-- Display 'punong_barangay' and 'lupon_chairman' as options -->
+    <option value="<?php echo $punong_barangay; ?>">
+    <option value="<?php echo $lupon_chairman; ?>">
+</datalist>
 </div>
 
 <p>Received by Respondent/s representative/s:</p>

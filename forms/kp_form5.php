@@ -95,29 +95,7 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 				</p>
 				</div>
 
-			<script>
-				function resetFields() {
-
-			document.getElementById('day').value = "";
-        
-			var inputs = document.querySelectorAll('.paper div[style="display: flex;"] input[type="text"]');
-        
-
-				inputs.forEach(function(input) {
-            input.value = "";
-				});
-			}
-			</script>
-
-                <?php if (!empty($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-
-    <div style="position: relative;"><br>
+		<div style="position: relative;"><br>
 		<p style="text-align: justify; text-indent: 1.5em;">
 		SO HELP ME GOD. (In case of affirmation the last sentence will be omitted.)</p>
 
@@ -149,13 +127,6 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
     Punong Barangay
 </p>
 
-<script>
-
-    const positionInput = document.getElementById('positionInput');
-    positionInput.addEventListener('click', function() {
-        this.select();
-    });
-</script>
     </div>
     </div>
     <div class="blank-page"></div>

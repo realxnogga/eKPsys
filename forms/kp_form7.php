@@ -218,6 +218,7 @@ if ($user && !empty($user['profile_picture'])) {
                                 <?php echo $rspndtNames; ?><br> </p>
                         </div>
                     </div>
+                    <form method ="POST">
                     <h3 style="text-align: center;"><b>COMPLAINT</b></h3>
                     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
                         <p>I/WE hereby complain against above named respondent/s for violating my/our rights and interests in the following manner:

@@ -221,19 +221,16 @@ function createTimestampFromInputs($day, $month, $year, $time) {
                 <h3 style="text-align: center;"><b>NOTICE TO CHOSEN PANGKAT MEMBER</b></h3>
                 <form method="POST">
                <div class="e" style="text-align: right;">
-               <input type="number" name="day" placeholder="day" min="1" max="31" value="<?php echo $appear_day; ?>" required>  of
-                <select name="month" required>
-                    <option value="">Select Month</option>
-                    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
-        <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
-    <?php endforeach; ?>
-                </select>,
-                
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo date('Y'); ?>" required> 
+              <?php
+
+// Get the current date
+$currentDate = date('F d, Y');
+
+// Print the formatted date
+echo $currentDate;
+
+?>
+
             </div>
 
 

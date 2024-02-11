@@ -38,7 +38,7 @@ $id = $_GET['formID'] ?? '';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT appear_date, made_date, received_date, resp_date FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -58,6 +58,7 @@ if (!empty($id)) {
 
         $madeDate = new DateTime($row['made_date']);
         $receivedDate = new DateTime($row['received_date']);
+        $respDate = new DateTime($row['resp_date']);
 
         // Populate form inputs with the extracted values
         $currentDay = $appearDate->format('j');
@@ -71,6 +72,10 @@ if (!empty($id)) {
         $existingReceivedDay = $receivedDate->format('j');
         $existingReceivedMonth = $receivedDate->format('F');
         $existingReceivedYear = $receivedDate->format('Y');
+
+        $existingRespDay = $respDate->format('j');
+        $existingRespMonth = $respDate->format('F');
+        $existingRespYear = $respDate->format('Y');
     }
 }
 
@@ -79,9 +84,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $madeDay = $_POST['made_day'] ?? '';
     $madeMonth = $_POST['made_month'] ?? '';
     $madeYear = $_POST['made_year'] ?? '';
+
     $receivedDay = $_POST['received_day'] ?? '';
     $receivedMonth = $_POST['received_month'] ?? '';
     $receivedYear = $_POST['received_year'] ?? '';
+
+    $respDay = $_POST['resp_day'] ?? '';
+    $respMonth = $_POST['resp_month'] ?? '';
+    $respYear = $_POST['resp_year'] ?? '';
+    
 
     $day = $_POST['day'] ?? '';
     $month = $_POST['month'] ?? '';
@@ -98,16 +109,32 @@ if ($appearTimestamp !== false) {
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
+    $respDate = createDateFromInputs($respDay, $respMonth, $respYear);
+
+        $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':complaintId', $complaintId);
+    $stmt->bindParam(':formUsed', $formUsed);
+    $stmt->bindParam(':currentHearing', $currentHearing);
+    $stmt->execute();
+    $existingForm14Count = $stmt->rowCount();
+
+if ($existingForm14Count > 0) {
+    $message = "There is already an existing KP Form 14 in this current hearing.";
+}
+
+else{
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date, resp_date)
+              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate, :respDate)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               appear_date = VALUES(appear_date),
               made_date = VALUES(made_date),
-              received_date = VALUES(received_date)";
+              received_date = VALUES(received_date), 
+              resp_date = VALUES(resp_date)";
 
 
      $stmt = $conn->prepare($query);
@@ -117,17 +144,20 @@ if ($appearTimestamp !== false) {
     $stmt->bindParam(':appearDate', $appearTimestamp);
     $stmt->bindParam(':madeDate', $madeDate);
     $stmt->bindParam(':receivedDate', $receivedDate);
-    
+    $stmt->bindParam(':respDate', $respDate);
+
     if ($stmt->execute()) {
         $message = "Form submit successful.";
     } else {
         $message = "Form submit failed.";
     }
 }
+}
 else {
         // Handle case where DateTime object creation failed
         $message ="Invalid date/time format! Input: ". $dateTimeString;
     }
+
 }
 
 // Function to create a date from day, month, and year inputs
@@ -223,20 +253,20 @@ function createTimestampFromInputs($day, $month, $year, $time) {
 
                 <h3 style="text-align: center;"><b> NOTICE OF HEARING <br>
 (RE: FAILURE TO APPEAR)</b> </h3>
-<form method="POST">
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <div class="label"></div>
     <div class="input-field">
-        <p> &nbsp;&nbsp;&nbsp;TO:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $cNames; ?><br></p>
+        <p> TO:<br><?php echo $cNames; ?><br></p>
 </div>
 </div>
 
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Complainant/s</p>                 
+                <p>Complainant/s</p>                 
                 </div>
 
 </div>
     <div>
+<form method="POST">
      <p style="text-indent: 2.8em; text-align: justify; ">
   You are hereby required to appear before me on
   <input type="number" name="day" placeholder="day" min="1" max="31" value="<?php echo $appear_day; ?>" required>  of
@@ -251,20 +281,19 @@ function createTimestampFromInputs($day, $month, $year, $time) {
     <?php endforeach; ?>
                 </select>,
                 
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo date('Y'); ?>" required> at <input type="time" id="time" name="time" size="5" style="border: none;"  value="<?php echo $appear_time; ?>"required> o'clock in the morning/ afternoon to explain why you failed to appear for mediation/conciliation scheduled on
-                <input type="number" name="day" placeholder="day" min="1" max="31" value="<?php echo $appear_day; ?>" required>
-                <select name="month" required>
-                    <option value="">Select Month</option>
-                    <?php foreach ($months as $m): ?>
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo isset($appear_year) ? $appear_year : date('Y'); ?>" required> at <input type="time" id="time" name="time" size="5" style="border: none;"  value="<?php echo $appear_time; ?>"required> o'clock in the morning/ afternoon to explain why you failed to appear for mediation/conciliation scheduled on
+                <input type="number" name="resp_day" placeholder="day" min="1" max="31" value="<?php echo $existingRespDay ?? ''; ?>" required>
+                <select name="resp_month" required>
+    <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
+            <option value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
         <?php else: ?>
             <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
-                </select>,
+</select>,
                 
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo date('Y'); ?>" required>
+                <input type="text" name="resp_year" placeholder="year" size="1" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>" required>
 and why your complaint should not be dismissed, a certificate to bar the filing of your action on court/government office should not be issued, and
 contempt proceedings should not be initiated in court for willful failure or refusal to appear before the Punong Barangay/Pangkat ng
 Tagapagkasundo.
@@ -282,19 +311,17 @@ Tagapagkasundo.
     <?php endforeach; ?>
 </select>,
                 
-                <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+                <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
               
 
-<div id="nameInput" style="display: none;">
-  <input type="text" id="name" name="name" placeholder="Enter Name" oninput="updateOptionText(this.value)" onkeydown="checkEnterKey(event)">
-</div>
+
 <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
                     <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay/Pangkat Chairman</label>
 </p>
  
                     </div></div>
 <div>  
-Notified this <input type="text" name="day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>"> day of
+Notified this <input type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>"> day of
   <select name="received_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
@@ -304,7 +331,7 @@ Notified this <input type="text" name="day" placeholder="day" size="5" value="<?
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+<input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">.
         </div>
 
         <?php if (!empty($message)) : ?>
@@ -316,7 +343,7 @@ Notified this <input type="text" name="day" placeholder="day" size="5" value="<?
     <div class="d">
     <div style="text-align: left; font-size: 12px; margin-left: 50px;"><br>
     <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $cNames; ?> <br>_____________________
-            <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <id="cmplnts" name="cmplnts" size="25"  style="text-align: left;"></p>
             
     <p>Respondent/s <br> <br><br><p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 570px; margin-left: auto;"><?php echo $rspndtNames; ?> <br>_____________________
             <id="rspndt" name="rspndt" size="25"  style="text-align: left;"></p><br><br>

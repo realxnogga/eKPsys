@@ -33,13 +33,13 @@ $months = array(
 
 $currentMonth = date('F'); 
 $currentDay = date('j');
+$existOfficer = '';
 
 $id = $_GET['formID'] ?? '';
 
-// Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT received_date, officer FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -50,74 +50,54 @@ if (!empty($id)) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
       // Extract and format the timestamp values
-        $appearDate = new DateTime($row['appear_date']);
-        $appear_day = $appearDate->format('j');
-
-        $appear_month = $appearDate->format('F');
-        $appear_year = $appearDate->format('Y');
-        $appear_time = $appearDate->format('H:i'); // Format for the time input
-
-        $madeDate = new DateTime($row['made_date']);
+     
         $receivedDate = new DateTime($row['received_date']);
-
-        // Populate form inputs with the extracted values
-        $currentDay = $appearDate->format('j');
-        $currentMonth = $appearDate->format('F');
-        $currentYear = $appearDate->format('Y');
-
-        $existingMadeDay = $madeDate->format('j');
-        $existingMadeMonth = $madeDate->format('F');
-        $existingMadeYear = $madeDate->format('Y');
-
+       
         $existingReceivedDay = $receivedDate->format('j');
         $existingReceivedMonth = $receivedDate->format('F');
         $existingReceivedYear = $receivedDate->format('Y');
+
+        $existOfficer = $row['officer'];
+
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form inputs
-    $madeDay = $_POST['made_day'] ?? '';
-    $madeMonth = $_POST['made_month'] ?? '';
-    $madeYear = $_POST['made_year'] ?? '';
+
     $receivedDay = $_POST['received_day'] ?? '';
     $receivedMonth = $_POST['received_month'] ?? '';
     $receivedYear = $_POST['received_year'] ?? '';
+    $officer = $_POST['officer'];
 
-    $day = $_POST['day'] ?? '';
-    $month = $_POST['month'] ?? '';
-    $year = $_POST['year'] ?? '';
-    $time = $_POST['time'] ?? '';
-
-$dateTimeString = "$year-$month-$day $time";
-$appearTimestamp = DateTime::createFromFormat('Y-F-j H:i', $dateTimeString);
-
-
-if ($appearTimestamp !== false) {
-    $appearTimestamp = $appearTimestamp->format('Y-m-d H:i:s');
-
-    // Logic to handle date and time inputs
-    $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
-    // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate)
+    // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
+    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':complaintId', $complaintId);
+    $stmt->bindParam(':formUsed', $formUsed);
+    $stmt->bindParam(':currentHearing', $currentHearing);
+    $stmt->execute();
+    $existingForm14Count = $stmt->rowCount();
+
+
+
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer)
+              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
-              appear_date = VALUES(appear_date),
-              made_date = VALUES(made_date),
-              received_date = VALUES(received_date)";
+              received_date = VALUES(received_date),
+                        officer = VALUES(officer)";
 
 
      $stmt = $conn->prepare($query);
     $stmt->bindParam(':complaintId', $complaintId);
     $stmt->bindParam(':currentHearing', $currentHearing);
     $stmt->bindParam(':formUsed', $formUsed);
-    $stmt->bindParam(':appearDate', $appearTimestamp);
-    $stmt->bindParam(':madeDate', $madeDate);
     $stmt->bindParam(':receivedDate', $receivedDate);
+    $stmt->bindParam(':officer', $officer);
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -125,11 +105,8 @@ if ($appearTimestamp !== false) {
         $message = "Form submit failed.";
     }
 }
-else {
-        // Handle case where DateTime object creation failed
-        $message ="Invalid date/time format! Input: ". $dateTimeString;
-    }
-}
+
+
 
 // Function to create a date from day, month, and year inputs
 function createDateFromInputs($day, $month, $year) {
@@ -141,12 +118,30 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 
-function createTimestampFromInputs($day, $month, $year, $time) {
-    if (!empty($day) && !empty($month) && !empty($year) && !empty($time)) {
-        return date('Y-m-d H:i:s', strtotime("$year-$month-$day $time"));
-    } else {
-        return null; 
+// Prepare a new query to fetch 'punong_barangay', 'lupon_chairman', and 'name1' to 'name20' based on 'user_id'
+$luponQuery = "SELECT name1, name2, name3, name4, name5, name6, name7, name8, name9, name10,
+                        name11, name12, name13, name14, name15, name16, name17, name18, name19, name20
+                    FROM lupons
+                    WHERE user_id = :user_id AND appoint = 0";
+$luponStmt = $conn->prepare($luponQuery);
+$luponStmt->bindParam(':user_id', $_SESSION['user_id']);
+$luponStmt->execute();
+
+// Fetch the lupon data
+$luponData = $luponStmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if lupon data is fetched successfully
+if ($luponData) {
+    $names = [];
+    for ($i = 1; $i <= 20; $i++) {
+        $name = $luponData["name$i"];
+        if (!empty($name)) {
+            $names[] = $name;
+        }
     }
+} else {
+    // If no data found, you can handle it accordingly (e.g., provide default values or display an error message)
+    $names = [];
 }
 
 ?>
@@ -255,7 +250,7 @@ echo $currentDate;
 
 
             <form method="POST">
-                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Received this<input type="text" name="day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>">  of
+                <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Received this<input type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>">  of
                 <select name="received_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
@@ -265,7 +260,7 @@ echo $currentDate;
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+<input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">.
 </div>
 
 
@@ -276,21 +271,19 @@ echo $currentDate;
             <p><?php echo $message; ?></p>
         <?php endif; ?>
         <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
-                    </form>
-                    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="cmplnts" name="cmplnts" size="25">Pangkat Member</p>
-      
+                    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
+<input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList"> Pangkat Member</p>
+<datalist id="officerList">
+    <?php foreach ($names as $name): ?>
+        <option value="<?php echo $name; ?>">
+    <?php endforeach; ?>
+</datalist>
+                    </p>
        
 
             </form>
 
-                <?php if (!empty($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-
+            
                 
             </div>
         </div>

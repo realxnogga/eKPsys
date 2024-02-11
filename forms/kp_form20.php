@@ -215,7 +215,7 @@ function createDateFromInputs($day, $month, $year) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+<input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
                
         <?php if (!empty($message)) : ?>
             <p><?php echo $message; ?></p>

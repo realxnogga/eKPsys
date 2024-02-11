@@ -38,7 +38,7 @@ $id = $_GET['formID'] ?? '';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT appear_date, made_date FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -57,7 +57,6 @@ if (!empty($id)) {
         $appear_time = $appearDate->format('H:i'); // Format for the time input
 
         $madeDate = new DateTime($row['made_date']);
-        $receivedDate = new DateTime($row['received_date']);
 
         // Populate form inputs with the extracted values
         $currentDay = $appearDate->format('j');
@@ -67,10 +66,6 @@ if (!empty($id)) {
         $existingMadeDay = $madeDate->format('j');
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
-
-        $existingReceivedDay = $receivedDate->format('j');
-        $existingReceivedMonth = $receivedDate->format('F');
-        $existingReceivedYear = $receivedDate->format('Y');
     }
 }
 
@@ -79,9 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $madeDay = $_POST['made_day'] ?? '';
     $madeMonth = $_POST['made_month'] ?? '';
     $madeYear = $_POST['made_year'] ?? '';
-    $receivedDay = $_POST['received_day'] ?? '';
-    $receivedMonth = $_POST['received_month'] ?? '';
-    $receivedYear = $_POST['received_year'] ?? '';
 
     $day = $_POST['day'] ?? '';
     $month = $_POST['month'] ?? '';
@@ -97,17 +89,15 @@ if ($appearTimestamp !== false) {
 
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
-    $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date)
+              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               appear_date = VALUES(appear_date),
-              made_date = VALUES(made_date),
-              received_date = VALUES(received_date)";
+              made_date = VALUES(made_date)";
 
 
      $stmt = $conn->prepare($query);
@@ -116,7 +106,6 @@ if ($appearTimestamp !== false) {
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':appearDate', $appearTimestamp);
     $stmt->bindParam(':madeDate', $madeDate);
-    $stmt->bindParam(':receivedDate', $receivedDate);
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -245,7 +234,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
     <?php endforeach; ?>
                 </select>,
                 
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo date('Y'); ?>" required> at <input type="time" id="time" name="time" size="5" style="border: none;"  value="<?php echo $appear_time; ?>"required> o'clock, then and there to testify in the hearing of the above-captioned case.  
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo isset($appear_year) ? $appear_year : date('Y'); ?>" required> at <input type="time" id="time" name="time" size="5" style="border: none;"  value="<?php echo $appear_time; ?>"required> o'clock, then and there to testify in the hearing of the above-captioned case.  
                   
     </div>
 
@@ -260,7 +249,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
     <?php endforeach; ?>
 </select>,
                 
-                <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+                <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
               
 </div>
 <?php if (!empty($message)) : ?>
@@ -273,16 +262,6 @@ function createTimestampFromInputs($day, $month, $year, $time) {
                     <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay</label>
 </p>
 
-
-                <?php if (!empty($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-
-                
             </div>
         </div>
 </div>

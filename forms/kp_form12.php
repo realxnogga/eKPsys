@@ -216,7 +216,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
     <?php endforeach; ?>
                 </select>,
                 
-                <input type="text" name="year" placeholder="year" size="1" value="<?php echo date('Y'); ?>" required> at <input type="time" id="time" name="time" size="5" style="border: none;"  value="<?php echo $appear_time; ?>"required> o'clock for a
+                <input type="text" name="year" placeholder="year" size="1" value="<?php echo isset($appear_year) ? $appear_year : date('Y'); ?>" required> at <input type="time" id="time" name="time" size="5" style="border: none;"  value="<?php echo $appear_time; ?>"required> o'clock for a
 hearing of the above-entitled case.             
                </div>  
                </div> 
@@ -233,7 +233,7 @@ hearing of the above-entitled case.
     <?php endforeach; ?>
 </select>,
                 
-                <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">. 
+                <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">. 
                 </div>
        <div style="position: relative;">
                     <br>
@@ -251,7 +251,7 @@ hearing of the above-entitled case.
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+<input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">.
         </div>
         <?php if (!empty($message)) : ?>
             <p><?php echo $message; ?></p>

@@ -238,7 +238,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-        <input type="number" name="year" placeholder="year" value="<?php echo date('Y'); ?>" required> at
+        <input type="number" name="year" placeholder="year" value="<?php echo isset($appear_year) ? $appear_year : date('Y'); ?>" required> at
         <input type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required> o'clock in the morning/afternoon for the hearing of your complaint.
     </div>
 
@@ -255,7 +255,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-        <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">
+        <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">
         <div style="position: relative;">
             <br>
             <br>
@@ -280,7 +280,7 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-            <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+            <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">.
         </div>
 
         <?php if (!empty($message)) : ?>

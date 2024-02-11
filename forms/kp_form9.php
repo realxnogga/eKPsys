@@ -383,7 +383,7 @@ Respondents
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.              
+                <input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.              
 </div> 
 
 
@@ -416,7 +416,7 @@ Respondents
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">  by: <br>
+                <input type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>">  by: <br>
                 <p> (Write name/s of respondent/s before mode by which he/they was/were served.)</p>
 </div>
 

@@ -17,6 +17,7 @@ $stmt = $conn->prepare($query);
 $stmt->bindParam(':rowID', $rowID);
 $stmt->bindParam(':userID', $_SESSION['user_id']);
 $stmt->execute();
+
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$row) {
@@ -89,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $_SESSION['current_complaint_id'] = $_GET['id'];
 $_SESSION['current_hearing'] = $currentHearing;
 
+
 ?>
 
 <!DOCTYPE html>
@@ -140,7 +142,6 @@ $_SESSION['current_hearing'] = $currentHearing;
 <hr>
                   
                     <div class="columns-container">
-
 <div class="form-buttons">
     <h5>Forms Used</h5>
 
@@ -150,7 +151,7 @@ $_SESSION['current_hearing'] = $currentHearing;
         'KP 18', 'KP 19', 'KP 20', 'KP 20 - A', 'KP 20 - B', 'KP 21', 'KP 22', 'KP 23', 'KP 24', 'KP 25'
     ];
 
-     foreach ($formButtons as $buttonText) {
+    foreach ($formButtons as $buttonText) {
         $formUsed = array_search($buttonText, $formButtons) + 7; // Assuming a sequential mapping starting from 7
 
         // Query to fetch the forms with the same complaint_id, form_used, and hearing_number
@@ -163,16 +164,29 @@ $_SESSION['current_hearing'] = $currentHearing;
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Display buttons with proper naming for multiple occurrences
+        $counter = 0;
         foreach ($results as $result) {
+            $counter++;
             $formID = $result['id'];
-            $formIdentifier = count($results) > 1 ? " ($formID)" : "";
-            $formFileName = 'kp_form' . $formUsed . '.php';
-            echo '<a href="forms/' . $formFileName . '?formID=' . $formID . '"><button class="open-form"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button></a>';
+            $formIdentifier = count($results) > 1 ? " ($counter)" : "";
+            $buttonID = 'formButton_' . $formUsed . '_' . $counter;
+            echo '<button class="open-form" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $formUsed . '"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button>';
         }
     }
     ?>
 </div>
 
+<script>
+    // JavaScript to handle button clicks and redirection with formID and formUsed
+    var buttons = document.querySelectorAll('.open-form');
+    buttons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var formID = this.getAttribute('data-form-id');
+            var formUsed = this.getAttribute('data-form-used');
+            window.location.href = 'forms/kp_form' + formUsed + '.php?formID=' + formID;
+        });
+    });
+</script>
 
   <h2>Forms</h2>
     <div class="form-buttons">

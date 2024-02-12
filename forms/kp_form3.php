@@ -77,10 +77,10 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
                 <h3 style="text-align: center;"><b>NOTICE OF APPOINTMENT</b></h3>
 
                 <div style="text-align: left;">
-<br><br><br>				
-<input type="text" id="recipient" name="recipient" list="nameList" required style="width:250px; height: 20px; border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none; size= 1;"></p>
-<input type="text" id="recipient" name="recipient" list="nameList" required style="width:250px;  height: 20px; border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none; size= 1;"></p>
-<input type="text" id="recipient" name="recipient" list="nameList" required style="width:250px; height: 20px; border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none; size= 1;"></p>
+				
+<input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; size= 1;"></p>
+<input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; size= 1;"></p>
+<input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; size= 1;"></p>
 
 
     <datalist id="nameList">
@@ -90,11 +90,11 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
     </datalist>
 
 
-				<br><p style="text-align: justify; font-size: 18px; font-family: 'Times New Roman', Times, serif;">Sir/Madam: </p>
-				<p style="text-align: justify; font-size: 18px; text-indent: 1.5em; font-family: 'Times New Roman', Times, serif;">Please be informed that you have been appointed by the Punong Barangay as a MEMBER OF THE LUPONG TAGAPAMAYAPA,
+				<br><p style="text-align: justify; font-size: 12px; margin-top: 0;">Sir/Madam: </p>
+				<p style="text-align: justify; font-size: 12px; text-indent: 1.5em;">Please be informed that you have been appointed by the Punong Barangay as a MEMBER OF THE LUPONG TAGAPAMAYAPA,
 					effective upon taking your oath of office, and until a new Lupon is constituted on the third year following your appointment. You may
 					take your oath of office before the Punong Barangay on
-				<input type="text" id="recipient" name="recipient" required style="text-align: justify; font-size: 18px; font-family: 'Times New Roman', Times, serif; width: 20%; border: none; border-bottom: 1px solid black; margin-right: 0;">.
+				<input type="text" id="recipient" name="recipient" required style="width: 20%; border: none; border-bottom: 1px solid black; margin-right: 0;">.
 				</p><br><br><br><br>
 				</div>
 
@@ -123,64 +123,19 @@ $linkedNames = $_SESSION['linkedNames'] ?? [];
 
     <div style="position: relative;"><br>
 
-		<p style="text-align: center; margin-left: 470px; margin-right: auto;  font-size: 18px; font-family: 'Times New Roman', Times, serif;">Very truly yours, </p>
+		<p style="text-align: center; margin-left: 570px; margin-right: auto;">Very truly yours, </p>
 	<body>
-    <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 470px; margin-right: auto;">
-    <input type="text" id="pngbrgy" name="pngbrgy" style="border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none;" size="25">
+    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
+    <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
 	Barangay Secretary
 	</p>
     </div>
     </div>
+    <div class="blank-page"></div>
+    </body>
+        </div><br><br><br><br><br> 
+		
 
-    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: relative; right: -980px; top: -850px;">
-</form>
 
-                <?php if (!empty($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-
-                
-            </div>
-        </div>
- 
-        <script>
-document.getElementById('downloadButton').addEventListener('click', function () {
-    var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
-    var saveButton = document.querySelector('input[name="saveForm"]');
-    var inputFields = document.querySelectorAll('input[type="text"], input[type="number"], select');
-    var pdfContent = document.querySelector('.paper');
-
-    // Hide buttons and remove borders for download
-    buttonsToHide.forEach(function (button) { button.style.visibility = 'hidden'; });
-    saveButton.style.visibility = 'hidden';
-    inputFields.forEach(function (field) { field.style.border = 'none'; });
-
-    // Generate PDF and initiate a download
-    html2pdf().from(pdfContent).set({
-        margin: 10,
-        filename: 'document.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, logging: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).save().then(function () {
-        // PDF download initiated
-    }).catch(function (error) {
-        // Handle any errors that occurred during PDF generation
-        console.error('Failed to generate PDF: ', error);
-    }).finally(function() {
-        // Make sure buttons are shown again after PDF generation
-        buttonsToHide.forEach(function (button) { button.style.visibility = 'visible'; });
-        saveButton.style.visibility = 'visible';
-        inputFields.forEach(function (field) { field.style.border = '1px solid #ccc'; }); // Or whatever your default style is
-    });
-});
-
-    </script>
-</div>        
-</div>
 </body>
-</html>
+</html>	

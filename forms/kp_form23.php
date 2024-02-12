@@ -21,6 +21,21 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
+   
+    <script>
+        function ComplainantRespondents() {
+            var selection = document.getElementById("Complainant/s/Respondent/s").value;
+            var displayElement = document.getElementById("displayContent");
+
+            if (selection === "Complainant") {
+                displayElement.innerHTML = "<?php echo $cNames; ?>";
+            } else if (selection === "Respondent") {
+                displayElement.innerHTML = "<?php echo $rspndtNames; ?>";
+            } else {
+                displayElement.innerHTML = ""; // Handle other cases or leave it empty
+            }
+        }
+    </script>
 </head>
 <body>
     <br>
@@ -134,13 +149,16 @@ this case.
         <br>
         <br>
         <br>
+        <div id="displayContent" style="text-align: right; margin-left: 550px; margin-right: auto;"></div>
        <hr style="border-top: 1px solid black; width: 30%; margin-left: 530px;">
 
-         <select id="Complainant/s/Respondent/s"name="Complainant/s/Respondent/s" onchange="ComplainantRespondents()" style="text-align: right; margin-left: 580px; margin-right: auto;"required>
+       <select id="Complainant/s/Respondent/s" name="Complainant/s/Respondent/s" onchange="ComplainantRespondents()" style="text-align: right; margin-left: 550px; margin-right: auto;" required>
         <option value="" disabled selected>Complainant/s/Respondent/s</option>
         <option value="Complainant">Complainant/s</option>
         <option value="Respondent">Respondent/s</option>  
     </select>
+
+    
         </div>
 
   </body>

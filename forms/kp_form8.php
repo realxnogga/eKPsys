@@ -14,7 +14,6 @@ $complaintId = $_SESSION['current_complaint_id'] ?? '';
 $currentHearing = $_SESSION['current_hearing'] ?? '';
 $formUsed = 8;
 
-
 // Fetch existing row values if the form has been previously submitted
 $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
 $stmt = $conn->prepare($query);
@@ -24,7 +23,6 @@ $stmt->execute();
 $rowCount = $stmt->rowCount();
 
 $currentYear = date('Y'); // Get the current year
-
 // Array of months
 $months = array(
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -36,10 +34,9 @@ $currentDay = date('j');
 
 $id = $_GET['formID'] ?? '';
 
-// Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT made_date FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -50,28 +47,13 @@ if (!empty($id)) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
       // Extract and format the timestamp values
-        $appearDate = new DateTime($row['appear_date']);
-        $appear_day = $appearDate->format('j');
-
-        $appear_month = $appearDate->format('F');
-        $appear_year = $appearDate->format('Y');
-        $appear_time = $appearDate->format('H:i'); // Format for the time input
-
+     
         $madeDate = new DateTime($row['made_date']);
-        $receivedDate = new DateTime($row['received_date']);
-
-        // Populate form inputs with the extracted values
-        $currentDay = $appearDate->format('j');
-        $currentMonth = $appearDate->format('F');
-        $currentYear = $appearDate->format('Y');
-
+       
         $existingMadeDay = $madeDate->format('j');
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
 
-        $existingReceivedDay = $receivedDate->format('j');
-        $existingReceivedMonth = $receivedDate->format('F');
-        $existingReceivedYear = $receivedDate->format('Y');
     }
 }
 
@@ -80,44 +62,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $madeDay = $_POST['made_day'] ?? '';
     $madeMonth = $_POST['made_month'] ?? '';
     $madeYear = $_POST['made_year'] ?? '';
-    $receivedDay = $_POST['received_day'] ?? '';
-    $receivedMonth = $_POST['received_month'] ?? '';
-    $receivedYear = $_POST['received_year'] ?? '';
-
-    $day = $_POST['day'] ?? '';
-    $month = $_POST['month'] ?? '';
-    $year = $_POST['year'] ?? '';
-    $time = $_POST['time'] ?? '';
-
-$dateTimeString = "$year-$month-$day $time";
-$appearTimestamp = DateTime::createFromFormat('Y-F-j H:i', $dateTimeString);
-
-
-if ($appearTimestamp !== false) {
-    $appearTimestamp = $appearTimestamp->format('Y-m-d H:i:s');
 
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
-    $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
+
+    // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
+    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':complaintId', $complaintId);
+    $stmt->bindParam(':formUsed', $formUsed);
+    $stmt->bindParam(':currentHearing', $currentHearing);
+    $stmt->execute();
+    $existingForm14Count = $stmt->rowCount();
+
+if ($existingForm14Count > 0) {
+    $message = "There is already an existing KP Form 8 in this current hearing.";
+}
+
+else{
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
+              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
-              appear_date = VALUES(appear_date),
-              made_date = VALUES(made_date),
-              received_date = VALUES(received_date)";
+              made_date = VALUES(made_date)
+              ";
 
 
      $stmt = $conn->prepare($query);
     $stmt->bindParam(':complaintId', $complaintId);
     $stmt->bindParam(':currentHearing', $currentHearing);
     $stmt->bindParam(':formUsed', $formUsed);
-    $stmt->bindParam(':appearDate', $appearTimestamp);
     $stmt->bindParam(':madeDate', $madeDate);
-    $stmt->bindParam(':receivedDate', $receivedDate);
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -125,12 +103,8 @@ if ($appearTimestamp !== false) {
         $message = "Form submit failed.";
     }
 }
-else {
-        // Handle case where DateTime object creation failed
-        $message ="Invalid date/time format! Input: ". $dateTimeString;
-    }
-}
 
+}
 // Function to create a date from day, month, and year inputs
 function createDateFromInputs($day, $month, $year) {
     if (!empty($day) && !empty($month) && !empty($year)) {
@@ -141,28 +115,7 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 
-function createTimestampFromInputs($day, $month, $year, $time) {
-    if (!empty($day) && !empty($month) && !empty($year) && !empty($time)) {
-        return date('Y-m-d H:i:s', strtotime("$year-$month-$day $time"));
-    } else {
-        return null; 
-    }
-}
-// Retrieve the profile picture name of the current user
-$query = "SELECT profile_picture FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['profile_picture'])) {
-    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $profilePicture = '../profile_pictures/defaultpic.jpg';
-}
-?>
+    ?>
 
 <!DOCTYPE html>
 <html>
@@ -191,6 +144,13 @@ if ($user && !empty($user['profile_picture'])) {
         text-align: center;
 
     }
+
+    input,
+        select {
+            border: none;
+        }
+    
+
     h5 {
         margin: 0;
         padding: 0;
@@ -199,6 +159,7 @@ if ($user && !empty($user['profile_picture'])) {
         margin: 0;
         padding: 0;
     }
+
 </style>
 
 <body>
@@ -280,8 +241,13 @@ if ($user && !empty($user['profile_picture'])) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
+
+        <input type="number" name="year" placeholder="year" value="<?php echo isset($appear_year) ? $appear_year : date('Y'); ?>" required> at
+        <input type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required> o'clock in the morning/afternoon for the hearing of your complaint.
+
         <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo date('Y'); ?>" required> at
         <input type="time" id="time" name="time" size="5" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $appear_time; ?>" required> o'clock in the morning/afternoon for the hearing of your complaint.
+
     </div>
 
 
@@ -298,7 +264,11 @@ if ($user && !empty($user['profile_picture'])) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
+
+        <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">
+
         <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+
         <div style="position: relative;">
             <br>
             <br>
@@ -327,7 +297,11 @@ if ($user && !empty($user['profile_picture'])) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
+
+            <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">.
+
            <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+
         </div>
 
         <?php if (!empty($message)) : ?>

@@ -196,7 +196,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo isset($existingMadeDay) ? $existingMadeDay : ''; ?>">
         day of
         <select name="made_month">
-            <option value="">Select Month</option>
             <?php foreach ($months as $m): ?>
                 <option value="<?php echo $m; ?>" <?php echo isset($existingMadeMonth) && $existingMadeMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
             <?php endforeach; ?>

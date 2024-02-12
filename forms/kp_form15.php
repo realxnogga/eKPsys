@@ -12,7 +12,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 $complaintId = $_SESSION['current_complaint_id'] ?? '';
 $currentHearing = $_SESSION['current_hearing'] ?? '';
-$formUsed = 10;
+$formUsed = 15;
 
 // Fetch existing row values if the form has been previously submitted
 $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
@@ -23,7 +23,6 @@ $stmt->execute();
 $rowCount = $stmt->rowCount();
 
 $currentYear = date('Y'); // Get the current year
-
 // Array of months
 $months = array(
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -35,10 +34,9 @@ $currentDay = date('j');
 
 $id = $_GET['formID'] ?? '';
 
-// Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT made_date FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -49,28 +47,13 @@ if (!empty($id)) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
       // Extract and format the timestamp values
-        $appearDate = new DateTime($row['appear_date']);
-        $appear_day = $appearDate->format('j');
-
-        $appear_month = $appearDate->format('F');
-        $appear_year = $appearDate->format('Y');
-        $appear_time = $appearDate->format('H:i'); // Format for the time input
-
+     
         $madeDate = new DateTime($row['made_date']);
-        $receivedDate = new DateTime($row['received_date']);
-
-        // Populate form inputs with the extracted values
-        $currentDay = $appearDate->format('j');
-        $currentMonth = $appearDate->format('F');
-        $currentYear = $appearDate->format('Y');
-
+       
         $existingMadeDay = $madeDate->format('j');
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
 
-        $existingReceivedDay = $receivedDate->format('j');
-        $existingReceivedMonth = $receivedDate->format('F');
-        $existingReceivedYear = $receivedDate->format('Y');
     }
 }
 
@@ -79,44 +62,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $madeDay = $_POST['made_day'] ?? '';
     $madeMonth = $_POST['made_month'] ?? '';
     $madeYear = $_POST['made_year'] ?? '';
-    $receivedDay = $_POST['received_day'] ?? '';
-    $receivedMonth = $_POST['received_month'] ?? '';
-    $receivedYear = $_POST['received_year'] ?? '';
-
-    $day = $_POST['day'] ?? '';
-    $month = $_POST['month'] ?? '';
-    $year = $_POST['year'] ?? '';
-    $time = $_POST['time'] ?? '';
-
-$dateTimeString = "$year-$month-$day $time";
-$appearTimestamp = DateTime::createFromFormat('Y-F-j H:i', $dateTimeString);
-
-
-if ($appearTimestamp !== false) {
-    $appearTimestamp = $appearTimestamp->format('Y-m-d H:i:s');
 
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
-    $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
+
+    // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
+    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':complaintId', $complaintId);
+    $stmt->bindParam(':formUsed', $formUsed);
+    $stmt->bindParam(':currentHearing', $currentHearing);
+    $stmt->execute();
+    $existingForm14Count = $stmt->rowCount();
+
+if ($existingForm14Count > 0) {
+    $message = "There is already an existing KP Form 15 in this current hearing.";
+}
+
+else{
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
+              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
-              appear_date = VALUES(appear_date),
-              made_date = VALUES(made_date),
-              received_date = VALUES(received_date)";
+              made_date = VALUES(made_date)
+              ";
 
 
      $stmt = $conn->prepare($query);
     $stmt->bindParam(':complaintId', $complaintId);
     $stmt->bindParam(':currentHearing', $currentHearing);
     $stmt->bindParam(':formUsed', $formUsed);
-    $stmt->bindParam(':appearDate', $appearTimestamp);
     $stmt->bindParam(':madeDate', $madeDate);
-    $stmt->bindParam(':receivedDate', $receivedDate);
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -124,12 +103,7 @@ if ($appearTimestamp !== false) {
         $message = "Form submit failed.";
     }
 }
-else {
-        // Handle case where DateTime object creation failed
-        $message ="Invalid date/time format! Input: ". $dateTimeString;
-    }
 }
-
 // Function to create a date from day, month, and year inputs
 function createDateFromInputs($day, $month, $year) {
     if (!empty($day) && !empty($month) && !empty($year)) {
@@ -140,134 +114,41 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 
-function createTimestampFromInputs($day, $month, $year, $time) {
-    if (!empty($day) && !empty($month) && !empty($year) && !empty($time)) {
-        return date('Y-m-d H:i:s', strtotime("$year-$month-$day $time"));
-    } else {
-        return null; 
-    }
-}
-// Retrieve the profile picture name of the current user
-$query = "SELECT profile_picture FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+    ?>               
 
-// Check if the user has a profile picture
-if ($user && !empty($user['profile_picture'])) {
-    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $profilePicture = '../profile_pictures/defaultpic.jpg';
-}
-?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KP Form 15</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>KP FORM 15</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
+    
 </head>
-<style>
-     .profile-img{
-    width: 3cm;
-}
-
-.header {
-    text-align: center;
-    padding-inline: 4cm;
-}
-    /* Hide the number input arrows */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* Hide the number input arrows for Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
-        border: none;
-        width: 30px;
-
-    }
-    h5{
-        margin:0;
-        padding:0;
-    }
-    @media print {
-        .page-break {
-            page-break-before: always;
-        }
-        input {
-        border-bottom: 1px solid black !important;
-    }
-      {
-        select[name="received_month"] {
-            border-bottom: 1px solid black; /* Set the desired border style and color */
-        }
-    }
-    }
-    .bottom-border {
-    border: none;
-    border-bottom: 1px solid black;
-}
-@media print {
-    input[type="text"], input[type="number"], select {
-        border: none !important; /* Remove all borders */
-        border-bottom: 1px solid black !important; /* Apply bottom border only */
-    }
-}
-</style>
 <body>
-<div class="container">
+    <br>
+    <div class="container">
         <div class="paper">
                 <div class="top-right-buttons">
                 <!-- Print button -->
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
                 </button>
-                <button class="btn btn-success download-button common-button" id="downloadButton">
-                    <i class="fas fa-file button-icon"></i> Download
-                </button>
-                <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-                 <button class="btn common-button" style="margin-top: 45px;">
-                   <i class="fas fa-arrow-left"></i> Back
+                <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>"><button class="btn common-button">
+                    <i class="button-icon"></i> Back
                 </button></a>
-
-            </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 15</b></h5>
-
-            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
-
-    <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
-        <br>
-        <h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
-        <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
-        <h5 class="header" style="text-align: center; font-size: 18px;">
-    <?php
-    $municipality = $_SESSION['municipality_name'];
-
-    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-        echo 'Municipality of ' . $municipality;
-    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-        echo 'City of ' . $municipality;
-    } else {
-        echo 'City/Municipality of ' . $municipality;
-    }
-    ?>
-</h5>
-        <h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-        <h5 class="header" style="font-size: 18px; margin-top: 5px;">OFFICE OF THE PUNONG BARANGAY</h5>
-    </div>
-</div>
-<br>
-<br>
+               
+            </div>
+            
+             <div style="text-align: left;">
+                <h5>KP Form No. 15</h5>
+                <h5 style="text-align: center;">Republic of the Philippines</h5>
+                <h5 style="text-align: center;">Province of Laguna</h5>
+                <h5 style="text-align: center;">CITY/MUNICIPALITY OF <?php echo $_SESSION['municipality_name']; ?></h5>
+                <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
+                <h5 style="text-align: center;">OFFICE OF THE PUNONG BARANGAY</h5>
+            </div>
 
             <?php
             $months = [
@@ -276,135 +157,83 @@ if ($user && !empty($user['profile_picture'])) {
             $currentYear = date('Y');
             ?>
 
-<div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;" >
-    <div class="input-field" style="float: right; width: 50%;">
-        <!-- case num here -->
-        <p style="text-align: left; margin-left:30px; font-size: 18px;">Barangay Case No.<span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($cNum) ? $cNum : '&nbsp;'; ?></span></p>
 
-        <p style="text-align: left; margin-left:30px; margin-top: 0; font-size: 18px;"> For:  <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($forTitle) ? nl2br(htmlspecialchars($forTitle)) : '&nbsp;'; ?></span> </p>
-    </div>
+<div class="form-group" style="text-align: right;">
+
+<div class="input-field"> <br>
+    <!-- case num here -->
+    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
+        <!-- ForTitle here -->
+         <?php echo $forTitle; ?> <br> 
+</div>
 </div>
 
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
-    <div class="label"></div>
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
-                </div>
-              
-<p style="font-size: 18px;"> Complainant/s </p>
-<p style="font-size: 18px;">- against -</p>
-                </div>
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p> Complainants:
+        <!-- CNames here -->
+        <br><?php echo $cNames; ?><br> </p>
+<br><p> — against —</p>
+</div>
+</div>
 
-<div class="form-group" style="text-align: justify; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
-  
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
-                </div>
-             
-<p style="font-size: 18px;"> Respondent/s </p> 
+<div>
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="label"></div>
+<div class="input-field">
+    <p> Respondents:<br>
+        <!-- RspndtNames here -->
+       <?php echo $rspndtNames; ?><br> </p>
+</div>
+</div>
 
-       
 
-<h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> <b style= "font-size: 18px;">
-ARBITRATION AWARD</b>
-</h3>
-
-<p style="text-indent: 2em; font-family: 'Times New Roman', Times, serif; font-size: 18px;">   After hearing the testimonies given and careful examination of the evidence presented in this case, award is hereby made as
+<h3 style="text-align: center;"><b>ARBITRATION AWARD</b></h3>
+<form method="POST">
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">   After hearing the testimonies given and careful examination of the evidence presented in this case, award is hereby made as
 follows:             
-<p style="text-align: left; font-size: 18px; font-size: 18px; margin-left: 2px; margin-top: 0;">
-<span style="border-bottom: 1px solid black; font-size: 18px; "><?php echo ($cDesc) ? nl2br(htmlspecialchars($cDesc)) : '&nbsp;'; ?></span>
-</p><br><br>
-<div style="text-align: justify; text-indent: 2em; font-size: 18px; font-family: 'Times New Roman', Times, serif">
-    Made this
-            <input type="number" name="received_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedDay ?? ''; ?>">
-    day of
-            <select name="received_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    </div>
+    <div class="a">
+  <textarea id="name" name="name" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
+  <br>
+</div>
+</div>
+<br>
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Made this <input type="text" name="made_day" placeholder="day" size="5" value="<?php echo $existingMadeDay ?? ''; ?>" required> day of
+  <select name="made_month">
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option style="font-size: 18px;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
         <?php else: ?>
-            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required>.
-        </div><br><br><br><br>
+<input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.              
+                </div>
 
-        <div style="text-align: right;">
-    <div style="min-width: 350px; border-bottom: 1px solid black; display: inline-block; position: relative;">
-        <div class="barangay-official" style="font-family: 'Times New Roman', Times, serif; font-size: 18px; text-align: center;">
-            <?php echo $punong_barangay; ?>
-        </div>
-        <label id="punongbrgy" name="punongbrgy" style="font-family: 'Times New Roman', Times, serif; font-size: 18px; position: absolute; top: 140%; left: 0; right: 0; text-align: center; font-weight: normal;">
-        Punong Barangay/Pangkat Chairman
-        </label>
-    </div><br><br><br><br><br>
+<?php if (!empty($message)) : ?>
+    <p><?php echo $message; ?></p>
+<?php endif; ?>
+<input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
+</form>
+<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
+    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value ="<?php echo $punong_barangay; ?>">
+   <br> Punong Barangay/Pangkat Chairman 
+</p>
 
     <div class="a">
-    <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 400px;  font-family: 'Times New Roman', Times, serif;">
-<input type="text" id="mmbr" name="mmbr" size="30" style="border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;"><br> Member</p>
-</div> 
-<div class="a">
-    <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 400px;  font-family: 'Times New Roman', Times, serif;">
-<input type="text" id="mmbr" name="mmbr" size="30" style="border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;"><br> Member</p>
-</div> 
+    <p><input type="text" id="mmbr" name="mmbr" size="30"> <br> Member </p>
+      <p><input type="text" id="mmbr" name="mmbr" size="30"> <br> Member </p>
+</div>
 <br>
 
   <div class="d">
-    <p style="text-align: left; font-size: 18px; margin-right: 400px;  font-family: 'Times New Roman', Times, serif;"> 
-    ATTESTED: <br><input type="text" id="attsd" name="attsd" size="30" style="border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;"></p>
-    <p style="text-align: left; font-family: 'Times New Roman', Times, serif; font-size: 18px;  margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">Punong Barangay/Lupon Secretary **</p>
-    <p style="text-indent: 2em; text-align: left; font-size: 18px; margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">* To be signed by either, whoever made the arbitration award.</p>
-    <p style="text-indent: 2em; text-align: left; font-size: 18px; margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">** To be signed by the Punong Barangay if the award is made by the Pangkat Chairman, and by the Lupon Secretary if the award is made by the Punong Barangay.</p>
+    <p>ATTESTED: <br> <input type="text" id="attsd" name="attsd" size="30"></p>
+    <p><b>Punong Barangay/Lupon Secretary ** </b></p><br>
+    <p>* To be signed by either, whoever made the arbitration award.</p>
+    <p>** To be signed by the Punong Barangay if the award is made by the Pangkat Chairman, and by the Lupon Secretary if the award is made by the Punong Barangay.</p>
   </div>        
-  <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: relative; right: -130px; top: -1065px;">
-</form>
-        </div>
-                <?php if (!empty($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>             
-            </div>
-        </div>
-
-        <script>
-document.getElementById('downloadButton').addEventListener('click', function () {
-    var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
-    var saveButton = document.querySelector('input[name="saveForm"]');
-    var inputFields = document.querySelectorAll('input[type="text"], input[type="number"], select');
-    var pdfContent = document.querySelector('.paper');
-
-    // Hide buttons and remove borders for download
-    buttonsToHide.forEach(function (button) { button.style.visibility = 'hidden'; });
-    saveButton.style.visibility = 'hidden';
-    inputFields.forEach(function (field) { field.style.border = 'none'; });
-
-    // Generate PDF and initiate a download
-    html2pdf().from(pdfContent).set({
-        margin: 10,
-        filename: 'document.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, logging: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).save().then(function () {
-        // PDF download initiated
-    }).catch(function (error) {
-        // Handle any errors that occurred during PDF generation
-        console.error('Failed to generate PDF: ', error);
-    }).finally(function() {
-        // Make sure buttons are shown again after PDF generation
-        buttonsToHide.forEach(function (button) { button.style.visibility = 'visible'; });
-        saveButton.style.visibility = 'visible';
-        inputFields.forEach(function (field) { field.style.border = '1px solid #ccc'; }); // Or whatever your default style is
-    });
-});
-
-    </script>
-</div>        
-</div><br>
 </body>
 </html>

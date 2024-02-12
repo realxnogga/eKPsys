@@ -1,7 +1,6 @@
-<?php 
-
- $user_id = $_SESSION['user_id'] ?? '';
-    $barangay_id = $_SESSION['barangay_id'] ?? '';
+<?php
+$user_id = $_SESSION['user_id'] ?? ''; 
+$barangay_id = $_SESSION['barangay_id'] ?? '';
 try{
 
 if (isset($_POST['submit'])) {
@@ -288,46 +287,47 @@ function handleMonthSelection($conn, $user_id, &$selected_month, &$report_data) 
 }
 
 // Function to handle default behavior
-function handleDefaultBehavior($conn, $user_id, &$default_report_data) {
-    if (!isset($_POST['selected_year']) && !isset($_POST['selected_month'])) {
-        $default_report_query = $conn->prepare("SELECT * FROM reports WHERE user_id = :user_id ORDER BY report_date DESC LIMIT 1");
-        $default_report_query->execute(['user_id' => $user_id]);
+function handleDefaultBehavior($conn, $user_id, &$default_report_data, $selected_year) {
+    $default_report_query = $conn->prepare("SELECT * FROM reports WHERE user_id = :user_id AND YEAR(report_date) = :selected_year ORDER BY report_date DESC LIMIT 1");
+        $default_report_query->execute(['user_id' => $user_id, 'selected_year' => $selected_year]);
         $default_report_data = $default_report_query->fetch(PDO::FETCH_ASSOC);
     }
+
+
+// Function to handle form submission
+function handleFormSubmission($conn, $user_id, &$selected_year, &$selected_month, &$annual_report_data, &$report_data, &$default_report_data) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        handleYearSelection($conn, $user_id, $selected_year, $annual_report_data);
+        handleMonthSelection($conn, $user_id, $selected_month, $report_data);
+        handleDefaultBehavior($conn, $user_id, $default_report_data, $selected_year); // Pass $selected_year here
+    }
 }
+
+// Call the function to handle form submission
+handleFormSubmission($conn, $user_id, $selected_year, $selected_month, $annual_report_data, $report_data, $default_report_data);
 
 // Usage
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     handleYearSelection($conn, $user_id, $selected_year, $annual_report_data);
     handleMonthSelection($conn, $user_id, $selected_month, $report_data);
-    handleDefaultBehavior($conn, $user_id, $default_report_data);
-
-    // Update displayed data based on the selected options
-    // Adjust the values displayed in the input fields based on selected_month and selected_year
-
-    // Check if the "Annual Report" select button is pressed
-  if (isset($_POST['submit_annual'])) {
-        $annual_report_data = fetchAnnualReportData($conn, $user_id, $selected_year);
+    handleDefaultBehavior($conn, $user_id, $default_report_data, $selected_year); // Pass $selected_year here 
+    if (isset($_POST['submit_annual'])) {
         $selected_year = $_POST['selected_year'];
-
-        // Fetch annual report data for the selected year
+        $annual_report_data = fetchAnnualReportData($conn, $user_id, $selected_year);
 
         // Assign fetched annual report data to the corresponding variables
+        $mayor = $default_report_data['mayor'];
+        $region = $default_report_data['region'];
+        $budget = $default_report_data['budget'];
+        $population = $default_report_data['population'];
+        $landarea = $default_report_data['landarea'];
+        $male = $default_report_data['male'];
+        $female = $default_report_data['female'];
+        $numlup = $default_report_data['numlupon'];
 
-        $mayor = $report_data['mayor'];
-        $region = $report_data['region'];
-        $budget = $report_data['budget'];
-        $population = $report_data['population'];
-        $landarea = $report_data['landarea'];
-        $male = $report_data['male'];
-        $female = $report_data['female'];
-        $numlup = $_SESSION['linkedNamesCount'];
-
-        
         $criminalCount = $annual_report_data['criminal_sum'] ?? '';
         $civilCount = $annual_report_data['civil_sum'] ?? '';
         $othersCount = $annual_report_data['others_sum'] ?? '';
-        $natureSum = $annual_report_data['totalNature_sum'] ?? '';
         $mediationCount = $annual_report_data['media_sum'] ?? '';
         $conciliationCount = $annual_report_data['concil_sum'] ?? '';
         $arbitrationCount = $annual_report_data['arbit_sum'] ?? '';
@@ -342,35 +342,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $totalUnsetCount = $annual_report_data['totalUnset_sum'] ?? '';
         $outsideJurisdictionCount = $annual_report_data['outsideBrgy_sum'] ?? '';
-        
     }
+
+    // Check if the "Monthly Report" select button is pressed
     elseif (isset($_POST['submit_monthly'])) {
-
-         $s_mayor = $report_data['mayor'] ?? '';
-    $s_region = $report_data['region'] ?? '';
-    $s_budget = $report_data['budget'] ?? '';
-    $s_population = $report_data['population'] ?? '';
-    $s_landarea = $report_data['landarea'] ?? '';
-    $s_male = $report_data['male'] ?? '';
-    $s_female = $report_data['female'] ?? '';
-    $s_totalc = $report_data['totalcase'] ?? '';
-    $s_numlup = $report_data['numlupon'] ?? '';
-    $s_criminal = $report_data['criminal'] ?? '';
-    $s_civil = $report_data['civil'] ?? '';
-    $s_others = $report_data['others'] ?? '';
-    $s_totalNature = $report_data['totalNature'] ?? '';
-    $s_mediation = $report_data['media'] ?? '';
-    $s_conciliation = $report_data['concil'] ?? '';
-    $s_arbit = $report_data['arbit'] ?? '';
-    $s_totalSet = $report_data['totalSet'] ?? '';
-    $s_pending = $report_data['pending'] ?? '';
-    $s_dismissed = $report_data['dismissed'] ?? '';
-    $s_repudiated = $report_data['repudiated'] ?? '';
-    $s_dropped = $report_data['dropped'] ?? '';
-    $s_totalUnset = $report_data['totalUnset'] ?? '';
-    $s_outside = $report_data['outsideBrgy'] ?? '';
-    $s_certified = $report_data['certcourt'] ?? '';
-
+        $s_mayor = $report_data['mayor'] ?? '';
+        $s_region = $report_data['region'] ?? '';
+        $s_budget = $report_data['budget'] ?? '';
+        $s_population = $report_data['population'] ?? '';
+        $s_landarea = $report_data['landarea'] ?? '';
+        $s_male = $report_data['male'] ?? '';
+        $s_female = $report_data['female'] ?? '';
+        $s_totalc = $report_data['totalcase'] ?? '';
+        $s_numlup = $report_data['numlupon'] ?? '';
+        $s_criminal = $report_data['criminal'] ?? '';
+        $s_civil = $report_data['civil'] ?? '';
+        $s_others = $report_data['others'] ?? '';
+        $s_totalNature = $report_data['totalNature'] ?? '';
+        $s_mediation = $report_data['media'] ?? '';
+        $s_conciliation = $report_data['concil'] ?? '';
+        $s_arbit = $report_data['arbit'] ?? '';
+        $s_totalSet = $report_data['totalSet'] ?? '';
+        $s_pending = $report_data['pending'] ?? '';
+        $s_dismissed = $report_data['dismissed'] ?? '';
+        $s_repudiated = $report_data['repudiated'] ?? '';
+        $s_dropped = $report_data['dropped'] ?? '';
+        $s_totalUnset = $report_data['totalUnset'] ?? '';
+        $s_outside = $report_data['outsideBrgy'] ?? '';
+        $s_certified = $report_data['certcourt'] ?? '';
     }
+
 }
+
  ?>

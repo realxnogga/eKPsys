@@ -123,21 +123,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check if the "Annual Report" select button is pressed
   if (isset($_POST['submit_annual'])) {
+
         $annual_report_data = fetchAnnualReportData($conn, $user_id, $selected_year);
-        $selected_year = $_POST['selected_year'];
+        $selected_year = $_POST['selected_year'] ?? '';
 
         // Fetch annual report data for the selected year
 
         // Assign fetched annual report data to the corresponding variables
 
-        $mayor = $report_data['mayor'];
-        $region = $report_data['region'];
-        $budget = $report_data['budget'];
-        $population = $report_data['population'];
-        $landarea = $report_data['landarea'];
-        $male = $report_data['male'];
-        $female = $report_data['female'];
-        $numlup = $report_data['numlupon'];
+        $mayor = $report_data['mayor'] ?? '';
+        $region = $report_data['region'] ?? '';
+        $budget = $report_data['budget'] ?? '';
+        $population = $report_data['population'] ?? '';
+        $landarea = $report_data['landarea'] ?? '';
+        $male = $report_data['male'] ?? '';
+        $female = $report_data['female'] ?? '';
+        $numlup = $report_data['numlupon'] ?? '';
 
         
         $criminalCount = $annual_report_data['criminal_sum'] ?? '';
@@ -161,7 +162,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
     }
     elseif (isset($_POST['submit_monthly'])) {
-
          $s_mayor = $report_data['mayor'] ?? '';
     $s_region = $report_data['region'] ?? '';
     $s_budget = $report_data['budget'] ?? '';

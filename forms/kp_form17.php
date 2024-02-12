@@ -128,7 +128,22 @@ function createDateFromInputs($day, $month, $year) {
 }
 
 
+// Retrieve the profile picture name of the current user
+$query = "SELECT profile_picture FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['profile_picture'])) {
+    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $profilePicture = '../profile_pictures/defaultpic.jpg';
+}
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -137,158 +152,301 @@ function createDateFromInputs($day, $month, $year) {
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
+
+    <style>
+    .profile-img{
+    width: 3cm;
+}
+
+.header {
+    text-align: center;
+    padding-inline: 4cm;
+}
+    /* Hide the number input arrows */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Hide the number input arrows for Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+        border: none;
+
+    }
+    h5{
+        margin:0;
+        padding:0;
+    }
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .checkbox-label {
+        margin-left: 10px;
+        font-size: 18px;
+        font-weight:normal;
+    }
+
+    .a {
+        margin-top: 5px;
+        margin-bottom: 15px;
+    }
     
+
+    @media print {
+        
+        
+        .checkbox-label {
+            border-bottom: none;
+        }
+        #nameR {
+            border-bottom: none;
+        }
+    }
+</style>
 </head>
 <body>
-    <br>
-    <div class="container">
+<div class="container">
         <div class="paper">
                 <div class="top-right-buttons">
                 <!-- Print button -->
-                <button class="btn btn-primary print-button common-button" onclick="window.print()">
-                    <i class="fas fa-print button-icon"></i> Print
-                </button>
-                <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>"><button class="btn common-button">
-                    <i class="button-icon"></i> Back
-                </button></a>
-            </div>
-            
-             <div style="text-align: left;">
-                <h5>KP Form No. 17</h5>
-                <h5 style="text-align: center;">Republic of the Philippines</h5>
-                <h5 style="text-align: center;">Province of Laguna</h5>
-                <h5 style="text-align: center;">CITY/MUNICIPALITY OF <?php echo $_SESSION['municipality_name']; ?></h5>
-                <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-                <h5 style="text-align: center;">OFFICE OF THE PUNONG BARANGAY</h5>
-            </div>
 
-            <?php
-            $months = [
-                'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 17 </b></h5>
 
-            $currentYear = date('Y');
-            ?>
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
 
-<div class="form-group" style="text-align: right;">
+    <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
+        <br>
+        <h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
+        <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
+        <h5 class="header" style="text-align: center; font-size: 18px;">
+    <?php
+    $municipality = $_SESSION['municipality_name'];
 
-<div class="input-field"> <br>
-    <!-- case num here -->
-    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
-         <?php echo $forTitle; ?> <br> 
-</div>
-</div>
-
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-<div class="label"></div>
-<div class="input-field">
-    <p> Complainants:
-        <br><?php echo $cNames; ?><br> </p>
-<br><p> — against —</p>
-</div>
-</div>
-
-<div>
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-<div class="label"></div>
-<div class="input-field">
-    <p> Respondents:<br>
-       <?php echo $rspndtNames; ?><br> </p>
-</div>
-</div>
-
-<h3 style="text-align: center;"><b>REPUDIATION</b></h3>
-<form id="formId" method="POST">
-    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-        I/WE hereby repudiate the settlement/agreement for arbitration on the ground that my/our consent was vitiated by: <br>
-        (Check out whichever is applicable)
+    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
+        echo 'Municipality of ' . $municipality;
+    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
+        echo 'City of ' . $municipality;
+    } else {
+        echo 'City/Municipality of ' . $municipality;
+    }
+    ?>
+</h5>
+        <h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
+        <h5 class="header" style="font-size: 18px;">OFFICE OF THE LUPONG TAGAPAMAYAPA</h5>
     </div>
-    <br>
-    <input type="checkbox" id="fraudCheckbox" name="fraudCheckbox">
-    <label for="fraudCheckbox">Fraud. (State details)</label>
-    <div class="a">
-        <textarea id="fraud" name="fraud" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
-    </div>
-    <br>
-    <input type="checkbox" id="violenceCheckbox" name="violenceCheckbox">
-    <label for="violenceCheckbox">Violence. (State details)</label>
-    <div class="a">
-        <textarea id="violence" name="violence" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
-    </div>
-    <br>
-    <input type="checkbox" id="intimidationCheckbox" name="intimidationCheckbox">
-    <label for="intimidationCheckbox">Intimidation. (State details)</label>
-    <div class="a">
-        <textarea id="intimidation" name="intimidation" style="width: 760px; box-sizing: border-box; overflow-y: hidden;"></textarea>
-    </div>
-    <br>
+</div>
+<br>
+<br>
 
+                <?php
+                $months = [
+                    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> This <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>"> day of
-    <select name="made_month" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
-        <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
-    <?php endforeach; ?>
-</select>,
-                
-                <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.              
-</div> 
+                $currentYear = date('Y');
+                ?>
+  
+   <div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;" >
+    <div class="input-field" style="float: right; width: 50%;">
+        <!-- case num here -->
+        <p style="text-align: left; margin-left:30px; font-size: 18px;">Barangay Case No.<span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($cNum) ? $cNum : '&nbsp;'; ?></span></p>
 
-<div class="d">
-    <div style="text-align: right; font-size: 12px; margin-right: 50px;"><br>
-    <p><br>Complainant/s <br> <br><br><p class="important-warning-text" style="text-align: right; font-size: 12px; margin-right: 570px; margin-right: auto;"><?php echo $cNames; ?> <br>_____________________
-            <id="cmplnts" name="cmplnts" size="25"  style="text-align: right;"></p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            
-    <p>Respondent/s <br> <br><br><p class="important-warning-text" style="text-align: right; font-size: 12px; margin-right: 570px; margin-right: auto;"><?php echo $rspndtNames; ?> <br>_____________________
-            <id="rspndt" name="rspndt" size="25"  style="text-align: right;"></p><br>
-  </div>
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> SUBSCRIBED AND SWORN TO before me this <input type="text" name="resp_day" placeholder="day" size="5" value="<?php echo $existingRespDay ?? ''; ?>"> day of
-  <select name="resp_month" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
-        <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
-    <?php endforeach; ?>
-</select>,
-<input type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>">.
+        <p style="text-align: left; margin-left:30px; margin-top: 0; font-size: 18px;"> For:  <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($forTitle) ? nl2br(htmlspecialchars($forTitle)) : '&nbsp;'; ?></span> </p>
+    </div>
+</div>
+
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
+    <div class="label"></div>
+    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
+                </div>
               
+<p style="font-size: 18px;"> Complainant/s </p>
+<p style="font-size: 18px;">- against -</p>
+                </div>
+
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
+    <div class="label"></div>
+    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
+                </div>
+                <div>
+<p style="font-size: 18px;"> Respondent/s </p> </div>
+<form method ="POST">
+<h3 style="text-align: center;"><b style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">REPUDIATION</b></h3>
+
+<div style="text-align: justify; text-indent: 0em; margin-left: 1px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">I/WE hereby repudiate the settlement/agreement for arbitration on the ground that my/our consent was vitiated by: <br>
+(Check out whichever is applicable)
+    </div>
+    <br>
+
+    <div style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+    <div class="checkbox-container">
+        <input type="checkbox" id="fraudCheckbox">
+        <label for="fraudCheckbox" class="checkbox-label"> Fraud. (State details)</label>
+    </div>
+    <div class="a">
+        <div id="nameR" name="nameR" style="text-decoration: underline; width: 700px; height: auto; border:none; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"> State details here.........................................................................................................................</div>
+    </div>
+
+    <div class="checkbox-container">
+        <input type="checkbox" id="violenceCheckbox">
+        <label for="violenceCheckbox" class="checkbox-label"> Violence. (State details)</label>
+    </div>
+    <div class="a">
+        <div id="nameR" name="nameR" style="text-decoration: underline; width: 700px; height: auto; border:none;  overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"> State details here.........................................................................................................................</div>
+    </div>
+
+    <div class="checkbox-container">
+        <input type="checkbox" id="intimidationCheckbox">
+        <label for="intimidationCheckbox" class="checkbox-label"> Intimidation. (State details)</label>
+    </div>
+    <div class="a">
+        <div id="nameR" name="nameR" style="text-decoration: underline; width: 700px; height: auto; border:none;  overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"> State details here.........................................................................................................................</div>
+    </div>
+</div>
+
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;font-size: 18px;font-family: 'Times New Roman', Times, serif; "> This
+    <input style="border: none; border-bottom: 1px solid black;font-size: 18px; width: 33px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="number" name="received_day" placeholder="day" min="01" max="31" value="<?php echo isset($existingReceivedDay) ? $existingReceivedDay : ''; ?>"> day of 
+                                    <select select style="border: none; border-bottom: 1px solid black;width: auto; font-size: 18px; margin-right: 5px;"  name="received_month">
+                                        <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="">Select Month</option>
+                                        <?php foreach ($months as $m): ?>
+                                            <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="<?php echo $m; ?>" <?php echo isset($existingReceivedMonth) && $existingReceivedMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>,
+        <input style="border-bottom: 1px solid black; width: 42px; font-size: 18px;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : ''; ?>"> .              
+</div> 
+<br>
+<div style="display: flex; justify-content: space-between; font-size: 18px; text-align: center; ">
+    <div style="text-align: center; margin-left: 210px;">
+        <p style="font-size: 18px;font-family: 'Times New Roman', Times, serif; ">Complainant/s</p>
+        <ul style="margin-bottom: 10; padding: 0; list-style: none; font-size: 18px; text-align: center;">
+        <span style="min-width: 30px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;font-family: 'Times New Roman', Times, serif;"><?php echo $cNames; ?></span>
+           
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-right: 210px;font-family: 'Times New Roman', Times, serif;">
+        <p style="font-size: 18px;font-family: 'Times New Roman', Times, serif; ">Respondent/s</p>
+        <ul style="margin-bottom: 10; padding: 0; list-style: none; font-size: 18px; text-align: center;">
+        <span style="min-width: 30px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;font-family: 'Times New Roman', Times, serif;"><?php echo $rspndtNames; ?></span>
+          
+        </ul>
+    </div>
+</div>
+
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px;font-family: 'Times New Roman', Times, serif; "> SUBSCRIBED AND SWORN TO before me this <input style=" border:none; border-bottom:1px solid black; font-size: 18px;" type="text" name="day" placeholder="day" size="1" required> day of
+<select select style="border: none; border-bottom: 1px solid black;width: auto; font-size: 18px; margin-right: 5px;"  name="received_month">
+                                        <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="">Select Month</option>
+                                        <?php foreach ($months as $m): ?>
+                                            <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="<?php echo $m; ?>" <?php echo isset($existingReceivedMonth) && $existingReceivedMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>,
+        <input style="border-bottom: 1px solid black; width: 42px; font-size: 18px;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : ''; ?>"> .              
 </div><br>
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
-                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay/Pangkat Chairman</label>
-</p>
-
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Received this<input type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>">  of
-                
-
-     <select name="received_month" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
-        <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
-    <?php endforeach; ?>
-</select> ,
-                                    <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">
-                                    </div>
-                                <?php if (!empty($message)) : ?>
-                                    <p><?php echo $message; ?></p>
-                                <?php endif; ?>
-                                <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
-                            </form>           
+<p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 550px; margin-right: auto;">
+    <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+        <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
+    </span></p>
+    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center; margin-left: 410px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Punong Barangay/Pangkat Chairman/Member</label>
+               
+<br>
+<br>
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px; "> Received and filed * this <input style="border:none; border-bottom:1px solid black;font-size: 18px;" type="text" name="day" placeholder="day" size="1" required> day of
+<select select style="border: none; border-bottom: 1px solid black;width: auto; font-size: 18px; margin-right: 5px;"  name="received_month">
+                                        <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="">Select Month</option>
+                                        <?php foreach ($months as $m): ?>
+                                            <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="<?php echo $m; ?>" <?php echo isset($existingReceivedMonth) && $existingReceivedMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>,
+        <input style="border-bottom: 1px solid black; width: 42px; font-size: 18px;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : ''; ?>"> .              
 </div><br>
 
 
-        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><?php echo $punong_barangay; ?><br>_________________<br>
-                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center;">Punong Barangay</label>
-</p>
-  <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">* Failure to repudiate the settlement or the arbitration agreement within the time limits respectively set (ten [10] days from the date of settlement and five[5] days from the date of arbitration agreement) shall be deemed a waiver of the right to challenge on
+<p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 550px; margin-right: auto;">
+    <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+        <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
+    </span></p>
+    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center; margin-left: 580px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Punong Barangay</label>
+               <br> <br>
+  <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px; ">* Failure to repudiate the settlement or the arbitration agreement within the time limits respectively set (ten [10] days from the date of settlement and five[5] days from the date of arbitration agreement) shall be deemed a waiver of the right to challenge on
 said grounds.
     </div>       
 </div>
+
+<?php if (!empty($message)) : ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+    <button class="btn btn-primary print-button common-button" onclick="window.print()" style="position: relative; right: -785px; top: -1298px;">
+                    <i class="fas fa-print button-icon"></i> Print
+                </button>
+            
+                <?php if (!empty($message)) : ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
+</form>
+<a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+    <button class="btn common-button" style="margin-left: -330px; margin-top: -2595px;">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+</a>
+<script>
+        document.getElementById('downloadButton').addEventListener('click', function () {
+            // Elements to hide during PDF generation
+            var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
+            var saveButton = document.querySelector('input[name="saveForm"]');
+
+            // Hide the specified buttons
+            buttonsToHide.forEach(function (button) {
+                button.style.display = 'none';
+            });
+
+            // Hide the Save button
+            saveButton.style.display = 'none';
+
+            // Remove borders for all input types and select
+            var inputFields = document.querySelectorAll('input, select');
+            inputFields.forEach(function (field) {
+                field.style.border = 'none';
+            });
+
+            var pdfContent = document.querySelector('.paper');
+            var downloadButton = document.getElementById('downloadButton');
+
+            // Hide the download button
+            downloadButton.style.display = 'none';
+
+            // Use html2pdf to generate a PDF
+            html2pdf(pdfContent, {
+                margin: 10,
+                filename: 'your_page.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).then(function () {
+                // Show the download button after PDF generation
+                downloadButton.style.display = 'inline-block';
+
+                // Show the Save button after PDF generation
+                saveButton.style.display = 'inline-block';
+
+                // Show the other buttons after PDF generation
+                buttonsToHide.forEach(function (button) {
+                    button.style.display = 'inline-block';
+                });
+
+                // Restore borders for all input types and select
+                inputFields.forEach(function (field) {
+                    field.style.border = ''; // Use an empty string to revert to default border
+                });
+            });
+        });
+    </script>
+                    </body>
 </html>

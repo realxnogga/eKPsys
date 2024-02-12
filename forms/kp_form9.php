@@ -253,18 +253,40 @@ if ($luponData) {
     $lupon_chairman = '';
 }
 
-?>
 
+// Retrieve the profile picture name of the current user
+$query = "SELECT profile_picture FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['profile_picture'])) {
+    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $profilePicture = '../profile_pictures/defaultpic.jpg';
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form9</title>
+    <title>KP Form 9</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
     
 </head>
 <style>
+     .profile-img{
+    width: 3cm;
+}
+
+.header {
+    text-align: center;
+    padding-inline: 4cm;
+}
     /* Hide the number input arrows */
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -279,29 +301,73 @@ if ($luponData) {
         width: 30px;
 
     }
+    h5{
+        margin:0;
+        padding:0;
+    }
+    @media print {
+        .page-break {
+            page-break-before: always;
+        }
+        input {
+        border-bottom: 1px solid black !important;
+    }
+      {
+        select[name="received_month"] {
+            border-bottom: 1px solid black; /* Set the desired border style and color */
+        }
+    }
+    }
+    .bottom-border {
+    border: none;
+    border-bottom: 1px solid black;
+}
+
 </style>
 <body>
-    <br>
-    <div class="container">
+<div class="container">
         <div class="paper">
                 <div class="top-right-buttons">
                 <!-- Print button -->
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
                 </button>
-               <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>"><button class="btn common-button">
-                    <i class="button-icon"></i> Back
+                <button class="btn btn-success download-button common-button" id="downloadButton">
+                    <i class="fas fa-file button-icon"></i> Download
+                </button>
+                <br>
+                <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+                 <button class="btn common-button" style="margin-top: 45px;">
+                   <i class="fas fa-arrow-left"></i> Back
                 </button></a>
-            </div>
-            
-             <div style="text-align: left;">
-                <h5>KP Form No. 9</h5>
-                <h5 style="text-align: center;">Republic of the Philippines</h5>
-                <h5 style="text-align: center;">Province of Laguna</h5>
-                <h5 style="text-align: center;">CITY/MUNICIPALITY OF <?php echo $_SESSION['municipality_name']; ?></h5>
-                <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-                <h5 style="text-align: center;">OFFICE OF THE PUNONG BARANGAY</h5>
-            </div>
+            </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 9 </b></h5>
+
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
+
+    <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
+        <br>
+        <h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
+        <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
+        <h5 class="header" style="text-align: center; font-size: 18px;">
+    <?php
+    $municipality = $_SESSION['municipality_name'];
+
+    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
+        echo 'Municipality of ' . $municipality;
+    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
+        echo 'City of ' . $municipality;
+    } else {
+        echo 'City/Municipality of ' . $municipality;
+    }
+    ?>
+</h5>
+        <h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
+        <h5 class="header" style="font-size: 18px;">OFFICE OF THE PUNONG BARANGAY</h5>
+    </div>
+</div>
+<br>
+<br>
 
             <?php
             $months = [
@@ -310,130 +376,141 @@ if ($luponData) {
             $currentYear = date('Y');
             ?>
 
-<div class="form-group" style="text-align: right;"><br>
-    
-    <div class="input-field">
-    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
-                <!-- ForTitle here -->
-                 <?php echo $forTitle; ?> <br> 
-        </div>
-    </div>
+<div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;" >
+    <div class="input-field" style="float: right; width: 50%;">
+        <!-- case num here -->
+        <p style="text-align: left; margin-left:30px; font-size: 18px;">Barangay Case No.<span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($cNum) ? $cNum : '&nbsp;'; ?></span></p>
 
-    <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-        <div class="label"></div>
-        <div class="input-field">
-            <p> Complainants:
-                <!-- CNames here -->
-                <br><?php echo $cNames; ?><br> </p>
-    <br><p> — against —</p>
-</div>
-</div>
-
-<div>
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <div class="label"></div>
-    <div class="input-field">
-        <p> Respondents:<br><?php echo $rspndtNames; ?></p>
+        <p style="text-align: left; margin-left:30px; margin-top: 0; font-size: 18px;"> For:  <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($forTitle) ? nl2br(htmlspecialchars($forTitle)) : '&nbsp;'; ?></span> </p>
     </div>
 </div>
 
-<h3 style="text-align: center;"> 
-SUMMONS
-</h3>
-
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
-    <div class="input-field">
-        <p> TO: <?php echo $rspndtNames; ?> </p>
-</div>
-</div>
+    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
+                </div>
+              
+<p style="font-size: 18px;"> Complainant/s </p>
+<p style="font-size: 18px;">- against -</p>
+                </div>
 
-<h3 style="text-align: center;"> 
-Respondents
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
+  
+    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
+                </div>
+             
+<p style="font-size: 18px;"> Respondent/s </p> 
+
+       
+
+<h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> <b style= "font-size: 18px;"  >
+SUMMONS </b>
 </h3>
+
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 1px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+  
+    <div class="input-field">
+        <p style="font-size: 18px;"> TO:     <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?></span></p> </div>
+                <div>
+<p style="font-size: 18px; text-indent:2em;"> Respondent/s </p> </div>
+
 <form method="POST">
-
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">You are hereby required to appear before me on the <input type="number" name="day" placeholder="day" min="1" max="31" value="<?php echo $appear_day; ?>" required>  of
-     <select name="month" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
-        <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
-    <?php endforeach; ?>
-</select>,
-                <input type="number" name="year" placeholder="year" min="<?php echo date('Y'); ?>" max="<?php echo date('Y') + 100; ?>" value="<?php echo date('Y'); ?>" required> at <input type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required> o'clock in the morning/afternoon then and there to answer to a complaint made before me, copy of which is attached hereto, for mediation/conciliation of your dispute with complainant/s.
-</div>
-    <br>
-
-    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> You are hereby warned that if you refuse or willfully fail to appear in obedience to this summons, you may be barred from filing any counterclaim arising from said complaint. <br> <br>FAIL NOT or else face punishment as for contempt of court.
+<div style="text-align: justify; text-indent: 2em; margin-left: 1px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+    You are hereby required to appear before me on the
+    <input style="font-size: 18px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="number" name="day" placeholder="day" min="1" max="31" value="<?php echo $appear_day; ?>" required> of
+    <select style="border: none; border-bottom: 1px solid black; font-size: 18px;" name="month" required>
+        <?php foreach ($months as $m): ?>
+            <?php if ($id > 0): ?>
+                <option style="font-size: 18px;" value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
+            <?php else: ?>
+                <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </select>,
+    <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="year" placeholder="year" min="<?php echo date('Y'); ?>" max="<?php echo date('Y') + 100; ?>" value="<?php echo date('Y'); ?>" required>
+    at <input style="font-size: 18px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required> o'clock in the morning/afternoon then and there to answer to a complaint made before me, copy of which is attached hereto, for mediation/conciliation of your dispute with complainant/s.
 </div>
 
-   <br>
+<div style="text-align: justify; text-indent: 2em; margin-left: 1px; margin-top: 1em; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+    You are hereby warned that if you refuse or willfully fail to appear in obedience to this summons, you may be barred from filing any counterclaim arising from said complaint. 
+    <br><p style="text-indent: 2em; margin-left: 1px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">FAIL NOT or else face punishment as for contempt of court.</p>
+</div>
 
-    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> This <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>">
+
+    <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;text-indent: 2em; margin-left: 1px; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> This <input style ="border: none; border-bottom: 1px solid black; font-size: 18px;" type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>">
  day of
-                <select name="made_month" required>
+                <select style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" name="made_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+            <option style=" font-size: 18px; font-family: 'Times New Roman', Times, serif;"value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
         <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style=" font-size: 18px; font-family: 'Times New Roman', Times, serif;"value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.              
+                <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.              
 </div> 
 
 
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;" size="25" value="<?php echo $punong_barangay;?>">
-    Punong Barangay
+<p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 550px; margin-right: auto; white-space: nowrap;">
+    <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+        <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
+    </span>
 </p>
+<label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center; margin-left: 480px; font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">
+    Punong Barangay/Kalihim ng Lupon
+</label>
 
-  <h3 style="text-align: center;"> OFFICER'S RETURN </h3>
+<<div class="page-break"></div>
 
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;"> I served this summons upon respondent <?php echo $rspndtNames; ?> on the  <input type="number" name="received_day" placeholder="day" min="1" max="31" value="<?php echo $existingReceivedDay ?? ''; ?>">
- day of
-                <select name="received_month" required>
+<h3 style="text-align: center; font-size: 18px;">
+    <b style="font-size: 18px;">OFFICER'S RETURN</b>
+</h3>
+
+<div style="font-size: 18px; text-align: justify; text-indent: 2em; margin-left: 1px;">
+    I served this summons upon respondent <?php echo $rspndtNames; ?> on the
+    <input style="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" type="number" name="received_day" placeholder="day" min="1" max="31" value="<?php echo $existingReceivedDay ?? ''; ?>">
+    day of
+                <select style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  name="received_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+            <option style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
         <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">, and upon respondent <?php echo $rspndtNames; ?> on the day
-                <input type="number" name="resp_day" placeholder="day" min="1" max="31" value="<?php echo $existingRespDay ?? ''; ?>"> of
-    <select name="resp_month" required>
+                <input style ="width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">, and upon respondent <?php echo $rspndtNames; ?> on the day
+                <input  style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"type="number" name="resp_day" placeholder="day" min="1" max="31" value="<?php echo $existingRespDay ?? ''; ?>"> of
+    <select style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" name="resp_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
+            <option style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
         <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>">  by: <br>
-                <p> (Write name/s of respondent/s before mode by which he/they was/were served.)</p>
+                <input style ="width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">  by: <br>
+                <p style="font-size: 18px;text-indent: 0em; margin-left:1px;"> (Write name/s of respondent/s before mode by which he/they was/were served.)</p>
 </div>
 
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-    <p style="text-indent: 0em; margin-left: 18px;">
-        <input type="text" id="scenario1" name="scenario_1" size="15" value="<?php echo ($existingScenario == 1) ? $rspndtName1 : ''; ?>"> 1. handing to him/them said summons in person, or <br>
-        <input type="text" id="scenario2" name="scenario_2" size="15" value="<?php echo ($existingScenario == 2) ? $rspndtName2 : ''; ?>"> 2. handing to him/them said summons and he/they refused to receive it, or <br>
-        <input type="text" id="scenario3" name="scenario_3" size="15" value="<?php echo ($existingScenario == 3) ? $rspndtName3 : ''; ?>"> 3. leaving said summons at his/their dwelling with
-        <input type="text" id="scenario3a" name="scenario_3a" size="15" value="<?php echo ($existingScenario == 3) ? $existScen3 : ''; ?>"> (name) a person of suitable age and discretion residing therein, or <br> 
-        <input type="text" id="scenario4" name="scenario_4" size="15" value="<?php echo ($existingScenario == 4) ? $rspndtName4 : ''; ?>"> 4. leaving said summons at his/their office/place of business with
-        <input type="text" id="scenario4a" name="scenario_4a" size="15" value="<?php echo ($existingScenario == 4) ? $existScen4 : ''; ?>">, (name) a competent person in charge thereof.
+
+<div style="font-size: 18px; text-align: justify; text-indent: 0em; margin-left: 20.5px;">
+    <p style="font-size: 18px; text-indent: 0em; margin-left: 18px;">
+        <input style="border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario1" name="scenario_1" size="15" value="<?php echo ($existingScenario == 1) ? $rspndtName1 : ''; ?>" > 1. handing to him/them said summons in person, or <br>
+        <input style="border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario2" name="scenario_2" size="15" value="<?php echo ($existingScenario == 2) ? $rspndtName2 : ''; ?>" > 2. handing to him/them said summons and he/they refused to receive it, or <br>
+        <input style="border: none; border-bottom: 1px solid black; font-size: 18px;" type="text" id="scenario3" name="scenario_3" size="15" value="<?php echo ($existingScenario == 3) ? $rspndtName3 : ''; ?>" > 3. leaving said summons at his/their dwelling with
+        <input style="border: none; border-bottom: 1px solid black; font-size: 18px; " type="text" id="scenario3a" name="scenario_3a" size="15" value="<?php echo ($existingScenario == 3) ? $existScen3 : ''; ?>" > (name) a person of suitable age and discretion residing therein, or <br> 
+        <input style="border: none; border-bottom: 1px solid black; font-size: 18px;" type="text" id="scenario4" name="scenario_4" size="15" value="<?php echo ($existingScenario == 4) ? $rspndtName4 : ''; ?>" > 4. leaving said summons at his/their office/place of business with
+        <input style="border: none; border-bottom: 1px solid black; font-size: 18px;" type="text" id="scenario4a" name="scenario_4a" size="15" value="<?php echo ($existingScenario == 4) ? $existScen4 : ''; ?>" >, (name) a competent person in charge thereof.
     </p>
 </div>
 
-
-<div class="e">
-<p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
 
 <input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList"> Officer</p>
 <datalist id="officerList">
@@ -443,19 +520,109 @@ Respondents
 </datalist>
 </div>
 
-<p>Received by Respondent/s representative/s:</p>
+<p style="font-size: 18px;text-indent: 1em; margin-left: 1px;">Received by Respondent/s representative/s:</p>
 
+<br>
+<div style="text-align: center; margin-top: 20px;">
 
-    <div class="a">
-        <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;"><input type="text" id="date" name="date" placeholder="Date" size="25"></p>
+<!-- First Signature and Date -->
+<div style="display: inline-block; margin-right: 50px;">
+  <div style="border-bottom: 1px solid black; width: 200px; margin-bottom: 10px;">  </div>
+    <div style="font-size: 18px;">Signature</div>
+</div>
+
+<!-- Second Signature and Date -->
+<div style="display: inline-block;">
+    <div style="border-bottom: 1px solid black; width: 200px; margin-bottom: 10px;"></div>
+    <div style="font-size: 18px;">Date</div>
+</div>
+
+</div>
+<div style="text-align: center; margin-top: 20px;">
+<br>
+<br>
+<!-- First Signature and Date -->
+<div style="display: inline-block; margin-right: 50px;">
+    <div style="border-bottom: 1px solid black; width: 200px; margin-bottom: 10px;"></div>
+    <div style="font-size: 18px;">Signature</div>
+</div>
+
+<!-- Second Signature and Date -->
+<div style="display: inline-block;">
+    <div style="border-bottom: 1px solid black; width: 200px; margin-bottom: 10px;"></div>
+    <div style="font-size: 18px;">Date</div>
+</div>
+        </div>
 </div>
 
 <?php if (!empty($message)) : ?>
-            <p><?php echo $message; ?></p>
-        <?php endif; ?>
-        <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
-</form>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+    <button class="btn btn-primary print-button common-button" onclick="window.print()" style="position: relative; right: -765px; top: -1485px;">
+                    <i class="fas fa-print button-icon"></i> Print
+                </button>
+            
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: relative; right: -662px; top: -1440px;">
 
+</form>
+<a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+    <button class="btn common-button" style="margin-left: -350px; margin-top: -2975px;">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+</a>
+
+<script>
+        document.getElementById('downloadButton').addEventListener('click', function () {
+            // Elements to hide during PDF generation
+            var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
+            var saveButton = document.querySelector('input[name="saveForm"]');
+
+            // Hide the specified buttons
+            buttonsToHide.forEach(function (button) {
+                button.style.display = 'none';
+            });
+
+            // Hide the Save button
+            saveButton.style.display = 'none';
+
+            // Remove borders for all input types and select
+            var inputFields = document.querySelectorAll('input, select');
+            inputFields.forEach(function (field) {
+                field.style.border = 'none';
+            });
+
+            var pdfContent = document.querySelector('.paper');
+            var downloadButton = document.getElementById('downloadButton');
+
+            // Hide the download button
+            downloadButton.style.display = 'none';
+
+            // Use html2pdf to generate a PDF
+            html2pdf(pdfContent, {
+                margin: 10,
+                filename: 'your_page.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).then(function () {
+                // Show the download button after PDF generation
+                downloadButton.style.display = 'inline-block';
+
+                // Show the Save button after PDF generation
+                saveButton.style.display = 'inline-block';
+
+                // Show the other buttons after PDF generation
+                buttonsToHide.forEach(function (button) {
+                    button.style.display = 'inline-block';
+                });
+
+                // Restore borders for all input types and select
+                inputFields.forEach(function (field) {
+                    field.style.border = ''; // Use an empty string to revert to default border
+                });
+            });
+        });
+    </script>
            
                 </div>
             </div>

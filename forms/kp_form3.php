@@ -308,10 +308,10 @@ if ($user && !empty($user['profile_picture'])) {
 NOTICE OF APPOINTMENT</b>
 
                 <div style="text-align: left;">
-				
-<input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; size= 1;"></p>
-<input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; size= 1;"></p>
-<input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; size= 1;"></p>
+<br><br><br>				
+<input type="text" id="recipient" name="recipient" list="nameList" required style="width:250px; height: 20px; border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none; size= 1;"></p>
+<input type="text" id="recipient" name="recipient" list="nameList" required style="width:250px;  height: 20px; border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none; size= 1;"></p>
+<input type="text" id="recipient" name="recipient" list="nameList" required style="width:250px; height: 20px; border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none; size= 1;"></p>
 
 
     <datalist id="nameList">
@@ -321,11 +321,11 @@ NOTICE OF APPOINTMENT</b>
     </datalist>
 
 
-				<br><p style="text-align: justify; font-size: 12px; margin-top: 0;">Sir/Madam: </p>
-				<p style="text-align: justify; font-size: 12px; text-indent: 1.5em;">Please be informed that you have been appointed by the Punong Barangay as a MEMBER OF THE LUPONG TAGAPAMAYAPA,
+				<br><p style="text-align: justify; font-size: 18px; font-family: 'Times New Roman', Times, serif;">Sir/Madam: </p>
+				<p style="text-align: justify; font-size: 18px; text-indent: 1.5em; font-family: 'Times New Roman', Times, serif;">Please be informed that you have been appointed by the Punong Barangay as a MEMBER OF THE LUPONG TAGAPAMAYAPA,
 					effective upon taking your oath of office, and until a new Lupon is constituted on the third year following your appointment. You may
 					take your oath of office before the Punong Barangay on
-				<input type="text" id="recipient" name="recipient" required style="width: 20%; border: none; border-bottom: 1px solid black; margin-right: 0;">.
+				<input type="text" id="recipient" name="recipient" required style="text-align: justify; font-size: 18px; font-family: 'Times New Roman', Times, serif; width: 20%; border: none; border-bottom: 1px solid black; margin-right: 0;">.
 				</p><br><br><br><br>
 				</div>
 
@@ -354,10 +354,10 @@ NOTICE OF APPOINTMENT</b>
 
     <div style="position: relative;"><br>
 
-		<p style="text-align: center; margin-left: 570px; margin-right: auto;">Very truly yours, </p>
+		<p style="text-align: center; margin-left: 470px; margin-right: auto;  font-size: 18px; font-family: 'Times New Roman', Times, serif;">Very truly yours, </p>
 	<body>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;" size="25">
+    <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 470px; margin-right: auto;">
+    <input type="text" id="pngbrgy" name="pngbrgy" style="border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none;" size="25">
 	Barangay Secretary
 	</p>
     </div>

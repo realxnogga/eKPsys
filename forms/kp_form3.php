@@ -362,11 +362,56 @@ NOTICE OF APPOINTMENT</b>
 	</p>
     </div>
     </div>
-    <div class="blank-page"></div>
-    </body>
-        </div><br><br><br><br><br> 
-		
 
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: relative; right: -980px; top: -850px;">
+</form>
 
+                <?php if (!empty($errors)): ?>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+
+                
+            </div>
+        </div>
+ 
+        <script>
+document.getElementById('downloadButton').addEventListener('click', function () {
+    var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
+    var saveButton = document.querySelector('input[name="saveForm"]');
+    var inputFields = document.querySelectorAll('input[type="text"], input[type="number"], select');
+    var pdfContent = document.querySelector('.paper');
+
+    // Hide buttons and remove borders for download
+    buttonsToHide.forEach(function (button) { button.style.visibility = 'hidden'; });
+    saveButton.style.visibility = 'hidden';
+    inputFields.forEach(function (field) { field.style.border = 'none'; });
+
+    // Generate PDF and initiate a download
+    html2pdf().from(pdfContent).set({
+        margin: 10,
+        filename: 'document.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, logging: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    }).save().then(function () {
+        // PDF download initiated
+    }).catch(function (error) {
+        // Handle any errors that occurred during PDF generation
+        console.error('Failed to generate PDF: ', error);
+    }).finally(function() {
+        // Make sure buttons are shown again after PDF generation
+        buttonsToHide.forEach(function (button) { button.style.visibility = 'visible'; });
+        saveButton.style.visibility = 'visible';
+        inputFields.forEach(function (field) { field.style.border = '1px solid #ccc'; }); // Or whatever your default style is
+    });
+});
+
+    </script>
+</div>        
+</div>
 </body>
-</html>	
+</html>

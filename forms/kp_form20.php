@@ -114,144 +114,314 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 
-    ?>
+// Retrieve the profile picture name of the current user
+$query = "SELECT profile_picture FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['profile_picture'])) {
+    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $profilePicture = '../profile_pictures/defaultpic.jpg';
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KP FORM 20</title>
+    <title>kp_form9</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+
     
 </head>
+<style>
+     .profile-img{
+    width: 3cm;
+}
+
+.header {
+    text-align: center;
+    padding-inline: 4cm;
+}
+    /* Hide the number input arrows */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Hide the number input arrows for Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+        border: none;
+        width: 30px;
+
+    }
+    h5{
+        margin:0;
+        padding:0;
+    }
+    @media print {
+        .page-break {
+            page-break-before: always;
+        }
+        input {
+        border-bottom: 1px solid black !important;
+    }
+      {
+        select[name="received_month"] {
+            border-bottom: 1px solid black; /* Set the desired border style and color */
+        }
+    }
+    }
+    .bottom-border {
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+</style>
 <body>
-    <br>
-    <div class="container">
+<div class="container">
         <div class="paper">
-                <div class="top-right-buttons">
-                <!-- Print button -->
-                <button class="btn btn-primary print-button common-button" onclick="window.print()">
-                    <i class="fas fa-print button-icon"></i> Print
-                </button>
-                <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>"><button class="btn common-button">
-                    <i class="button-icon"></i> Back
-                </button></a>
-            </div>
-            
-             <div style="text-align: left;">
-                <h5>KP Form No. 20</h5>
-                <h5 style="text-align: center;">Republic of the Philippines</h5>
-                <h5 style="text-align: center;">Province of Laguna</h5>
-                <h5 style="text-align: center;">CITY/MUNICIPALITY OF <?php echo $_SESSION['municipality_name']; ?></h5>
-                <h5 style="text-align: center;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-                <h5 style="text-align: center;">OFFICE OF THE PUNONG BARANGAY</h5>
-            </div>
+        <div class="top-right-buttons">
+    <button class="btn btn-primary print-button common-button" onclick="window.print()" style="position:fixed; right: 20px;">
+        <i class="fas fa-print button-icon"></i> Print
+    </button>
+    <button class="btn btn-success download-button common-button" id="downloadButton" style="position:fixed; right: 20px; top: 75px; ">
+        <i class="fas fa-file button-icon"></i> Download
+    </button>
+
+    <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+    </a>
+
+
+            </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 20 </b></h5>
+
+            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
+
+    <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
+        <br>
+        <h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
+        <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
+        <h5 class="header" style="text-align: center; font-size: 18px;">
+    <?php
+    $municipality = $_SESSION['municipality_name'];
+
+    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
+        echo 'Municipality of ' . $municipality;
+    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
+        echo 'City of ' . $municipality;
+    } else {
+        echo 'City/Municipality of ' . $municipality;
+    }
+    ?>
+</h5>
+        <h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
+        <h5 class="header" style="font-size: 18px;">OFFICE OF THE LUPONG TAGAPAMAYAPA</h5>
+    </div>
+</div>
+<br>
+<br>
+
             <?php
             $months = [
-                'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-            ];
+                'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
             $currentYear = date('Y');
             ?>
 
-         
+<div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;" >
+    <div class="input-field" style="float: right; width: 50%;">
+        <!-- case num here -->
+        <p style="text-align: left; margin-left:30px; font-size: 18px;">Barangay Case No.<span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($cNum) ? $cNum : '&nbsp;'; ?></span></p>
+
+        <p style="text-align: left; margin-left:30px; margin-top: 0; font-size: 18px;"> For:  <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($forTitle) ? nl2br(htmlspecialchars($forTitle)) : '&nbsp;'; ?></span> </p>
+    </div>
+</div>
+
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
+    <div class="label"></div>
+    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
+                </div>
+              
+<p style="font-size: 18px;"> Complainant/s </p>
+<p style="font-size: 18px;">- against -</p>
+                </div>
+
+<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
+  
+    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
+                </div>
              
-<div class="form-group" style="text-align: right;">
+<p style="font-size: 18px;"> Respondent/s </p> 
 
-<div class="input-field"> <br>
-    <!-- case num here -->
-    <div style="text-align: right; margin-right: 180px;"> Barangay Case No.<?php echo $cNum; ?> </div> <br> <p> <div style="text-align: right; margin-right: 100px;">For: 
-        <!-- ForTitle here -->
-         <?php echo $forTitle; ?> <br> 
-</div>
-</div>
-
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-<div class="label"></div>
-<div class="input-field">
-    <p> Complainants:
-        <!-- CNames here -->
-        <br><?php echo $cNames; ?><br> </p>
-<br><p> — against —</p>
-</div>
-</div>
-
-<div>
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px;">
-<div class="label"></div>
-<div class="input-field">
-    <p> Respondents:<br>
-        <!-- RspndtNames here -->
-       <?php echo $rspndtNames; ?><br> </p>
-</div>
-</div>
-                <h3 style="text-align: center;"><b> CERTIFICATION TO FILE ACTION</b> </h3>
-                <form method="POST">
-<div style="text-align: left;">
-            <p style="text-align: justify; margin-top: 0;">This is to certify that:</p>
-          
-            <div class="form" style="text-align: left;">
-    <div class="checkbox" style="text-align: left;text-indent: 1.5em;">
        
-        <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;"> 1. There has been a personal confrontation between the parties before the Punong Barangay/Pangkat ng Tagapagkasundo;</label>
+                <h3 style="text-align: center;"><b style="font-size: 18px;"> CERTIFICATION TO FILE ACTION</b> </h3>
+                <div style="text-align: justify;">
+    <p style="text-align: justify; margin-top: 0; font-size: 18px;">This is to certify that:</p>
+    
+    <div class="form" style="text-align: left; font-size: 18px;">
+        <div class="checkbox" style="text-align: left; text-indent: 2em;">
+            <input type="checkbox" id="checkbox1">
+            <label for="checkbox1" style="text-indent: 0em; margin-left: 1px; font-size: 18px;"> 1. There has been a personal confrontation between the parties before the Punong Barangay/Pangkat ng Tagapagkasundo;</label>
+        </div>
     </div>
 
-</div>
- <div class="form" style="text-align: left;">
-    <div class="checkbox"style="text-align: left;text-indent: 1.5em;">
-       
-        <label for="checkbox1"style="text-indent: 0em; margin-left: 2px;">  2. A settlement was reached; </label>
+    <div class="form" style="text-align: left; font-size: 18px;">
+        <div class="checkbox" style="text-align: left; text-indent: 2em;">
+            <input type="checkbox" id="checkbox2">
+            <label for="checkbox2" style="text-indent: 0em; margin-left: 1px; font-size: 18px;"> 2. A settlement was reached; </label>
+        </div>
     </div>
-<p style="text-align: justify; text-indent: 0em; margin-left: 38.5px;"> 3. The settlement has been repudiated in a statement sworn to before the Punong Barangay by <input type="text" name="name" id="name" placeholder=" "required> on ground of <input type="text" name="name" id="name" placeholder=" "required>; and </p>
-            <p style="text-align: justify; text-indent: 0em; margin-left: 38px;"> 4. Therefore, the corresponding complaint for the dispute may now be filed in court/government office.</p>    
-<br>
-<p style="text-align: justify; text-indent: 0em; margin-left: 38.5px;"> This <input type="text" name="made_day" placeholder="day" size="5" value="<?php echo $existingMadeDay ?? ''; ?>" required> day of
-  <select name="made_month">
+
+    <p style="text-align: justify; text-indent: 0em; margin-left: 2px; font-size: 18px;">
+        <div class="form" style="text-align: left; font-size: 18px;">
+            <div class="checkbox" style="text-align: left; text-indent: 2em;">
+                <input type="checkbox" id="checkbox3">
+                <label for="checkbox3" style="text-indent: 0em; margin-left: 1px; font-size: 18px;">
+                    3. The settlement has been repudiated in a statement sworn to before the Punong Barangay by
+                    <input style="border:none; border-bottom:1px solid black" type="text" name="name" id="name" placeholder=" " required> on ground of
+                    <input style="border:none; border-bottom:1px solid black" type="text" name="name" id="name" placeholder=" " required>;
+                </label>
+            </div>
+        </div>
+    </p>
+
+    <p style="text-align: justify; text-indent: 0em; margin-left: 2px; font-size: 18px;">
+        <div class="form" style="text-align: left; font-size: 18px;">
+            <div class="checkbox" style="text-align: left; text-indent: 2em;">
+                <input type="checkbox" id="checkbox4">
+                <label for="checkbox4" style="text-indent: 0em; margin-left: 1px; font-size: 18px;">
+                    4. Therefore, the corresponding complaint for the dispute may now be filed in court/government office.
+                </label>
+            </div>
+ 
+
+<p style="text-align: justify; text-indent: 0em; margin-left: 1px; font-size: 18px;"> This <input style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" type="text" name="made_day" placeholder="day" size="5" value="<?php echo $existingMadeDay ?? ''; ?>" required> day of
+  <select style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" name="made_month">
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+            <option style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
         <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
+<input style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  width:44px; font-size: 18px;" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
                
-        <?php if (!empty($message)) : ?>
-            <p><?php echo $message; ?></p>
-        <?php endif; ?>
-        <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
-</form>
-            </p>
 </div>
 </div>
 
 <br>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-    <input type="text" id="luponSec" name="luponSec" style="text-align: center; style="border: none; border-bottom: 1px solid black; outline: none; size="25">
-    Lupon Secretary
+    <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 570px; margin-right: auto;">
+    <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+        <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
+    </span> Lupon Secretary
     </p>
     <br>
 </div>
 </p>
 <br>
-    <p style="text-align: left; margin-top: 0;">
+    <p style="font-family: 'Times New Roman', Times, serif; text-align: left; margin-top: 0;font-size: 18px; text-indent: 1em;">
         Attested:</p>
-    <p class="important-warning-text" style="text-align: left; font-size: 12px; margin-left: 50px;"><?php echo $punong_barangay; ?><br>_________________<br>
-                    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: left;">Lupon Chairman</label>
-</p>
-<br>
-   <br>
-<br>
-<br>
-<br>
-</div>
-</div>
+        <p class="important-warning-text" style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-left: -550px; margin-right: auto;">
+    <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+        <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
+    </span></p>
+    <label id="punongbrgy" name="punongbrgy" size="25" style="font-family: 'Times New Roman', Times, serif; text-align: center; margin-left:  40px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Lupon Chairman</label>
+          
+
+<form>
+    <?php if (!empty($message)) : ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+
+            
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position:fixed; right: 20px; top: 130px;">
+
+    
+
+    </form>
+
+
+   
+<script>
+        document.getElementById('downloadButton').addEventListener('click', function () {
+            // Elements to hide during PDF generation
+            var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
+            var saveButton = document.querySelector('input[name="saveForm"]');
+
+            // Hide the specified buttons
+            buttonsToHide.forEach(function (button) {
+                button.style.display = 'none';
+            });
+
+            // Hide the Save button
+            saveButton.style.display = 'none';
+
+            // Remove borders for all input types and select
+            var inputFields = document.querySelectorAll('input, select');
+            inputFields.forEach(function (field) {
+                field.style.border = 'none';
+            });
+
+            var pdfContent = document.querySelector('.paper');
+            var downloadButton = document.getElementById('downloadButton');
+
+            // Hide the download button
+            downloadButton.style.display = 'none';
+
+            // Use html2pdf to generate a PDF
+            html2pdf(pdfContent, {
+                margin: 10,
+                filename: 'your_page.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).then(function () {
+                // Show the download button after PDF generation
+                downloadButton.style.display = 'inline-block';
+
+                // Show the Save button after PDF generation
+                saveButton.style.display = 'inline-block';
+
+                // Show the other buttons after PDF generation
+                buttonsToHide.forEach(function (button) {
+                    button.style.display = 'inline-block';
+                });
+
+                // Restore borders for all input types and select
+                inputFields.forEach(function (field) {
+                    field.style.border = ''; // Use an empty string to revert to default border
+                });
+            });
+        });
+    </script>
+
+           
                 </div>
             </div>
-        </div><br>
-    </div>
+        </div>
 
-
+<br>           
+</div>
 </body>
+
 </html>

@@ -305,6 +305,7 @@ $currentYear = date('Y');
 </div>
 
             </div>
+            <form method="POST">
                 <div style="text-align: center; text-indent: 0em; margin-left: 1px; font-size:18px;   font-family: 'Times New Roman', Times, serif;">
                 <p><b style="font-size:18px; font-family: 'Times New Roman', Times, serif;">NOTICE OF HEARING<br>(CONCILIATION PROCEEDINGS)
 </b></p> 
@@ -327,7 +328,7 @@ hearing of the above-entitled case.
                </div> 
                <br>
 
-               <form method="POST">
+               
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
                  This <input style="height:33px; text-align:center; font-size: 18px; font-family: 'Times New Roman', Times, serif; width: 44px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>" required>  day of
                 <select style="height:33px; border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; width: auto; font-size: 18px; margin-right: 5px;"  name="received_month"  required>

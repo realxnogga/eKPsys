@@ -312,15 +312,18 @@ if ($user && !empty($user['profile_picture'])) {
 </div>
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;font-size: 18px;font-family: 'Times New Roman', Times, serif; "> This
-    <input style="border: none; border-bottom: 1px solid black;font-size: 18px; width: 33px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="number" name="received_day" placeholder="day" min="01" max="31" value="<?php echo isset($existingReceivedDay) ? $existingReceivedDay : ''; ?>"> day of 
-                                    <select select style="border: none; border-bottom: 1px solid black;width: auto; font-size: 18px; margin-right: 5px;"  name="received_month">
-                                        <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="">Select Month</option>
-                                        <?php foreach ($months as $m): ?>
-                                            <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="<?php echo $m; ?>" <?php echo isset($existingReceivedMonth) && $existingReceivedMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>,
-        <input style="border-bottom: 1px solid black; width: 42px; font-size: 18px;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : ''; ?>"> .              
-</div> 
+    <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>"> day of
+    <select name="made_month" required>
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+        <?php else: ?>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>,
+                
+                <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.</div> 
 <br>
 <div style="display: flex; justify-content: space-between; font-size: 18px; text-align: center; ">
     <div style="text-align: center; margin-left: 210px;">
@@ -340,14 +343,18 @@ if ($user && !empty($user['profile_picture'])) {
     </div>
 </div>
 
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px;font-family: 'Times New Roman', Times, serif; "> SUBSCRIBED AND SWORN TO before me this <input style=" border:none; border-bottom:1px solid black; font-size: 18px;" type="text" name="day" placeholder="day" size="1" required> day of
-<select select style="border: none; border-bottom: 1px solid black;width: auto; font-size: 18px; margin-right: 5px;"  name="received_month">
-                                        <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="">Select Month</option>
-                                        <?php foreach ($months as $m): ?>
-                                            <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="<?php echo $m; ?>" <?php echo isset($existingReceivedMonth) && $existingReceivedMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>,
-        <input style="border-bottom: 1px solid black; width: 42px; font-size: 18px;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : ''; ?>"> .              
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px;font-family: 'Times New Roman', Times, serif; "> SUBSCRIBED AND SWORN TO before me this <input type="text" name="resp_day" placeholder="day" size="5" value="<?php echo $existingRespDay ?? ''; ?>"> day of
+  <select name="resp_month" required>
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
+        <?php else: ?>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>,
+<input type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>">.
+                
 </div><br>
 <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 550px; margin-right: auto;">
     <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
@@ -357,14 +364,25 @@ if ($user && !empty($user['profile_picture'])) {
                
 <br>
 <br>
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px; "> Received and filed * this <input style="border:none; border-bottom:1px solid black;font-size: 18px;" type="text" name="day" placeholder="day" size="1" required> day of
-<select select style="border: none; border-bottom: 1px solid black;width: auto; font-size: 18px; margin-right: 5px;"  name="received_month">
-                                        <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="">Select Month</option>
-                                        <?php foreach ($months as $m): ?>
-                                            <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="<?php echo $m; ?>" <?php echo isset($existingReceivedMonth) && $existingReceivedMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>,
-        <input style="border-bottom: 1px solid black; width: 42px; font-size: 18px;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : ''; ?>"> .              
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px; "> Received and filed * this <input type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>">  of
+                
+
+                <select name="received_month" required>
+               <?php foreach ($months as $m): ?>
+                   <?php if ($id > 0): ?>
+                       <option value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+                   <?php else: ?>
+                       <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+                   <?php endif; ?>
+               <?php endforeach; ?>
+           </select> ,
+                                               <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">
+                                               </div>
+                                           <?php if (!empty($message)) : ?>
+                                               <p><?php echo $message; ?></p>
+                                           <?php endif; ?>
+                                           <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
+                                       </form>                   
 </div><br>
 
 

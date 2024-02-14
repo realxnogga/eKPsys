@@ -139,7 +139,7 @@ $budget = $row['budget'] ?? '';
 $population = $row['population'] ?? '';
 $landarea = $row['landarea'] ?? '';
 $totalc = $row['totalcase'] ?? '';
-$numlup = $row['numlupon'] ?? ''; // Update $numlup to reflect the linked names count
+$numlup = $_SESSION['linkedNamesCount'] ?? ''; // Update $numlup to reflect the linked names count
 
 
 $male = $row['male'] ?? '';

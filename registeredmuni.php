@@ -31,155 +31,66 @@ if (isset($_POST['search'])) {
 }
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <title>Municipalities</title>
-    <link rel="stylesheet" type="text/css" href="style copy.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registered Municipalities</title>
+    <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
 
-    <?php include 'functions.php';?>
-    <style>
-/* Style for the search wrapper */
-.search-wrapper {
-    position: relative;
-    display: inline-block;
-    width: 540px; /* Adjust width as needed */
-    border-radius: 10px; /* Round corners for wrapper */
-    border: 1px solid #ccc; /* Thin line border */
-    overflow: hidden; /* Hide overflow to maintain border-radius */
-}
-
-/* Style for the search input field */
-input[type="text"] {
-    width: 100%; /* Take full width of the wrapper */
-    padding: 10px 20px; /* Add padding for spacing */
-    border: none; 
-    font-size: 16px; /* Increase font size for readability */
-    outline: none; /* Remove default outline */
-
-}
-
-/* Style for the search button */
-.search-btn {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 50px; /* Fixed width for the button */
-    height: 100%; /* Match height of the input field */
-    color: white; /* White text */
-    border: none;
-    cursor: pointer;
-    text-align: center; /* Center the icon */
-    font-size: 16px; /* Match font size of the input field */
-    border-radius: 0 2px 2px 0; /* Rounded right corners only */
-}
-
-/* Specific style for the Clear button */
-input[name="clear"] {
-    background-color: red; /* Red color for the Clear button */
-    color: white;
-    border-radius: 5px;
-    margin-left: 10px; /* Add margin for spacing */
-    padding: 6px 12px;
-    border: none;
-    cursor: pointer;
-}
-
-/* Style for the search button */
-.search-btn {
-    background-color: #4CAF50; /* Green background */
-}
-
-/* Hover effect for the search button */
-.search-btn:hover {
-    background-color: #3a8e3a; /* Dark green color on hover */
-}
-
-
-/* Style for the Clear button */
-input[name="clear"] {
-    background-color: red; /* Red color for the Clear button */
-    color: white;
-    border: none; /* Remove border */
-    cursor: pointer;
-    padding: 10px 20px; /* Adjust padding to match search bar height */
-    margin-left: 10px; /* Add margin for spacing */
-    font-size: 16px; /* Match font size of the search bar */
-    border-radius: 10px; /* Rounded corners to match search bar */
-    vertical-align: top; /* Align with the top of search bar */
-}
-
-/* Hover effect for the Clear button */
-input[name="clear"]:hover {
-    background-color: #b30000; /* Darker red color on hover */
-}
-
-
-        /* Style for the background color */
-        body {
-            background-color: #e9ecf3; /* Light gray background color */
-        }
-
-        .card {
-            border-radius: 20px; /* Set the radius of the card's corners to 20px */
-
-        }
-
-.container {
-    width: 100%; /* Adjust this as needed */
-    max-width: 960px; /* Example max width, adjust to match your design */
-    margin: auto; /* Center the container */
-}
-
-/* Style for the search wrapper */
-.search-wrapper {
-    width: 93%; /* Take full width of the container */
-}
-
-.municipality-column {
-    width: 21%; /* Adjust the width as needed */
-}
-
-.admin-column {
-    width: 23%; /* Adjust the width as needed */
-}
-
-.contact-column {
-    width: 23%; /* Adjust the width as needed */
-}
-
-.email-column {
-    width: 23%; /* Adjust the width as needed */
-}
-
-.actions-column {
-    width: 10%; /* Reduce the width as needed */
-}
-</style>
 </head>
-<body>
 
-    <div class="columns-container">
-        <div class="left-column">
+<body style="background-color: #eeeef6">
+
+
+<div class="container-fluid">
+<a href="superadmin_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+<br><br>
+
+        <!--  Row 1 -->
             <div class="card">
-    <h4><b>Registered Municipalities</b></h4><hr><br>
+              <div class="card-body">
+                    
+                  <div class="d-flex align-items-center">
+    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+    <div>
+        <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+    </div></div>    
+    <br>   
 
-<form method="POST" class="search-form">
-    <div class="search-wrapper">
-        <input type="text" name="municipality" placeholder="Search Municipality" value="<?php echo $searchedMunicipality; ?>">
-        <button type="submit" name="search" class="btn-light search-btn">
-            <i class="fas fa-search"></i>
+                     <h5 class="card-title mb-9 fw-semibold">Registered Municipalities</h5><hr>
+                   <b>  
+<br>
+                   
+
+     
+
+
+
+
+
+
+
+<form method="GET" action="" class="searchInput">
+    <div style="display: flex; align-items: center;">
+    <input type="text" name="municipality" class="form-control" placeholder="Search Municipality" value="<?php echo $searchedMunicipality; ?>">
+        <br><button type="submit" class="btn btn-dark m1" name="search">Search
         </button>
+        <input type="submit" class="btn btn-light m1" name="clear" value="Clear" formnovalidate>
     </div>
-
-    <input type="submit" name="clear" value="Clear" formnovalidate>
-
 </form>
 
 
 
-                <table class="table table-striped">
+
+
+<br>
+
+
+<table class="table table-striped">
                     <thead>
                         <tr>
                         <th class="municipality-column" style="padding: 8px; background-color: #d3d3d3;">Municipality</th>
@@ -197,7 +108,7 @@ input[name="clear"]:hover {
                                 <td><?php echo $row['contact_number']; ?></td>
                                 <td><?php echo $row['email']; ?></td>
                                 <td>
-                                <a href="ManageAccount.php?admin_id=<?php echo $row['id']; ?>" class="btn btn-secondary">
+                                <a href="ManageAccount.php?admin_id=<?php echo $row['id']; ?>" class="btn btn-primary m1" >
                     <i class="fas fa-cog"></i> Manage
                 </a>
                                 </td>
@@ -205,8 +116,31 @@ input[name="clear"]:hover {
                         <?php } ?>
                     </tbody>
                 </table>
+
+            
+            
+   
+
+  
+
+      
+    </div></div>
+      
+
+              </div>
+
+              
             </div>
+          </div></b>
+                    
+          </div>
         </div>
+       
+       
+          
     </div>
+  </div>
+
 </body>
+
 </html>

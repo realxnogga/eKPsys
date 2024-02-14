@@ -1,8 +1,7 @@
 <?php
 session_start();
 include_once("connection.php");
-include 'user-navigation.php';
-include 'functions.php';
+include 'index-navigation.php';
 
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
@@ -113,197 +112,99 @@ $stmt->bindParam(':receivedDate', $formattedReceivedDate, PDO::PARAM_STR);
 }
 ?>
 
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+
 <head>
-    <title>Edit Complaint</title>
-    <link rel="stylesheet" type="text/css" href="style copy.css">
-<style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Information</title>
+    <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
 
-
-/* Style the form */
-form {
-    border-radius: 5px;
-    padding: 20px;
-}
-
-/* Style labels and input fields */
-label {
-    display: block;
-}
-
-input[type="text"],
-input[type="date"],
-select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border-radius: 3px;
-}
-
-/* Add styles for required fields */
-.text-danger {
-    color: red;
-    font-weight: bold;
-}
-
-/* Style the submit button */
-input[type="submit"] {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-input[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-.columns-container {
-            max-height: 800px; /* Adjust the height as needed */
-            overflow: auto;}
-</style>
 </head>
+<body style="background-color: #eeeef6">
 
 
-<hr><br>
-<body>
-  
-<div class="columns-container">
-    <div class="left-column">
-        <div class="card">
-    <h4><b>Edit information</b></h4>
+<div class="container-fluid">
+<a href="user_complaints.php" class="btn btn-outline-dark m-1">Back to Complaints</a>
+<br><br>
 
-    <div class="container-fluid px-1 py-5 mx-auto">
-        <div class="row d-flex justify-content-center">
-            <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+        <!--  Row 1 -->
+            <div class="card">
+              <div class="card-body">
+                    
+                  <div class="d-flex align-items-center">
+    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+    <div>
+    <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+
+    </div></div>    
+    <br>   
+
+                     <h5 class="card-title mb-9 fw-semibold">Edit Information</h5><hr>
+                   <b>  
+
+                  
+            
+
                     <?php echo $successMessage; // Display success message here ?>
                     <form action="" method="post">
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-6 flex-column d-flex">
+                            <div>
                                 <label class="form-control-label px-3">Case No.<span class="text-danger"> *</span></label>
-
-                                <input type="text" id="CNum" name="CNum" placeholder="Case No. - Blotter No. - MMYY" onblur="validate(1)" required value="<?php echo $complaint['CNum']; ?>">
+                                <input type="text" class="form-control" id="CNum" name="CNum" placeholder="Case No. - Blotter No. - MMYY" onblur="validate(1)" required value="<?php echo $complaint['CNum']; ?>">
                             </div>
-                            <div class="form-group col-sm-6 flex-column d-flex">
+
+                            <div>
                                 <label class="form-control-label px-3">For:<span class="text-danger"> *</span></label>
-                                <input type="text" id="ForTitle" name="ForTitle" placeholder="Enter Name" onblur="validate(2)" required value="<?php echo $complaint['ForTitle']; ?>">
+                                <input type="text" class="form-control" id="ForTitle" name="ForTitle" placeholder="Enter Name" onblur="validate(2)" required value="<?php echo $complaint['ForTitle']; ?>">
                             </div>
-                        </div>
-                        <div class="row justify-content-between text-left">
-                        <div class="form-group col-sm-6 flex-column d-flex">
-    <label class="form-control-label px-3">Complainants:<span class="text-danger"> *</span></label>
-    <input type="text" id="CNames" name="CNames" placeholder="Enter name of complainants" onblur="validate(3)" required value="<?php echo ucwords($complaint['CNames']); ?>" oninput="capitalizeAfterSpace(this)">
-</div>
 
-<script>
-    function capitalizeAfterSpace(input) {
-        // Get the input value
-        let inputValue = input.value;
-
-        // Split the input value by space
-        let words = inputValue.split(' ');
-
-        // Capitalize the first letter of each word
-        for (let i = 0; i < words.length; i++) {
-            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
-        }
-
-        // Join the words back together with a space
-        let capitalizedValue = words.join(' ');
-
-        // Set the input value to the capitalized value
-        input.value = capitalizedValue;
-    }
-</script>
-
-<div class="form-group col-sm-6 flex-column d-flex">
-    <label class="form-control-label px-3">Respondents:<span class="text-danger"> *</span></label>
-    <input type="text" id="RspndtNames" name="RspndtNames" placeholder="Enter name of respondents" onblur="validate(4)" required value="<?php echo ucwords($complaint['RspndtNames']); ?>" oninput="capitalizeAfterSpace(this)">
-</div>
-
-<script>
-    function capitalizeAfterSpace(input) {
-        // Get the input value
-        let inputValue = input.value;
-
-        // Split the input value by space
-        let words = inputValue.split(' ');
-
-        // Capitalize the first letter of each word
-        for (let i = 0; i < words.length; i++) {
-            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
-        }
-
-        // Join the words back together with a space
-        let capitalizedValue = words.join(' ');
-
-        // Set the input value to the capitalized value
-        input.value = capitalizedValue;
-    }
-</script>
-
-                        
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 flex-column d-flex">
-                                <label class="form-control-label px-3">Complain<span class="text-danger"> *</span></label>
-                                <input type="text" id="CDesc" name="CDesc" placeholder="" onblur="validate(5)" required value="<?php echo $complaint['CDesc']; ?>">
+                            <div>
+                                <label class="form-control-label px-3">Complainants:<span class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" id="CNames" name="CNames" placeholder="Enter name of complainants" onblur="validate(3)" required value="<?php echo $complaint['CNames']; ?>">
                             </div>
-                        </div>
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-12 flex-column d-flex">
-                                <label class="form-control-label px-3">Petition<span class="text-danger"> *</span></label>
-                                <input type="text" id="Petition" name="Petition" placeholder="" onblur="validate(6)" required value="<?php echo $complaint['Petition']; ?>">
+
+                            <div>
+                                <label class="form-control-label px-3">Respondents:<span class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" id="RspndtNames" name="RspndtNames" placeholder="Enter name of respondents" onblur="validate(4)" required value="<?php echo $complaint['RspndtNames']; ?>">
                             </div>
-                        </div>
+                            
+                            <div>
+                                <label class="form-control-label px-3">Complain:<span class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" id="CDesc" name="CDesc" placeholder="" onblur="validate(5)" required value="<?php echo $complaint['CDesc']; ?>">
+                            </div>
+
+                            <div>
+                                <label class="form-control-label px-3">Petition:<span class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" id="Petition" name="Petition" placeholder="" onblur="validate(6)" required value="<?php echo $complaint['Petition']; ?>">
+                            </div>
+
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-sm-6 flex-column d-flex">
                                 <label class="form-control-label px-3">Made:<span class="text-danger"> *</span></label>
-                                <input type="datetime-local" id="Mdate" name="Mdate"onblur="validate(7)" value="<?php echo date('Y-m-d\TH:i'); ?>">
+                                <input type="datetime-local" class="form-control" id="Mdate" name="Mdate"onblur="validate(7)" value="<?php echo date('Y-m-d\TH:i'); ?>">
                             </div>
                             <div class="form-group col-sm-6 flex-column d-flex">
                                 <label class="form-control-label px-3">Received:</label>
-                                <input type="date" id="RDate" name="RDate" onblur="validate(8)" value="<?php echo $complaint['RDate']; ?>">
+                                <input type="date" class="form-control" id="RDate" name="RDate" onblur="validate(8)" value="<?php echo $complaint['RDate']; ?>">
                             </div>
                         </div>
-                        <div class="row justify-content-between text-left">
-    <div class="form-group col-12 flex-column d-flex">
-        <label class="form-control-label px-3">Pangkat:<span class="text-danger"></span></label>
-        <input type="text" id="Pangkat" name="Pangkat" placeholder="Enter name of Punong Barangay" oninput="capitalizeAfterSpace(this); showDropdown()" value="<?php echo ucwords($complaint['Pangkat']); ?>">
-        <!-- Apply the custom class to the dropdown container -->
-        <div id="pangkatDropdown"></div>
-    </div>
+<div class="row justify-content-between text-left">
+ <div class="form-group col-12 flex-column d-flex">
+  <label class="form-control-label px-3">Pangkat:<span class="text-danger"></span></label>
+  <input type="text" class="form-control" id="Pangkat" name="Pangkat" placeholder="Enter name of Punong Barangay" oninput="showDropdown()" value="<?php echo $complaint['Pangkat']; ?>">
+  <!-- Apply the custom class to the dropdown container -->
+  <div id="pangkatDropdown"></div>
 </div>
 
-<script>
-    function capitalizeAfterSpace(input) {
-        // Get the input value
-        let inputValue = input.value;
-
-        // Split the input value by space
-        let words = inputValue.split(' ');
-
-        // Capitalize the first letter of each word
-        for (let i = 0; i < words.length; i++) {
-            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
-        }
-
-        // Join the words back together with a space
-        let capitalizedValue = words.join(' ');
-
-        // Set the input value to the capitalized value
-        input.value = capitalizedValue;
-    }
-</script>
-
+</div>
 <div class="row justify-content-between text-left">
 
-                        <div class="row justify-content-between text-left">
                             
-    <div class="form-group col-sm-6 flex-column d-flex">
+    <div>
         <label class="form-control-label px-3">Case Status:<span class="text-danger"> *</span></label>
-        <select name="CStatus" id="cStatusSelect">
+        <select name="CStatus" id="cStatusSelect" class="form-select">
             <option value="Settled" <?php if ($complaint['CStatus'] === 'Settled') echo 'selected'; ?>>Settled</option>
             <option value="Unsettled" <?php if ($complaint['CStatus'] === 'Unsettled') echo 'selected'; ?>>Unsettled</option>
             <option value="Others" <?php if ($complaint['CStatus'] === 'Others') echo 'selected'; ?>>Outside the Jurisdiction</option>
@@ -312,9 +213,9 @@ input[type="submit"]:hover {
     </div>
 <input type="hidden" id="hiddenCMethod" name="hiddenCMethod" value="<?php echo $complaint['CMethod']; ?>">
 
-<div class="form-group col-sm-6 flex-column d-flex">
+<div>
     <label class="form-control-label px-3">Case Method:<span class="text-danger"> *</span></label>
-    <select name="CMethod" id="CMethodSelect">
+    <select name="CMethod" id="CMethodSelect" class="form-select">
         <?php
         $methodOptions = [];
 
@@ -340,24 +241,20 @@ input[type="submit"]:hover {
 </div>
 
 </div>
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-6 flex-column d-flex">
-                                <label class="form-control-label px-3">Case Type:<span class="text-danger"> *</span></label>
-                                <select name="CType">
+                            <div>
+                                <label class="form-control-label">Case Type:<span class="text-danger"> *</span></label>
+                                <select name="CType" class="form-select">
                                     <option value="Civil" <?php if ($complaint['CType'] === 'Civil') echo 'selected'; ?>>Civil</option>
                                     <option value="Criminal" <?php if ($complaint['CType'] === 'Criminal') echo 'selected'; ?>>Criminal</option>
                                     <option value="Others" <?php if ($complaint['CType'] === 'Others') echo 'selected'; ?>>Others</option>
                                 </select>
-                            </div>
+                            </div>   <br>  
+                                           <input type="submit" class="btn btn-dark m-1" name="submit" value="Update">
+
                         </div>
 
-                        
-                        <div class="row justify-content-end">
-                            <div class="form-group col-sm-2">
-                                <input type="submit" name="submit" value="Update">
-                            </div>
-                        </div>
                     </form>
+
                 </div>
             </div>
         </div>
@@ -425,8 +322,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </script>
 <script src="edit_script.js"></script>
+   
 
+  
 
+      
+    </div></div>
+      
+
+              </div>
+
+              
+            </div>
+          </div></b>
+                    
+          </div>
+        </div>
+       
+       
+          
+    </div>
+  </div>
 
 </body>
+
 </html>

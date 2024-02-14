@@ -1,4 +1,4 @@
-    <div class="sidebar">
+<div class="sidebar">
 
             <ul class="list-group">
             <br><br><br>
@@ -30,7 +30,12 @@
                     <li><a href="user_archives.php"><i class="fa fa-folder-open"></i> Archives</a></li>
 
                     <li><a href="report.php"><i class="fa fa-files-o"></i> Reports</a></li>
+                    
+
                     <li><a href="user-settings.php"><i class="fa fa-wrench"></i> Settings</a>
+
+                    <li><a href="user_logs.php"><i class="fa fa-list"></i> User Logs</a></li>
+
             </ul>
         </div>
         
@@ -43,6 +48,7 @@
              
 
 <li>
+
   <a href="logout.php" style="position: relative; display: inline-block;">
     <i class="fa fa-share-square-o"></i> 
     <span></span> 

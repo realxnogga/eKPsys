@@ -22,7 +22,8 @@ $apptNames = $_SESSION['apptNames'] ?? [];
                 <button class="btn btn-primary print-button common-button" onclick="window.print()">
                     <i class="fas fa-print button-icon"></i> Print
                 </button>
-               
+                <a href="../user_lupon.php" class="btn btn-primary print-button common-button">Back</a>
+              
             </div>
 			
              <div style="text-align: left;">

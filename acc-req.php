@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 }
 
 include 'admin_func.php';   
-include 'admin-nav.php';
+include 'admin-navigation.php';
 include 'functions.php';
 
 $currentMunicipalityID = $_SESSION['municipality_id'] ?? null;
@@ -28,31 +28,53 @@ $accountRequestsStatement = $conn->prepare($accountRequestsQuery);
 $accountRequestsStatement->execute([$currentMunicipalityID, $search_query_like, $search_query_like, $search_query_like]);
 $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<!doctype html>
+<html lang="en">
 
-<!DOCTYPE html>
-<html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Account Requests</title>
-    <link rel="stylesheet" type="text/css" href="style copy.css">
+    <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
+
 </head>
-<hr><br>
-<body>
-    <div class="columns-container">
-        <div class="left-column">
+
+<body style="background-color: #eeeef6">
+
+
+<div class="container-fluid">
+<a href="admin_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+<br><br>
+
+        <!--  Row 1 -->
             <div class="card">
-                <h4><b>Account Requests</b></h4><br>
+              <div class="card-body">
+                    
+                  <div class="d-flex align-items-center">
+    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+    <div>
+        <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+    </div></div>    
+    <br>   
 
-                <form method="GET" action="" class="searchInput">
-                    <input type="text" name="search" id="search" placeholder="Search by Name or Barangay Name" class="searchInput">
-                    <input type="submit" value="Search" class="refresh-button">
-                </form>
+                     <h5 class="card-title mb-9 fw-semibold">Account Requests</h5><hr>
+                   <b>  
+<br>
 
-                <?php
+<form method="GET" action="" class="searchInput" style="display: flex; align-items: center;">
+    <input type="text" class="form-control" name="search" id="search" placeholder="Search by Name or Barangay Name" class="searchInput">
+    <input type="submit" class="btn btn-dark m-1" value="Search" class="refresh-button">
+</form>
+
+    
+     
+<?php
                 echo '<div id="account-requests" style="display: block;">';
 
                 if (!empty($accountRequests)) {
-                    echo '<table class="table table-bordered">';
-                    echo '<thead><tr><th>Username</th><th>Secretary</th><th>Email</th><th>Contact Number</th><th>Barangay</th><th>Actions</th></tr></thead>';
+                    echo '<table class="table table-striped">';
+                    echo '<thead class="thead-dark"><tr><th>Username</th><th>Secretary</th><th>Email</th><th>Contact No.</th><th>Barangay</th><th>Actions</th></tr></thead>';
                     echo '<tbody>';
 
                     foreach ($accountRequests as $user) {
@@ -67,16 +89,16 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                         if (!isset($user['verified']) || !$user['verified']) {
                             echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
                             echo '<input type="hidden" name="user_id" value="' . $user['id'] . '">';
-                            echo '<button class="verify-button" type="submit" name="action" value="verify">Verify</button>';
-                            echo '<button class="deny-button" type="submit" name="action" value="deny">Deny</button>';
+                            echo '<button class="btn btn-success m-1" type="submit" name="action" value="verify">Verify</button>';
+                            echo '<button class="btn btn-danger m-1" type="submit" name="action" value="deny">Deny</button>';
                             echo '</form>';
                         } else {
                             echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
                             echo '<input type="hidden" name="user_id" value="' . $user['id'] . '">';
-                            echo '<button class="btn btn-danger" type="submit" name="action" value="unverify">Unverify</button>';
+                            echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Unverify</button>';
                             echo '</form>';
                         }
-                        echo '<a href="UserManageAccount.php?user_id=' . $user['id'] . '" class="acc-button">Manage Account</a>';
+                        echo '<a href="UserManageAccount.php?user_id=' . $user['id'] . '" class="btn btn-light m-1">Manage</a>';
 
                         echo '</td>';
                         echo '</tr>';
@@ -90,8 +112,32 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
 
                 echo '</div>';
                 ?>
+
+  
+            
+            
+   
+
+  
+
+      
+    </div></div>
+      
+
+              </div>
+
+              
             </div>
+          </div></b>
+                    
+          </div>
         </div>
+       
+       
+          
     </div>
+  </div>
+
 </body>
+
 </html>

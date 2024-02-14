@@ -60,201 +60,46 @@ $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <title>Municipality Reports</title>
-    <link rel="stylesheet" type="text/css" href="style copy.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reports</title>
+    <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
 
-    <style>
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
-.card {
-    height: 75vh; /* Set the height to 100% of the viewport height */
-    width: 154vh; /* Set the height to 100% of the viewport height */
-
-    overflow: auto;
-    padding-bottom: 20px; /* Add some padding to the bottom */
-    transition: height 0.3s ease; /* Add a smooth transition effect for height changes */
-}
-
-@media screen and (min-resolution: 192dpi), screen and (min-resolution: 2dppx) {
-    /* Adjust for high-density (Retina) displays */
-    .card {
-        height: 50vh;
-    }
-}
-
-@media screen and (max-width: 1200px) {
-    /* Adjust for window resolution 125% scaling */
-    .card {
-        height: 80vh;
-    }
-}
-
-@media screen and (max-width: 960px) {
-    /* Adjust for window resolution 150% scaling */
-    .card {
-        height: 66.67vh;
-    }
-}
-
-
-    .form-group {
-        margin-bottom: 1px;
-        }
-
-    .form-control-label {
-        font-weight: bold;
-    }
-
-        input[type="text"],
-        input[type="datetime-local"],
-        input[type="date"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: green;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 auto; /* Center the submit button */
-    display: block; /* Ensure it takes up full width */
-        }
-
-        input[type="searc"]:hover {
-            background-color: #45a049;
-        }
-        /* Center align the submit button */
-        .row.justify-content-end {
-    display: flex;
-    justify-content: center;
-}
-
-.form-group.col-sm-2 {
-    text-align: center;
-    margin-right: 190px; /* Add some top margin for better spacing */
-}
-
-/* Style for the search wrapper */
-.search-wrapper {
-    position: relative;
-    height: 43px;
-    display: inline-block;
-    border-radius: 10px; /* Round corners for wrapper */
-    border: 1px solid #ccc; /* Thin line border */
-    overflow: hidden; /* Hide overflow to maintain border-radius */
-}
-
-.search-and-controls-container {
-    display: flex;
-    align-items: center; /* Align items vertically */
-    justify-content: flex-start; /* Align items to the start of the container */
-}
-
-/* Style for the search input field */
-input[type="text"] {
-    padding: 10px 20px; /* Add padding for spacing */
-    border: none;
-    font-size: 16px; /* Increase font size for readability */
-    outline: none; /* Remove default outline */
-}
-
-/* Style for the search button */
-.search-btn {
-    position: absolute;
-    left: 488;
-    width: 49px; /* Fixed width for the button */
-    height: 100%; /* Match height of the input field */
-    color: white; /* White text */
-    border: none;
-    cursor: pointer;
-    text-align: center; /* Center the icon */
-    font-size: 16px; /* Match font size of the input field */
-    border-radius: 0 2px 2px 0; /* Rounded right corners only */
-
-    background-color: #4CAF50; /* Green background */
-}
-
-/* Hover effect for the search button */
-.search-btn:hover {
-    background-color: #3a8e3a; /* Dark green color on hover */
-}
-/* Style for the search wrapper */
-.search-wrapper {
-    width: 40%; /* Take full width of the container */
-}
-
-/* Style for the select month dropdown */
-.select-and-clear-container select[name="selected_month"] {
-    flex: 1; /* This makes it take the available space. Adjust or remove if needed. */
-    padding: 10px;
-    border-radius: 10px; /* Rounded corners to match search bar */
-    border: 1px solid #ccc;
-    width: 40%; /* Adjust this value to change the width */
-}
-
-
-/* Style for the Clear button */
-input[name="clear"] {
-    background-color: red; /* Red color for the Clear button */
-    color: white;
-    height: 43px;
-    border: none; /* Remove border */
-    cursor: pointer;
-    padding: 10px 20px; /* Adjust padding to match search bar height */
-    margin-left: 10px; /* Add margin for spacing */
-    font-size: 16px; /* Match font size of the search bar */
-    border-radius: 10px; /* Rounded corners to match search bar */
-    vertical-align: top; /* Align with the top of search bar */
-}
-
-/* Hover effect for the Clear button */
-input[name="clear"]:hover {
-    background-color: #b30000; /* Darker red color on hover */
-}
-
-        /* Style for the background color */
-        body {
-            background-color: #e9ecf3; /* Light gray background color */
-        }
-
-        .card {
-            border-radius: 20px; /* Set the radius of the card's corners to 20px */
-
-        }
-
-.container {
-    width: 100%; /* Adjust this as needed */
-    max-width: 960px; /* Example max width, adjust to match your design */
-    margin: auto; /* Center the container */
-}
-
-
-
-</style>
 </head>
-<body>
-    
 
-    <div class="columns-container">
-        <div class="left-column">
+<body style="background-color: #eeeef6">
+
+
+<div class="container-fluid">
+<a href="superadmin_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+<br><br>
+
+        <!--  Row 1 -->
             <div class="card">
+              <div class="card-body">
+                    
+                  <div class="d-flex align-items-center">
+    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+    <div>
+        <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+    </div></div>    
+    <br>   
 
-                <h4><b>Municipality Reports</b></h4><hr><br>
+                     <h5 class="card-title mb-9 fw-semibold">Report Overview</h5><hr>
+                   <b>  
+<br>
+                   
 
-                <form method="POST">
+     
+
+
+
+<form method="POST">
                     <div class="search-wrapper">
                         <input type="text" name="municipality" placeholder="Search Municipality" value="<?php echo $searchedMunicipality; ?>">
                       <button type="submit" name="search" class="btn-light search-btn">
@@ -295,6 +140,8 @@ input[name="clear"]:hover {
                             <a href="?sort=unsettled_asc">&#8593;</a>
                             <a href="?sort=unsettled_desc">&#8595;</a>
                         </th>
+                        <th style="padding: 8px; background-color: #d3d3d3;">Actions</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -343,17 +190,40 @@ input[name="clear"]:hover {
                             <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
                             <td><?php echo $row['Settled']; ?></td>
                             <td><?php echo $row['Unsettled']; ?></td>
+                            <td><a href="report_superadmin.php" class="btn btn-primary m-1">View Report</a>
+</td>
+
                         </tr>
                     <?php } ?>
                 </tbody>
             </table>
+
+
+
+            
+            
+   
+
+  
+
+      
+    </div></div>
+      
+
+              </div>
+
+              
+            </div>
+          </div></b>
+                    
+          </div>
         </div>
+       
+       
+          
     </div>
-</div>
+  </div>
 
-
-</div>
-</div>
-</div>
 </body>
+
 </html>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-include 'user-navigation.php';
+include 'index-navigation.php';
 include 'functions.php';
 
 
@@ -29,44 +29,63 @@ if (!empty($searchInput)) {
 
 $result = $conn->query($query);
 
+
 ?>
 
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+
 <head>
-    <title>Barangay Complaints</title>
-    <link rel="stylesheet" type="text/css" href="style copy.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Complaints</title>
+    <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
+
 </head>
-<hr><br>
-<body>
 
-<div class="columns-container">
-    <div class="left-column">
-        <div class="card">
-    <h4><b>Barangay Complaints</b></h4>
+<body style="background-color: #eeeef6">
 
-    <br>
 
-<form method="GET" action="" class="searchInput">
-    <input type="text" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput">
-    <input type="button" value="Search" onclick="location.href='user_complaints.php';" class="refresh-button">
-    <input type="button" value="+ Add complaint" onclick="location.href='add_complaint.php';" class="complaint-button">
+<div class="container-fluid">
+<a href="user_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+<br><br>
 
+        <!--  Row 1 -->
+            <div class="card">
+              <div class="card-body">
+                    
+                  <div class="d-flex align-items-center">
+    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+    <div>
+        <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+    </div></div>    
+    <br>   
+
+                     <h5 class="card-title mb-9 fw-semibold">Barangay Complaints</h5><hr>
+                   <b>  
+<br>
+                   <form method="GET" action="" class="searchInput">
+    <div style="display: flex; align-items: center;">
+        <input type="text" class="form-control" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput" style="flex: 1; margin-right: 5px;">
+        <input type="button" class="btn btn-dark m-1" value="Search" onclick="location.href='user_complaints.php';" class="refresh-button">
+        <input type="button" class="btn btn-success m-1" value="Add complaint" onclick="location.href='add_complaint.php';" class="complaint-button" style="margin-left: 0;">
+    </div>
 </form>
 
-
-    <table class="table table-striped">
+<br>
+     
+<table class="table table-striped">
         <thead class="thead-dark">
         <tr>
-            <th style="width: 10%">Case No.</th>
-            <th style="width: 15%">Title</th>
-            <th style="width: 15%">Complainants</th>
-            <th style="width: 15%">Respondents</th>
-            <th style="width: 10%">Date Made</th>
-            <th style="width: 10%">Case Status</th>
-            <th style="width: 10%">Case Progress</th>
-
-            <th style="width: 14%">Actions</th>
+            <th style="width: 10%">No.</th>
+            <th style="width: 5%">Title</th>
+            <th style="width: 2%">Complainants</th>
+            <th style="width: 2%">Respondents</th>
+            <th style="width: 5%">Date</th>
+            <th style="width: 2%">Status</th>
+            <th style="width: 5%">Progress</th>
+            <th style="width: 10%">Actions</th>
         </tr>
     </thead>
         
@@ -111,21 +130,18 @@ $result = $conn->query($query);
             </td>
 
             <td>
-                <a href="edit_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
-                <a href="archive_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger"><i class="fa fa-file-o"></i></a>
-                <a href="manage_case.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-warning"><i class="fa fa-folder-open"></i></a>
-            </td>
+    <a href="edit_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary"  title="Edit" data-placement="top"><i class="fas fa-edit"></i></a>
+    <a href="archive_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger" title="Archive" data-placement="top"><i class="fas fa-archive"></i></a>
+    <a href="manage_case.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-warning" title="Manage" data-placement="top"><i class="fas fa-folder"></i></a>
+
+
+</td>
+
         </tr>
     <?php endwhile; ?>
 </tbody>
 
     </table>
-
-        </div>
-        </div>
-
-        </div>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -173,6 +189,31 @@ $result = $conn->query($query);
                 }
             }
         });
-    </script>
+    </script> 
+            
+            
+   
+
+  
+
+      
+    </div></div>
+      
+
+              </div>
+
+              
+            </div>
+          </div></b>
+                    
+          </div>
+        </div>
+       
+       
+          
+    </div>
+  </div>
+
 </body>
+
 </html>

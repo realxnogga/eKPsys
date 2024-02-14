@@ -39,181 +39,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <title>Forgot Password</title>
-
-
-    <style>
-
-html, body {
-    overflow: hidden;
-    height: 100%;
-    margin: 0;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Roboto';
-    color: black;
-    height: 100%;
-    margin: 0;
-    background: #e9ecf3;
-}
-
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.leftcolumn {   
-    padding-left: 40px;
-    padding-right: 40px; /* Add padding to the right for better spacing */
-    width: 100%;
-    margin: 0 auto; /* Center the element horizontally */
-}
-
-
-.card {
-    height: 83vh; /* Set the height to 100% of the viewport height */
-    overflow: auto;
-    margin-top: 70px; /* Add some padding to the bottom */
-    padding-bottom: 0; /* Add some padding to the bottom */
-    transition: height 0.3s ease; /* Add a smooth transition effect for height changes */
-}
-
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-@media screen and (max-width: 800px) {
-    .leftcolumn, .rightcolumn {   
-        width: 100%;
-        padding: 0;
-    }
-}
-
-.card {
-    color: black;
-    background: white; 
-    border-radius: 20px;
-    padding: 60px;
-    margin-bottom: 10px;
-    flex-basis: calc(33.33% - 20px); 
-    box-sizing: border-box;
-    box-shadow: 0 0 7px #16336d34;  
-}
-
-.navbar {
-    background: #e9ecf3;
-    margin-top: -50px; 
-    color: #000000;
-    padding: 0; 
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-}
-
-.navbar ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center; 
-    
-}
-
-.navbar ul li {
-    margin: 0;
-    margin-right: 20px; 
-}
-
-.navbar ul li a {
-    font-size: 20px;
-    color: black;
-    text-decoration: none;
-    transition: color 0.3s ease-in-out;
-}
-
-.navbar ul li a:hover {
-    color: #b41f1f;
-}
-
-.logo img {
-    margin-top: 75px; 
-    margin-bottom: -45px; 
-    margin-left: 40px; 
-    max-height: 85px; 
-}
-
-.card h2 {
-    font-size: 18px;
-    color: #727272;
-    margin: 0;
-}  
-
-.card h3 {
-    font-size: 23px;
-    color: black;
-    margin: 0;
-} 
-
-* {
-  box-sizing: border-box;
-}
-
-.column {
-  float: left;
-  width: 33.33%;
-  padding: 5px;
-}
-
-/* Clearfix (clear floats) */
-.row::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forgot Password</title>
+  <link rel="stylesheet" href="assets/css/styles.min.css" />
 </head>
+
 <body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div
+      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+      <div class="d-flex align-items-center justify-content-center w-100">
+        <div class="row justify-content-center w-100">
+          <div class="col-md-8 col-lg-6 col-xxl-3">
+            <div class="card mb-0">
+              <div class="card-body">
+                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                </a>
+                <div class="text-center">
+    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle"><br><br>
+    <b><h5 class="card-title mb-9 fw-semibold">Forgot Password</h5></b>
+</div>
 
-<div class="content">
-            <div class="navbar">
-                <div class="logo">
-                    <img src="img/dilg-banner.png" alt="Logo">
-                </div>
-                <ul>
-             
+                
+<form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <input type="email" class="form-control" placeholder="Email" name="email" required><br>
+        <input type="submit" class="btn btn-primary w-100" value="Search">
+    </form> 
 
-<li>
- 
-                </ul>
+       </div>
+              </div>
             </div>
-
-            <div class="row">
-  <div class="leftcolumn">
-    <div class="card">
-        
-
-
-
-    <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-        <input type="email" placeholder="Email" name="email" required>
-        <input type="submit" value="Search">
-    </form>
-
-
+          </div>
+        </div>
+      </div>
     </div>
-  </div> <!-- Close leftcolumn here -->
+  </div>
+  <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -16,11 +16,12 @@ include 'report_handler.php';
 <!DOCTYPE html>
 <html>
 <head>
-<a href="report.php">Back</a>
+<a href="reports.php" class="btn btn-outline-dark m-1">Back to Report Overview</a>
 <!-- Include jQuery, html2pdf.js, and xlsx libraries -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
 
     <script>
     function generatePDF() {
@@ -49,7 +50,7 @@ html2pdf(newWindow.document.body, {
     margin: 10,
     filename: 'table_' + getFormattedDate() + '.pdf',
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-    outputPixelRatio: 5, // Adjust the pixel ratio for better resolution
+    outputPixelRatio: 10, // Adjust the pixel ratio for better resolution
 });
 
     // Close the new window
@@ -83,7 +84,7 @@ html2pdf(newWindow.document.body, {
         table.setAttribute('data-original-style', table.getAttribute('style') || '');
 
         // Set new styles for PDF generation
-        table.style.fontSize = '10px'; // Adjust font size
+        table.style.fontSize = '7px'; // Adjust font size
         table.style.width = '100%'; // Adjust table width
         // Add more style adjustments as needed
     }
@@ -110,7 +111,7 @@ html2pdf(newWindow.document.body, {
     table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 13px; /* Adjust font size for printing */
+        font-size: 11px; /* Adjust font size for printing */
 
     }
 
@@ -139,12 +140,12 @@ html2pdf(newWindow.document.body, {
 </style>
 </head>
 <body>
+
 <b>
 <table>
     <br>    <br>
     <br>
-    <br>
-    <br>
+
 
     <!-- Header Section -->
    <!-- Header Section -->
@@ -221,8 +222,8 @@ html2pdf(newWindow.document.body, {
 
     </tr>
     <tr>
-        <td colspan="19">SETTLED <br> (2)</td>
-        <td colspan="18">NOT SETTLED <br> (3)</td>
+        <td colspan="16">SETTLED <br> (2)</td>
+        <td colspan="24">NOT SETTLED <br> (3)</td>
     
     </tr>
     <tr>
@@ -268,10 +269,8 @@ html2pdf(newWindow.document.body, {
     </tr>
     </table>
 
-    <br><br>
-    <button onclick="generatePDF()">Generate PDF</button>
-    <button onclick="downloadExcel()">Download Excel</button>
-
+    <br>
+    <button onclick="generatePDF()" class="btn btn-dark m-1">Generate PDF</button>
 
 </body>
 </html>

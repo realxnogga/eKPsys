@@ -13,7 +13,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
     header("Location: login.php");
     exit;
 }
+
 include 'viewreporthandler.php';
+
+$stmt = $conn->prepare("SELECT barangay_name FROM barangays WHERE id = :barangay_id");
+$stmt->bindParam(':barangay_id', $barangay_id);
+$stmt->execute();
+
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -34,7 +41,8 @@ include 'viewreporthandler.php';
     <a href="sec-corner.php">Back</a>
     <div class="container">
         <form method="POST">
-               <h2>Annual Report (<?php echo isset($selected_year) ? $selected_year : date('F, Y'); ?>)</h2>
+            <h1>Reports of Barangay <?php echo $row['barangay_name']; ?></h1>
+               <h3>Annual (<?php echo isset($selected_year) ? $selected_year : date('F, Y'); ?>)</h3>
 
 <!-- Dropdown to select year -->
 <label for="selected_year">Select Year to Display Report:</label>
@@ -45,7 +53,7 @@ include 'viewreporthandler.php';
 </select>
     <input type="submit" name="submit_annual" value="Select Annual Report">
 
-<h2>Monthly Report (<?php echo isset($selected_month) ? $selected_month : date('F, Y'); ?>)</h2>
+<h3>Monthly (<?php echo isset($selected_month) ? $selected_month : date('F, Y'); ?>)</h3>
 
 <!-- Dropdown to select month -->
 <label for="selected_month">Select Month to Display Report:</label>

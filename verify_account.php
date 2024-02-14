@@ -1,6 +1,5 @@
 <?php
 include 'connection.php';
-include 'header.php';
 
 session_start();
 
@@ -90,41 +89,82 @@ if (isset($_SESSION['user_id'])) {
 }
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <title>Verify Account</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify Account</title>
+  <link rel="stylesheet" href="assets/css/styles.min.css" />
 </head>
+
 <body>
-    <h2>Verify Your Account</h2>
-    <?php
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div
+      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+      <div class="d-flex align-items-center justify-content-center w-100">
+        <div class="row justify-content-center w-100">
+          <div class="col-md-8 col-lg-6 col-xxl-3">
+            <div class="card mb-0">
+              <div class="card-body">
+                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                </a>
+                <div class="text-center">
+    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle"><br><br>
+    <b><h5 class="card-title mb-9 fw-semibold">Verify Account</h5></b>
+</div>
+
+<?php
     if (!empty($errors)) {
         foreach ($errors as $error) {
             echo "<p style='color: red;'>$error</p>";
         }
     }
     ?>
+
+<b>
+
     <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
         <?php if (isset($security_row) && !empty($security_row)) : ?>
             <label><?php echo $questions[$security_row['question1']]; ?></label>
-            <input type="text" name="answer1" required><br>
+            <input type="text" class="form-control" name="answer1" required><br>
 
             <label><?php echo $questions[$security_row['question2']]; ?></label>
-            <input type="text" name="answer2" required><br>
+            <input type="text" class="form-control" name="answer2" required><br>
 
             <label><?php echo $questions[$security_row['question3']]; ?></label>
-            <input type="text" name="answer3" required><br>
+            <input type="text" class="form-control" name="answer3" required><br>
 
-            <input type="submit" value="Verify Answers">
+            <b>  <p><a href="logout.php">Cancel</a></p>
+
+            <input type="submit" class="btn btn-primary w-100" value="Verify Answers">
         <?php endif; ?>
-    </form>
-    <a href="logout.php">Cancel</a>
-</body>
-</html>
-<script>
+    </form>     
+    
+
+    <script>
     window.addEventListener('beforeunload', function(event) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'logout.php', false);
         xhr.send();
     });
 </script>
+
+
+
+       </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

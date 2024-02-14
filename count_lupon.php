@@ -15,9 +15,9 @@ $fetchBrgyInfoStmt->execute();
 $brgyInfo = $fetchBrgyInfoStmt->fetch(PDO::FETCH_ASSOC);
 
 // Store 'brgy_name,' 'punong_brgy,' and 'munic_name' in session variables
-$_SESSION['brgy_name'] = $brgyInfo['brgy_name'];
-$_SESSION['munic_name'] = $brgyInfo['munic_name'];
-$_SESSION['punong_brgy'] = $brgyInfo['punong_brgy'];
+$_SESSION['brgy_name'] = $brgyInfo['brgy_name'] ?? '';
+$_SESSION['munic_name'] = $brgyInfo['munic_name'] ?? '';
+$_SESSION['punong_brgy'] = $brgyInfo['punong_brgy'] ?? '';
 
 
 

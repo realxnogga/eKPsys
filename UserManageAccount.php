@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-include 'admin-nav.php';
+include 'admin-navigation.php';
 include 'functions.php';
 
 // Check if the user is logged in
@@ -69,8 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($updateStmt->execute()) {
         // Redirect back to the admin dashboard after successful update
-        header("Location: admin_dashboard.php");
-        exit;
     } else {
         // Handle the case where the update fails
         $error = "Update failed. Please try again.";
@@ -78,57 +76,103 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Manage User Account</title>
-    <link rel="stylesheet" type="text/css" href="style copy.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User Manage Account</title>
+    <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
+
 </head>
-<body>
-<div class="columns-container">
-    <div class="left-column">
-        <div class="user">
-        <h4><b>Manage User Account</b></h4><br>
-        <?php if (isset($error)) { ?>
+
+<body style="background-color: #eeeef6">
+
+
+<div class="container-fluid">
+<a href="admin_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+<br><br>
+
+        <!--  Row 1 -->
+            <div class="card">
+              <div class="card-body">
+                    
+                  <div class="d-flex align-items-center">
+    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+    <div>
+        <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+    </div></div>    
+    <br>   
+
+                     <h5 class="card-title mb-9 fw-semibold">User Manage Account</h5><hr>
+                   <b>  
+
+
+    
+     
+<?php if (isset($error)) { ?>
             <p class="text-danger"><?php echo $error; ?></p>
         <?php } ?>
         <form method="post">
             <!-- Display user information in form fields -->
             <div class="form-group">
                 <label for="municipality_name">Municipality Name:</label>
-                <input type="text" class="form-control" id="municipality_name" name="municipality_name" value="<?php echo $user['municipality_name']; ?>" readonly><br>
-            </div><br>
+                <input type="text" class="form-control" id="municipality_name" name="municipality_name" value="<?php echo $user['municipality_name']; ?>" readonly>
+            </div>
             <div class="form-group">
                 <label for="barangay_name">Barangay Name:</label>
-                <input type="text" class="form-control" id="barangay_name" name="barangay_name" value="<?php echo $user['barangay_name']; ?>" readonly><br>
-            </div><br>
+                <input type="text" class="form-control" id="barangay_name" name="barangay_name" value="<?php echo $user['barangay_name']; ?>" readonly>
+            </div>
             <div class="form-group">
-                <label for="first_name">First Name:</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" required><br>
-            </div><br>
+                <label>First Name:</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" required>
+            </div>
             <div class="form-group">
-                <label for="last_name">Last Name:</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" required><br>
-            </div><br>
+                <label>Last Name:</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" required>
+            </div>
             <div class="form-group">
-                <label for="contact_number">Contact Number:</label>
-                <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>" required><br>
-            </div><br>
+                <label>Contact Number:</label>
+                <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>" required>
+            </div>
             <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>" required><br>
-            </div><br>
+                <label>Email:</label>
+                <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>" required>
+            </div>
             <div class="form-group">
-                <label for="new_password">New Password (leave empty to keep current password):</label>
-                <input type="password" class="form-control" id="new_password" name="new_password"><br>
+                <label>New Password (leave empty to keep current password):</label>
+                <input type="password" class="form-control" id="new_password" name="new_password">
             </div><br>
-            <button type="submit" class="save">Save Changes</button>
+            <button type="submit" class="btn btn-success m-1">Save Changes</button>
         </form>
+       
+            
+            
+   
+
+  
+
+      
+    </div></div>
+      
+
+              </div>
+
+              
+            </div>
+          </div></b>
+                    
+          </div>
+        </div>
+       
+       
+          
     </div>
-</div>
-</div>
+  </div>
+
 </body>
+
 </html>
-
-

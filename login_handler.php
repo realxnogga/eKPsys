@@ -27,6 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['last_name'] = $user['last_name'];   // Store last name
                     $_SESSION['barangay_id'] = $user['barangay_id']; // Store barangay ID
 
+                    // Log user activity
+                    logUserActivity($user['id'], "User logged in");
+
                     // Fetch additional user information like municipality_name and barangay_name
                     $additionalInfoStmt = $conn->prepare("SELECT municipality_name FROM municipalities WHERE id = :municipality_id");
                     $additionalInfoStmt->bindParam(':municipality_id', $user['municipality_id'], PDO::PARAM_INT);
@@ -76,4 +79,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: login.php");
     exit;
 }
+
+// Function to log user activity
+function logUserActivity($user_id, $activity) {
+    global $conn; // Assuming $conn is your database connection variable
+
+    $query = "INSERT INTO user_logs (user_id, activity) VALUES (?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(1, $user_id, PDO::PARAM_INT);
+    $stmt->bindParam(2, $activity, PDO::PARAM_STR);
+    $stmt->execute();
+    $stmt = null; // Close the cursor
+}
+
+
+
 ?>

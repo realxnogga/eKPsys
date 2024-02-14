@@ -1,10 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-include 'user-navigation.php';
-include 'functions.php';
-
-
+include 'index-navigation.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: login.php");
@@ -35,120 +32,56 @@ include 'count_lupon.php';
 include 'report_handler.php';
 ?>
 
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+
 <head>
-    <title>Archived Barangay Complaints</title>
-    <link rel="stylesheet" type="text/css" href="style copy.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Archives</title>
+    <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
+    <link rel="stylesheet" href="assets/css/styles.min.css" />
 
-   <style>
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
-.card {
-    height: 75vh; /* Set the height to 100% of the viewport height */
-    overflow: auto;
-    padding-bottom: 20px; /* Add some padding to the bottom */
-    transition: height 0.3s ease; /* Add a smooth transition effect for height changes */
-}
-
-@media screen and (min-resolution: 192dpi), screen and (min-resolution: 2dppx) {
-    /* Adjust for high-density (Retina) displays */
-    .card {
-        height: 50vh;
-    }
-}
-
-@media screen and (max-width: 1200px) {
-    /* Adjust for window resolution 125% scaling */
-    .card {
-        height: 80vh;
-    }
-}
-
-@media screen and (max-width: 960px) {
-    /* Adjust for window resolution 150% scaling */
-    .card {
-        height: 66.67vh;
-    }
-}
-
-
-    .form-group {
-        margin-bottom: 1px;
-        }
-
-    .form-control-label {
-        font-weight: bold;
-    }
-
-        input[type="text"],
-        input[type="datetime-local"],
-        input[type="date"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            background-color: green;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 auto; /* Center the submit button */
-    display: block; /* Ensure it takes up full width */
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-        /* Center align the submit button */
-        .row.justify-content-end {
-    display: flex;
-    justify-content: center;
-}
-
-.form-group.col-sm-2 {
-    text-align: center;
-    margin-right: 190px; /* Add some top margin for better spacing */
-}
-
-</style>
 </head>
-<body>
 
-<div class="row">
-        <div class="leftcolumn">
+<body style="background-color: #eeeef6">
+
+
+<div class="container-fluid">
+<a href="user_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+<br><br>
+
+        <!--  Row 1 -->
             <div class="card">
-                <div class="row">
+              <div class="card-body">
+                    
+                  <div class="d-flex align-items-center">
+    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+    <div>
+        <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+    </div></div>    
+    <br>   
 
-                    <h3>Barangay Archives</h3>
-                   <br><br>
-
+                     <h5 class="card-title mb-9 fw-semibold">Barangay Complaint Archives</h5><hr>
+                   <b>  
+ <br>
                    <form method="GET" action="" class="searchInput">
-    <input type="text" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput">
-    <input type="button" value="Search" onclick="location.href='user_complaints.php';" class="btn btn-outline-primary m-1">
-
+    <div style="display: flex; align-items: center;">
+        <input type="text" class="form-control" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput" style="flex: 1; margin-right: 5px;">
+        <input type="button" class="btn btn-dark m-1" value="Search" onclick="location.href='user_complaints.php';" class="refresh-button">
+    </div>
 </form>
 
-
-
-                    <table class="table table-striped">
+  
+<table class="table table-striped">
                     <thead class="thead-dark">
             <tr>
-            <th style="width: 8%">Case No.</th>
-            <th style="width: 15%">Title</th>
-            <th style="width: 15%">Complainants</th>
-            <th style="width: 15%">Respondents</th>
-            <th style="width: 9%">Date Made</th>
-            <th style="width: 11%">Actions</th>
+            <th style="width: 10%">No.</th>
+            <th style="width: 10%">Title</th>
+            <th style="width: 10%">Complainants</th>
+            <th style="width: 10%">Respondents</th>
+            <th style="width: 10%">Date</th>
+            <th style="width: 10%">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -161,21 +94,31 @@ body, html {
                 echo "<td>" . $row['RspndtNames'] . "</td>";
                 echo "<td>" . date('Y-m-d', strtotime($row['Mdate'])) . "</td>";
                 echo "<td>";
-                echo '<a href="unarchive_complaint.php?unarchive_id=' . $row['id'] . '" class="unarchive-button"><i class="fa fa-file-o"></i> Unarchive</a>';
+                echo '<a href="unarchive_complaint.php?unarchive_id=' . $row['id'] . '" class="btn btn-sm btn-danger"><i class="fa fa-file-o"></i> Unarchive</a>';
                 echo "</td>";
                 echo "</tr>";
             }
             ?>
         </tbody>
     </table>
-            
-</div>
-</div>
-    </div>
+      
+    </div></div>
+      
 
-  
-</div>
-</div>
+              </div>
+
+              
+            </div>
+          </div></b>
+                    
+          </div>
+        </div>
+       
+       
+          
+    </div>
+  </div>
 
 </body>
+
 </html>

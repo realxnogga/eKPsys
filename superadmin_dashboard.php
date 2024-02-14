@@ -21,6 +21,9 @@ $stmt = $conn->prepare("SELECT u.id, u.municipality_id, u.first_name, u.last_nam
 $stmt->execute();
 $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+include 'report_handler.php';
+
+
 $searchInput = isset($_GET['search']) ? $_GET['search'] : '';
 
 $userID = $_SESSION['user_id'];
@@ -92,432 +95,248 @@ $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
+
 <head>
-    <title>Superadmin Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="style copy.css">
-     <?php include 'functions.php';?>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard</title>
+  <link rel="shortcut icon" type="image/png" href="assets/images/logos/favicon.png" />
+  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  <!-- Add this script tag to include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  
   <style>
-
-html, body {
-    overflow: hidden;
-    height: 100%;
-    margin: 0;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Roboto';
-    color: black;
-    height: 100%;
-    margin: 0;
-}
-
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.leftcolumn {   
-    float: left;
-    width: 65%;
-}
-
-.rightcolumn {
-    float: left;
-    width: 35%;
-    padding-left: 60px;
-}
-
-.card {
-    background-color: white;
-    margin-top: 25px;
-    min-height: 100%; 
-    border-radius: 20px; 
-    height: 75vh; /* Set the height to 100% of the viewport height */
-    overflow: auto;
-    padding-bottom: 20px; /* Add some padding to the bottom */
-    transition: height 0.3s ease; /* Add a smooth transition effect for height changes */
-}
-
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-@media screen and (max-width: 800px) {
-    .leftcolumn, .rightcolumn {   
-        width: 100%;
-        padding: 0;
-    }
-}
-
-@media screen and (min-resolution: 192dpi), screen and (min-resolution: 2dppx) {
-    /* Adjust for high-density (Retina) displays */
-    .card {
-        height: 50vh;
-    }
-}
-
-@media screen and (max-width: 1200px) {
-    /* Adjust for window resolution 125% scaling */
-    .card {
-        height: 80vh;
-    }
-}
-
-@media screen and (max-width: 960px) {
-    /* Adjust for window resolution 150% scaling */
-    .card {
-        height: 66.67vh;
-    }
-}
-
-
-.form-group {
-        margin-bottom: 1px;
+   .scrollable-card-body {
+            max-height: 400px; /* Set the maximum height for the card body */
+            overflow-y: auto; /* Enable vertical scrolling */
+            scrollbar-width: thin; /* Specify a thin scrollbar */
+            scrollbar-color: transparent transparent; /* Set scrollbar color to transparent */
         }
 
-    .form-control-label {
-        font-weight: bold;
-    }
-
-        input[type="text"],
-        input[type="datetime-local"],
-        input[type="date"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        /* For Webkit browsers like Chrome and Safari */
+        .scrollable-card-body::-webkit-scrollbar {
+            width: 8px; /* Set the width of the scrollbar */
         }
 
-        input[type="submit"] {
-            background-color: green;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 auto; /* Center the submit button */
-    display: block; /* Ensure it takes up full width */
+        .scrollable-card-body::-webkit-scrollbar-thumb {
+            background-color: transparent; /* Set scrollbar thumb color to transparent */
         }
-
-        input[type="searc"]:hover {
-            background-color: #45a049;
-        }
-        /* Center align the submit button */
-        .row.justify-content-end {
-    display: flex;
-    justify-content: center;
-}
-
-.form-group.col-sm-2 {
-    text-align: center;
-    margin-right: 190px; /* Add some top margin for better spacing */
-}
-
-/* Style for the search wrapper */
-.search-wrapper {
-    position: relative;
-    height: 43px;
-    display: inline-block;
-    border-radius: 10px; /* Round corners for wrapper */
-    border: 1px solid #ccc; /* Thin line border */
-    overflow: hidden; /* Hide overflow to maintain border-radius */
-}
-
-.search-and-controls-container {
-    display: flex;
-    align-items: center; /* Align items vertically */
-    justify-content: flex-start; /* Align items to the start of the container */
-}
-
-/* Style for the search input field */
-input[type="text"] {
-    padding: 10px 20px; /* Add padding for spacing */
-    border: none;
-    font-size: 16px; /* Increase font size for readability */
-    outline: none; /* Remove default outline */
-}
-
-/* Style for the search button */
-.search-btn {
-    position: absolute;
-    left: 488;
-    width: 49px; /* Fixed width for the button */
-    height: 100%; /* Match height of the input field */
-    color: white; /* White text */
-    border: none;
-    cursor: pointer;
-    text-align: center; /* Center the icon */
-    font-size: 16px; /* Match font size of the input field */
-    border-radius: 0 2px 2px 0; /* Rounded right corners only */
-
-    background-color: #4CAF50; /* Green background */
-}
-
-/* Hover effect for the search button */
-.search-btn:hover {
-    background-color: #3a8e3a; /* Dark green color on hover */
-}
-/* Style for the search wrapper */
-.search-wrapper {
-    width: 100%; /* Take full width of the container */
-}
-
-/* Style for the select month dropdown */
-.select-and-clear-container select[name="selected_month"] {
-    flex: 1; /* This makes it take the available space. Adjust or remove if needed. */
-    padding: 10px;
-    border-radius: 10px; /* Rounded corners to match search bar */
-    border: 1px solid #ccc;
-    width: 100%; /* Adjust this value to change the width */
-}
-
-
-/* Style for the Clear button */
-input[name="clear"] {
-    background-color: red; /* Red color for the Clear button */
-    color: white;
-    height: 43px;
-    border: none; /* Remove border */
-    cursor: pointer;
-    padding: 10px 20px; /* Adjust padding to match search bar height */
-    margin-left: 10px; /* Add margin for spacing */
-    font-size: 16px; /* Match font size of the search bar */
-    border-radius: 10px; /* Rounded corners to match search bar */
-    vertical-align: top; /* Align with the top of search bar */
-}
-
-/* Hover effect for the Clear button */
-input[name="clear"]:hover {
-    background-color: #b30000; /* Darker red color on hover */
-}
-
-        /* Style for the background color */
-        body {
-            background-color: #e9ecf3; /* Light gray background color */
-        }
-
-        .card {
-            border-radius: 20px; /* Set the radius of the card's corners to 20px */
-
-        }
-
-.container {
-    width: 100%; /* Adjust this as needed */
-    max-width: 960px; /* Example max width, adjust to match your design */
-    margin: auto; /* Center the container */
-}
 </style>
+
 </head>
 
+<body style="background-color: #eeeef6">
+  <!--  Body Wrapper -->
+ 
+      <div class="container-fluid">
+        <!--  Row 1 -->
+        <div class="row">
+          <div class="col-lg-8 d-flex align-items-strech">
+            <div class="card w-100">
+              <div class="card-body">
+                <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+                  <div class="mb-3 mb-sm-0">
+                    <h5 class="card-title fw-semibold">Report Overview</h5>
+                  </div>
+                 
+                </div>
+               
 
-<body style="background-color: #e9ecf3;">
+               
 
 
-<div class="row">
-        <div class="leftcolumn">
-            <div class="card">
-                <div class="row">
-
-                <h3>Super Admin Dashboard</h3><br<br><hr>
-                <h2>Data Showing: All Municipalities</h2><br>
-
-
-                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Add this inside the body, where you want the chart to appear -->
-
-<!-- Add this inside the body, above the canvas and totalCases div -->
-<div class="row">
-<div class="col-md-12">
-<h3 id="mayorName"></h3>
-<canvas id="casesChart" width="500" height="270"></canvas>
-<div id="totalCases" style="margin-top: 20px;"></div>
-
-</div>
 </div>
 
 
 
 
-<!-- Add this before the closing body tag -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-// Get the data for the chart
-var criminalCount = <?php echo $criminalCount; ?>;
-var civilCount = <?php echo $civilCount; ?>;
-var othersCount = <?php echo $othersCount; ?>;
-
-// Calculate total cases
-var totalCases = criminalCount + civilCount + othersCount;
-
-// Prepare data for the chart
-var data = {
-labels: ['Criminal', 'Civil', 'Others'],
-datasets: [{
-label: 'Case Type Unsettled/Settled',
-data: [criminalCount, civilCount, othersCount],
-backgroundColor: [
-    'rgba(255, 99, 132, 0.6)',
-    'rgba(54, 162, 235, 0.6)',
-    'rgba(255, 206, 86, 0.6)'
-],
-borderColor: [
-    'rgba(255, 99, 132, 1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)'
-],
-borderWidth: 1
-}]
-};
-
-// Get the canvas element
-var ctx = document.getElementById('casesChart').getContext('2d');
-
-// Create the chart
-var casesChart = new Chart(ctx, {
-type: 'bar',
-data: data,
-options: {
-scales: {
-    y: {
-        beginAtZero: true
-    }
-}
-}
-});
-
-// Display total cases
-document.getElementById('totalCases').innerHTML = '<b>Total Cases:</b> ' + totalCases;
-});
-</script>
 
 
 
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="row">
+              <div class="col-lg-12">
+                <!-- Yearly Breakup -->
+                <div class="card overflow-hidden">
+                  <div class="card-body p-4">
+                    <h5 class="card-title mb-9 fw-semibold">Title</h5><hr>
+                    <div class="row align-items-center">
 
+            
+
+
+  </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <!-- Monthly Earnings -->
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row alig n-items-start">
+                      <div class="col-8">
+                        <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
+                        <h4 class="fw-semibold mb-3">$6,820</h4>
+                        <div class="d-flex align-items-center pb-1">
+                          <span
+                            class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
+                            <i class="ti ti-arrow-down-right text-danger"></i>
+                          </span>
+                          <p class="text-dark me-1 fs-3 mb-0">+9%</p>
+                          <p class="fs-3 mb-0">last year</p>
+                        </div>
+                      </div>
+                      <div class="col-4">
+                        <div class="d-flex justify-content-end">
+                          <div
+                            class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                            <i class="ti ti-currency-dollar fs-6"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="earning"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 d-flex align-items-stretch">
+            <div class="card w-100">
+              <div class="card-body p-4">
+                <div class="mb-4">
+                  <h5 class="card-title fw-semibold">Title</h5>
+                </div><b><hr>
+
+
+
+
+                                
+
+
+              </div></b>
+            </div>
+          </div>
+          <div class="col-lg-8 d-flex align-items-stretch">
+            <div class="card w-100">
+            <div class="card-body p-4 scrollable-card-body"> <!-- Add the scrollable class here -->
+                <h5 class="card-title fw-semibold mb-4">Title</h5>
+               <hr>
+                
+
+   
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-xl-3">
+            <div class="card overflow-hidden rounded-2">
+              <div class="position-relative">
+                <a href="javascript:void(0)"><img src="assets/images/products/s4.jpg" class="card-img-top rounded-0" alt="..."></a>
+                <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
+              <div class="card-body pt-3 p-4">
+                <h6 class="fw-semibold fs-4">Boat Headphone</h6>
+                <div class="d-flex align-items-center justify-content-between">
+                  <h6 class="fw-semibold fs-4 mb-0">$50 <span class="ms-2 fw-normal text-muted fs-3"><del>$65</del></span></h6>
+                  <ul class="list-unstyled d-flex align-items-center mb-0">
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="card overflow-hidden rounded-2">
+              <div class="position-relative">
+                <a href="javascript:void(0)"><img src="assets/images/products/s5.jpg" class="card-img-top rounded-0" alt="..."></a>
+                <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
+              <div class="card-body pt-3 p-4">
+                <h6 class="fw-semibold fs-4">MacBook Air Pro</h6>
+                <div class="d-flex align-items-center justify-content-between">
+                  <h6 class="fw-semibold fs-4 mb-0">$650 <span class="ms-2 fw-normal text-muted fs-3"><del>$900</del></span></h6>
+                  <ul class="list-unstyled d-flex align-items-center mb-0">
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="card overflow-hidden rounded-2">
+              <div class="position-relative">
+                <a href="javascript:void(0)"><img src="assets/images/products/s7.jpg" class="card-img-top rounded-0" alt="..."></a>
+                <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
+              <div class="card-body pt-3 p-4">
+                <h6 class="fw-semibold fs-4">Red Valvet Dress</h6>
+                <div class="d-flex align-items-center justify-content-between">
+                  <h6 class="fw-semibold fs-4 mb-0">$150 <span class="ms-2 fw-normal text-muted fs-3"><del>$200</del></span></h6>
+                  <ul class="list-unstyled d-flex align-items-center mb-0">
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="card overflow-hidden rounded-2">
+              <div class="position-relative">
+                <a href="javascript:void(0)"><img src="assets/images/products/s11.jpg" class="card-img-top rounded-0" alt="..."></a>
+                <a href="javascript:void(0)" class="bg-primary rounded-circle p-2 text-white d-inline-flex position-absolute bottom-0 end-0 mb-n3 me-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Add To Cart"><i class="ti ti-basket fs-4"></i></a>                      </div>
+              <div class="card-body pt-3 p-4">
+                <h6 class="fw-semibold fs-4">Cute Soft Teddybear</h6>
+                <div class="d-flex align-items-center justify-content-between">
+                  <h6 class="fw-semibold fs-4 mb-0">$285 <span class="ms-2 fw-normal text-muted fs-3"><del>$345</del></span></h6>
+                  <ul class="list-unstyled d-flex align-items-center mb-0">
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="me-1" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                    <li><a class="" href="javascript:void(0)"><i class="ti ti-star text-warning"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <!--  Row 1 -->
+      <div class="card">
+              <div class="card-body">
+                    
+                  <div class="d-flex align-items-center">
+                  <h5 class="card-title fw-semibold mb-4">Title</h5>
+    </div>    
+
+
+                     
+      </div>
     </div>
-    </div>
-    </div>
-
-    
-    <div class="rightcolumn">
-            <div class="card">
-
-
-            <h4><b>Municipality Reports</b></h4><hr>
-            <h2>Shortcut</h2><br>
-
-
-<form method="POST">
-    <div class="search-wrapper">
-        <input type="text" name="municipality" placeholder="Search Municipality" value="<?php echo $searchedMunicipality; ?>">
-      <button type="submit" name="search" class="btn-light search-btn">
-            <i class="fas fa-search"></i></button>
-    </div><br><br>
-
-<!-- Month and year dropdown -->
-<div class="select-and-clear-container">
-<select name="selected_month">
-<?php
-// Loop through months and years to generate options for the last 12 months
-for ($i = 0; $i < 12; $i++) {
-$timestamp = strtotime("-$i months");
-$monthYear = date('F Y', $timestamp);
-$value = date('Y-m', $timestamp);
-?>
-<option value="<?php echo $value; ?>"><?php echo $monthYear; ?></option>
-<?php } ?>
-</select>
-<br><br>
-<input type="submit" name="clear" value="Clear" formnovalidate>
-</div>
-</form>
-<h1><?php echo $selectedMonth; ?></h1>
-<div class="columns-container">
-<table class="table table-striped">
-<thead>
-    <tr>
-        <th style="padding: 8px; background-color: #d3d3d3;">Municipality</th>
-        <th style="padding: 8px; background-color: #d3d3d3;">Admin</th>
-        <th style="padding: 8px; background-color: #d3d3d3;">
-            Settled
-            <a href="?sort=settled_asc">&#8593;</a>
-            <a href="?sort=settled_desc">&#8595;</a>
-        </th>
-        <th style="padding: 8px; background-color: #d3d3d3;">
-            Unsettled
-            <a href="?sort=unsettled_asc">&#8593;</a>
-            <a href="?sort=unsettled_desc">&#8595;</a>
-        </th>
-    </tr>
-</thead>
-<tbody>
-    <?php
-    // Function to compare values for sorting
-    function compareValues($a, $b) {
-        return $a <=> $b;
-    }
-
-    // Check if sorting parameter exists
-    if (isset($_GET['sort'])) {
-        $sort = $_GET['sort'];
-
-        // Define the sorting order based on the parameter value
-        switch ($sort) {
-            case 'settled_asc':
-                usort($user, function($a, $b) {
-                    return compareValues($a['Settled'], $b['Settled']);
-                });
-                break;
-            case 'settled_desc':
-                usort($user, function($a, $b) {
-                    return compareValues($b['Settled'], $a['Settled']);
-                });
-                break;
-         case 'unsettled_asc':
-                usort($user, function($a, $b) {
-                    return compareValues($a['Unsettled'], $b['Unsettled']);
-                });
-                break;
-            case 'unsettled_desc':
-                usort($user, function($a, $b) {
-                    return compareValues($b['Unsettled'], $a['Unsettled']);
-                });
-                break;
-            default:
-                // Handle default case or error
-                break;
-        }
-    }
-
-    // Output the sorted or default user data
-    foreach ($user as $row) { ?>
-        <tr>
-            <td><?php echo $row['municipality_name']; ?></td>
-            <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
-            <td><?php echo $row['Settled']; ?></td>
-            <td><?php echo $row['Unsettled']; ?></td>
-        </tr>
-    <?php } ?>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-
-
-</div>
-</div>
+  </div>
 
 </body>
+
 </html>

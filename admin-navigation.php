@@ -10,6 +10,10 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <style>
+
+
+
+  
   .sidebar-img {
     display: flex;
     align-items: center;
@@ -100,14 +104,14 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 <span class="hide-menu">Account Requests</span>
               </a>
             </li>
-            <li class="sidebar-item">
+        <!--    <li class="sidebar-item">
               <a class="sidebar-link" href="sec-corner.php" aria-expanded="false">
                 <span>
                 <i class="ti ti-align-box-left-bottom"></i>
                 </span>
                 <span class="hide-menu">Secretaries Corner</span>
               </a>
-            </li>
+            </li>-->
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">OTHERS</span>
@@ -120,14 +124,14 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 <span class="hide-menu">Settings</span>
               </a>
             </li>
-            <li class="sidebar-item">
+          <!--  <li class="sidebar-item">
               <a class="sidebar-link" href="about.php" aria-expanded="false">
                 <span>
                 <i class="ti ti-info-circle"></i>
                 </span>
                 <span class="hide-menu">About Us</span>
               </a>
-            </li>
+            </li>-->
           </ul>
         </nav>
         <!-- End Sidebar navigation -->
@@ -178,6 +182,8 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
           </div>
         </nav>
       </header>
+      <!--  Header End -->
+
   <script src="assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/sidebarmenu.js"></script>

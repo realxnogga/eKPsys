@@ -13,27 +13,31 @@ $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 $lastCaseNumber = $row ? $row['lastCaseNumber'] : null;
 
-// If no Case Number exists, start with "01"
 if (!$lastCaseNumber) {
-    $caseNum = date('my') . '-01';
+    $caseNum = '01-000-' . date('my');
 } else {
     // Extract the parts of the last case number
     $parts = explode('-', $lastCaseNumber);
     
-    if (count($parts) === 2) {
-        $lastMonthYear = $parts[0];
-        $lastCase = intval($parts[1]);
-
+    if (count($parts) === 3) {
         $currentMonthYear = date('my');
-        $currentCase = ($lastMonthYear === $currentMonthYear) ? $lastCase + 1 : 1;
+        
+        // If current month/year is the same as last case, increment blotter number
+        if ($parts[2] === $currentMonthYear) {
+            $blotterNumber = intval($parts[0]) + 1;
+        } else {
+            // Reset blotter number if month/year has changed
+            $blotterNumber = 1;
+        }
 
-        // Format the case number with leading zeros
-        $caseNum = $currentMonthYear . '-' . sprintf('%02d', $currentCase);
+        // Format the case number
+        $caseNum = sprintf('%02d', $blotterNumber) . '-' . $parts[1] . '-' . $currentMonthYear;
     } else {
         // Handle unexpected format of $lastCaseNumber
-        $caseNum = date('my') . '-01';
+        $caseNum = '01-000-' . date('my');
     }
 }
+
 
 if (isset($_POST['submit'])) {
  
@@ -46,10 +50,10 @@ if (isset($_POST['submit'])) {
     $madeDate = $_POST['Mdate'];
     $receivedDate = $_POST['RDate'];
     $caseType = $_POST['CType'];
+    $caseNum = $_POST['CNum'];
 
     // Insert the complaint into the 'complaints' table with default values
     $stmt = $conn->prepare("INSERT INTO complaints (UserID, BarangayID, CNum, ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CType, CStatus, CMethod) VALUES (:userID, :barangayID, :caseNum, :forTitle, :complainants, :respondents, :complaintDesc, :petition, :madeDate, :receivedDate, :caseType, 'Unsettled', 'Pending')");
-
     $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
     $stmt->bindParam(':barangayID', $barangayID, PDO::PARAM_INT);
     $stmt->bindParam(':caseNum', $caseNum, PDO::PARAM_STR);
@@ -64,23 +68,23 @@ if (isset($_POST['submit'])) {
 
     if ($stmt->execute()) {
         // Get the ID of the last inserted complaint
-    $lastInsertedId = $conn->lastInsertId();
+        $lastInsertedId = $conn->lastInsertId();
 
-    // Insert into case_progress table for the new complaint with default values
-    $stmtCaseProgress = $conn->prepare("INSERT INTO case_progress (complaint_id, current_hearing) VALUES (:complaintId, '0')");
-    $stmtCaseProgress->bindParam(':complaintId', $lastInsertedId, PDO::PARAM_INT);
+        // Insert into case_progress table for the new complaint with default values
+        $stmtCaseProgress = $conn->prepare("INSERT INTO case_progress (complaint_id, current_hearing) VALUES (:complaintId, '0')");
+        $stmtCaseProgress->bindParam(':complaintId', $lastInsertedId, PDO::PARAM_INT);
 
-    if ($stmtCaseProgress->execute()) {
-        // Case progress updated successfully
-        $successMessage = '<div class="alert alert-success" role="alert">
-            Complaint Submitted Successfully!
-        </div>';
-    } else {
-        // Failed to update case progress
-        $successMessage = '<div class="alert alert-danger" role="alert">
-            Failed to Update Case Progress. Contact Devs.
-        </div>';
-    }
+        if ($stmtCaseProgress->execute()) {
+            // Case progress updated successfully
+            $successMessage = '<div class="alert alert-success" role="alert">
+                Complaint Submitted Successfully!
+            </div>';
+        } else {
+            // Failed to update case progress
+            $successMessage = '<div class="alert alert-danger" role="alert">
+                Failed to Update Case Progress. Contact Devs.
+            </div>';
+        }
 
     } else {
         // Failed to submit complaint

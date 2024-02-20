@@ -114,6 +114,7 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 
+
 // Retrieve the profile picture name of the current user
 $query = "SELECT profile_picture FROM users WHERE id = :userID";
 $stmt = $conn->prepare($query);
@@ -132,7 +133,7 @@ if ($user && !empty($user['profile_picture'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form9</title>
+    <title>kp_form20</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
@@ -272,7 +273,7 @@ if ($user && !empty($user['profile_picture'])) {
              
 <p style="font-size: 18px;"> Respondent/s </p> 
 
-       
+       <form method ="POST">
                 <h3 style="text-align: center;"><b style="font-size: 18px;"> CERTIFICATION TO FILE ACTION</b> </h3>
                 <div style="text-align: justify;">
     <p style="text-align: justify; margin-top: 0; font-size: 18px;">This is to certify that:</p>

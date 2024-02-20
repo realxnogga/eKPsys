@@ -99,8 +99,8 @@ include 'report_handler.php';
                     
          </div>
             
-         
-         <b>
+         <form method="POST"> 
+
     <b>NATURE OF CASES</b>
     <div class="row">
         <div class="col-md-3 mb-3">
@@ -125,11 +125,6 @@ include 'report_handler.php';
         </div>
 </div>
 <hr>
-
-
-
-
-
         <b>ACTION TAKEN - SETTLED</b>
         <div class="row">   
         <div class="col-md-3 mb-3">
@@ -160,8 +155,7 @@ include 'report_handler.php';
 
     <div>
        
-
-    <b>ACTION TAKEN - UNSETTLED</b>
+<b>ACTION TAKEN - UNSETTLED</b>
         <div class="row">
             <div class="col-md-3 mb-3">
                 <label for="pending">Pending:</label>
@@ -234,8 +228,6 @@ include 'report_handler.php';
                 <div class="card overflow-hidden">
                   <div class="card-body p-4">
                     <h5 class="card-title mb-9 fw-semibold">Information</h5><hr><b>
-
-                    <form method="POST">
 
                     <div class="form-group">
                         <label for="mayor">Mayor:</label>

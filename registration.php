@@ -16,6 +16,8 @@ include 'functions.php';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Register</title>
   <link rel="stylesheet" href="assets/css/styles.min.css" />
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+
 </head>
 
 <body>
@@ -96,7 +98,7 @@ include 'functions.php';
       <div class="row">   
         <div class="col-md-6 mb-6">
                 <label for="mediation">Password:</label>
-                <input type="password" class="form-control" required name="password" placeholder="Enter Password">
+                <input type="password" class="form-control" required name="password" placeholder="Enter Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}" title="Password must contain at least 8 characters, including uppercase(A-Z), lowercase (a-z), number(0-9), and special character (!@#$%^&*). Example: Cluster-A2024">
             </div>
             <div class="col-md-6 mb-6">
                 <label for="conciliation">Confirm Password:</label>
@@ -111,7 +113,7 @@ include 'functions.php';
       <select class="form-select" id="exampleFormControlSelect1" name="utype" onchange="toggleSecretaryField()" required>
         <option value="" disabled selected>Select</option>
         <option value="user">Barangay Secretary</option>
-        <option value="admin">DILG Secretary</option>
+        <option value="admin">C/MLGOOs</option>
       </select>
 
       <br>

@@ -12,7 +12,8 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 $complaintId = $_SESSION['current_complaint_id'] ?? '';
 $currentHearing = $_SESSION['current_hearing'] ?? '';
-$formUsed = 13;
+$formUsed = 11;
+
 
 // Fetch existing row values if the form has been previously submitted
 $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
@@ -32,13 +33,13 @@ $months = array(
 
 $currentMonth = date('F'); 
 $currentDay = date('j');
+$existOfficer = '';
 
 $id = $_GET['formID'] ?? '';
 
-// Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date FROM hearings WHERE id = :id";
+    $query = "SELECT received_date, officer FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -49,63 +50,54 @@ if (!empty($id)) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
       // Extract and format the timestamp values
-        $appearDate = new DateTime($row['appear_date']);
-        $appear_day = $appearDate->format('j');
+     
+        $receivedDate = new DateTime($row['received_date']);
+       
+        $existingReceivedDay = $receivedDate->format('j');
+        $existingReceivedMonth = $receivedDate->format('F');
+        $existingReceivedYear = $receivedDate->format('Y');
 
-        $appear_month = $appearDate->format('F');
-        $appear_year = $appearDate->format('Y');
-        $appear_time = $appearDate->format('H:i'); // Format for the time input
+        $existOfficer = $row['officer'];
 
-        $madeDate = new DateTime($row['made_date']);
-
-        // Populate form inputs with the extracted values
-        $currentDay = $appearDate->format('j');
-        $currentMonth = $appearDate->format('F');
-        $currentYear = $appearDate->format('Y');
-
-        $existingMadeDay = $madeDate->format('j');
-        $existingMadeMonth = $madeDate->format('F');
-        $existingMadeYear = $madeDate->format('Y');
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form inputs
-    $madeDay = $_POST['made_day'] ?? '';
-    $madeMonth = $_POST['made_month'] ?? '';
-    $madeYear = $_POST['made_year'] ?? '';
 
-    $day = $_POST['day'] ?? '';
-    $month = $_POST['month'] ?? '';
-    $year = $_POST['year'] ?? '';
-    $time = $_POST['time'] ?? '';
+    $receivedDay = $_POST['received_day'] ?? '';
+    $receivedMonth = $_POST['received_month'] ?? '';
+    $receivedYear = $_POST['received_year'] ?? '';
+    $officer = $_POST['officer'];
 
-$dateTimeString = "$year-$month-$day $time";
-$appearTimestamp = DateTime::createFromFormat('Y-F-j H:i', $dateTimeString);
+    $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
+
+    // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
+    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':complaintId', $complaintId);
+    $stmt->bindParam(':formUsed', $formUsed);
+    $stmt->bindParam(':currentHearing', $currentHearing);
+    $stmt->execute();
+    $existingForm14Count = $stmt->rowCount();
 
 
-if ($appearTimestamp !== false) {
-    $appearTimestamp = $appearTimestamp->format('Y-m-d H:i:s');
 
-    // Logic to handle date and time inputs
-    $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
-
-    // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer)
+              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
-              appear_date = VALUES(appear_date),
-              made_date = VALUES(made_date)";
+              received_date = VALUES(received_date),
+                        officer = VALUES(officer)";
 
 
      $stmt = $conn->prepare($query);
     $stmt->bindParam(':complaintId', $complaintId);
     $stmt->bindParam(':currentHearing', $currentHearing);
     $stmt->bindParam(':formUsed', $formUsed);
-    $stmt->bindParam(':appearDate', $appearTimestamp);
-    $stmt->bindParam(':madeDate', $madeDate);
+    $stmt->bindParam(':receivedDate', $receivedDate);
+    $stmt->bindParam(':officer', $officer);
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -113,11 +105,8 @@ if ($appearTimestamp !== false) {
         $message = "Form submit failed.";
     }
 }
-else {
-        // Handle case where DateTime object creation failed
-        $message ="Invalid date/time format! Input: ". $dateTimeString;
-    }
-}
+
+
 
 // Function to create a date from day, month, and year inputs
 function createDateFromInputs($day, $month, $year) {
@@ -129,15 +118,31 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 
-function createTimestampFromInputs($day, $month, $year, $time) {
-    if (!empty($day) && !empty($month) && !empty($year) && !empty($time)) {
-        return date('Y-m-d H:i:s', strtotime("$year-$month-$day $time"));
-    } else {
-        return null; 
+// Prepare a new query to fetch 'punong_barangay', 'lupon_chairman', and 'name1' to 'name20' based on 'user_id'
+$luponQuery = "SELECT name1, name2, name3, name4, name5, name6, name7, name8, name9, name10,
+                        name11, name12, name13, name14, name15, name16, name17, name18, name19, name20
+                    FROM lupons
+                    WHERE user_id = :user_id AND appoint = 0";
+$luponStmt = $conn->prepare($luponQuery);
+$luponStmt->bindParam(':user_id', $_SESSION['user_id']);
+$luponStmt->execute();
+
+// Fetch the lupon data
+$luponData = $luponStmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if lupon data is fetched successfully
+if ($luponData) {
+    $names = [];
+    for ($i = 1; $i <= 20; $i++) {
+        $name = $luponData["name$i"];
+        if (!empty($name)) {
+            $names[] = $name;
+        }
     }
+} else {
+    // If no data found, you can handle it accordingly (e.g., provide default values or display an error message)
+    $names = [];
 }
-
-
 // Retrieve the profile picture name of the current user
 $query = "SELECT profile_picture FROM users WHERE id = :userID";
 $stmt = $conn->prepare($query);
@@ -152,27 +157,52 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KP Form 11</title>
+    <title>KP Form 11 English</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- here angle the link for responsive paper -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
 </head>
 <style>
-     .profile-img{
-    width: 3cm;
-}
-
-.header {
-    text-align: center;
-    padding-inline: 4cm;
-}
     /* Hide the number input arrows */
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -184,61 +214,135 @@ if ($user && !empty($user['profile_picture'])) {
     input[type=number] {
         -moz-appearance: textfield;
         border: none;
-        width: 30px;
+        width: 40px;
+        text-align: center;
 
     }
-    h5{
-        margin:0;
-        padding:0;
+    h5 {
+        margin: 0;
+        padding: 0;
     }
-    @media print {
-        .page-break {
-            page-break-before: always;
+    h3 {
+        margin: 0;
+        padding: 0;
+    }
+    .centered-line {
+        border-bottom: 1px ridge black;
+        display: inline-block;
+        min-width: 350px;
+        text-align: center;
+    }
+        
+.profile-img{
+   width: 3cm;
+}
+
+.header {
+   text-align: center;
+   padding-inline: 4cm;
+}
+h5 {
+       margin: 0;
+       padding: 0;
+   }
+   body {
+    background: rgb(204, 204, 204);
+}
+
+.container {
+    margin: 0 auto;
+}
+
+.paper {
+    background: white;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+}
+
+/* Add Bootstrap responsive classes for different screen sizes */
+@media (min-width: 992px) {
+    .paper {
+        width: 21cm;
+        height: 29.7cm;
+    }
+
+    .paper[layout="landscape"] {
+        width: 29.7cm;
+        height: 21cm;
+    }
+}
+
+@media (min-width: 1200px) {
+    .paper[size="A3"] {
+        width: 29.7cm;
+        height: 42cm;
+    }
+
+    .paper[size="A3"][layout="landscape"] {
+        width: 42cm;
+        height: 29.7cm;
+    }
+
+    .paper[size="A5"] {
+        width: 14.8cm;
+        height: 21cm;
+    }
+
+    .paper[size="A5"][layout="landscape"] {
+        width: 21cm;
+        height: 14.8cm;
+    }
+}
+
+@media print {
+    body, .paper {
+        background: white;
+        margin: 0;
+        box-shadow: 0;
+    }
+  /* Adjust print styles here */
+  .input-field {
+    /* Example: Ensure input fields do not expand beyond their containers */
+    max-width: 100%;
+  }
+  input[name="saveForm"] {
+            display: none;
         }
-        input {
+  
+  input[type="text"] {
         border-bottom: 1px solid black !important;
     }
-      {
-        select[name="received_month"] {
-            border-bottom: 1px solid black; /* Set the desired border style and color */
-        }
-    }
-    }
-    .bottom-border {
-    border: none;
-    border-bottom: 1px solid black;
-}
-@media print {
-    input[type="text"], input[type="number"], select {
-        border: none !important; /* Remove all borders */
-        border-bottom: 1px solid black !important; /* Apply bottom border only */
+    input[type="text"] {
+        border-bottom: 1px solid black !important;
     }
 }
 </style>
 <body>
 <div class="container">
-        <div class="paper">
-                <div class="top-right-buttons">
-                <!-- Print button -->
-                <button class="btn btn-primary print-button common-button" onclick="window.print()">
-                    <i class="fas fa-print button-icon"></i> Print
-                </button>
-                <button class="btn btn-success download-button common-button" id="downloadButton">
-                    <i class="fas fa-file button-icon"></i> Download
-                </button>
-                <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-                 <button class="btn common-button" style="margin-top: 45px;">
-                   <i class="fas fa-arrow-left"></i> Back
-                </button></a>
-            
+    <div class="paper">
+    <div class="top-right-buttons">
+    <button class="btn btn-primary print-button common-button" onclick="window.print()" style="position:fixed; right: 20px;">
+        <i class="fas fa-print button-icon"></i> Print
+    </button>
+    <button class="btn btn-success download-button common-button" id="downloadButton" style="position:fixed; right: 20px; top: 75px; ">
+        <i class="fas fa-file button-icon"></i> Download
+    </button>
 
-            </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 11</b></h5>
+    <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+    </a>
+    </div>     
+    <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 11</b></h5>
 
-            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
-
-    <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
-        <br>
+           <div style="display:inline-block;text-align: center;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
+<div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
+<br>
         <h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
         <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
         <h5 class="header" style="text-align: center; font-size: 18px;">
@@ -257,7 +361,7 @@ if ($user && !empty($user['profile_picture'])) {
         <h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
         <h5 class="header" style="font-size: 18px; margin-top: 5px;">OFFICE OF THE PUNONG BARANGAY</h5>
     </div>
-</div>
+
 <br>
 <br>
 
@@ -357,9 +461,9 @@ echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p
 <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required>.
         </div><br><br>
         
-        <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
-                    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 570px; margin-right: auto;">
-<input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList"> Pangkat Member</p>
+<input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList" style="margin-left: 430px; border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;">
+<br><div style="margin-top: 20px; margin-left: 440px; text-align: justify; text-indent: 3em; font-size: 18px; font-family: 'Times New Roman', Times, serif">
+Pangkat Member</p></div>
 <datalist id="officerList">
     <?php foreach ($names as $name): ?>
         <option value="<?php echo $name; ?>">
@@ -367,7 +471,7 @@ echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p
 </datalist>
                     </p>
         </div> 
-        <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: relative; right: -980px; top: -850px;">
+<input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
 </form>
 
                 <?php if (!empty($errors)): ?>
@@ -376,46 +480,71 @@ echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p
                             <li><?php echo $error; ?></li>
                         <?php endforeach; ?>
                     </ul>
-                <?php endif; ?>
-
-                
+                <?php endif; ?>  
             </div>
         </div>
- 
-        <script>
+<script>
+var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable
 document.getElementById('downloadButton').addEventListener('click', function () {
+    // Elements to hide during PDF generation
     var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
     var saveButton = document.querySelector('input[name="saveForm"]');
-    var inputFields = document.querySelectorAll('input[type="text"], input[type="number"], select');
-    var pdfContent = document.querySelector('.paper');
 
-    // Hide buttons and remove borders for download
-    buttonsToHide.forEach(function (button) { button.style.visibility = 'hidden'; });
-    saveButton.style.visibility = 'hidden';
-    inputFields.forEach(function (field) { field.style.border = 'none'; });
-
-    // Generate PDF and initiate a download
-    html2pdf().from(pdfContent).set({
-        margin: 10,
-        filename: 'document.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, logging: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    }).save().then(function () {
-        // PDF download initiated
-    }).catch(function (error) {
-        // Handle any errors that occurred during PDF generation
-        console.error('Failed to generate PDF: ', error);
-    }).finally(function() {
-        // Make sure buttons are shown again after PDF generation
-        buttonsToHide.forEach(function (button) { button.style.visibility = 'visible'; });
-        saveButton.style.visibility = 'visible';
-        inputFields.forEach(function (field) { field.style.border = '1px solid #ccc'; }); // Or whatever your default style is
-    });
+// Hide the specified buttons
+buttonsToHide.forEach(function (button) {
+    button.style.display = 'none';
 });
 
-    </script>
-</div>        
+// Hide the Save button
+saveButton.style.display = 'none';
+
+// Ensure input borders are visible for PDF generation
+var toInputs = document.querySelectorAll('input[name^="to"]');
+toInputs.forEach(function(input) {
+    input.style.borderBottom = '1px solid black';
+});
+
+var pdfContent = document.querySelector('.paper');
+var downloadButton = document.getElementById('downloadButton');
+
+// Hide the download button
+downloadButton.style.display = 'none';
+
+     // Modify the filename option to include the barangay case number
+     html2pdf(pdfContent, {
+        margin: [10, 10, 10, 10],
+        filename: 'kp_form8_' + barangayCaseNumber + '.pdf', // Dynamic filename
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+        scale: 2, // Adjust the scale as necessary
+        width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
+        windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
+    },
+    jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+    }
+}).then(function () {
+    // Show the download button after PDF generation
+    downloadButton.style.display = 'inline-block';
+
+    // Show the Save button after PDF generation
+    saveButton.style.display = 'inline-block';
+
+    // Show the other buttons after PDF generation
+    buttonsToHide.forEach(function (button) {
+        button.style.display = 'inline-block';
+    });
+
+    // Restore borders for all input types and select
+    inputFields.forEach(function (field) {
+        field.style.border = ''; // Use an empty string to revert to default border
+        });
+    });
+});
+</script>
+</div>
 </div>
 </body>
 </html>

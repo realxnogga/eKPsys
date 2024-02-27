@@ -38,9 +38,21 @@ if (isset($_POST['view_logs'])) {
     <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="assets/css/styles.min.css" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <style>
+
+.card {
+      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+
+      }
+
+      tr:hover {background-color: #D6EEEE;}
+
+</style>
 </head>
 
-<body style="background-color: #eeeef6">
+<body style="background-color: #E8E8E7">
 
 <div class="container-fluid">
     <!-- Row 1 -->
@@ -48,7 +60,7 @@ if (isset($_POST['view_logs'])) {
         <div class="card-body">
             <!-- Your existing HTML content -->
 
-            <h5 class="card-title mb-9 fw-semibold">User Activity Logs</h5>    <hr><?>
+            <h5 class="card-title mb-9 fw-semibold">User Activity Logs</h5>    <?>
 
 
 <b>

@@ -27,7 +27,6 @@ if (isset($_GET['unarchive_id'])) {
 }
 
 
-include 'count_lupon.php';
 
 include 'report_handler.php';
 ?>
@@ -41,14 +40,29 @@ include 'report_handler.php';
     <title>Archives</title>
     <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="assets/css/styles.min.css" />
+<style>
 
+.table {
+            font-size: 14px; /* Adjust the font size as needed */
+            font-weight: bold;
+        }
+
+        tr:hover {background-color: #D6EEEE;}
+
+
+    .card {
+      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+
+      }
+</style>
 </head>
 
-<body style="background-color: #eeeef6">
+<body style="background-color: #E8E8E7">
 
 
 <div class="container-fluid">
-<a href="user_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+<a href="user_dashboard.php" class="btn btn-dark m-1">Back to Dashboard</a>
 <br><br>
 
         <!--  Row 1 -->
@@ -62,9 +76,9 @@ include 'report_handler.php';
     </div></div>    
     <br>   
 
-                     <h5 class="card-title mb-9 fw-semibold">Barangay Complaint Archives</h5><hr>
+                     <h5 class="card-title mb-9 fw-semibold">Barangay Complaint Archives</h5>
                    <b>  
- <br>
+ 
                    <form method="GET" action="" class="searchInput">
     <div style="display: flex; align-items: center;">
         <input type="text" class="form-control" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput" style="flex: 1; margin-right: 5px;">
@@ -72,16 +86,16 @@ include 'report_handler.php';
     </div>
 </form>
 
-  
+<br>
 <table class="table table-striped">
                     <thead class="thead-dark">
             <tr>
-            <th style="width: 10%">No.</th>
-            <th style="width: 10%">Title</th>
-            <th style="width: 10%">Complainants</th>
-            <th style="width: 10%">Respondents</th>
-            <th style="width: 10%">Date</th>
-            <th style="width: 10%">Actions</th>
+            <th>No.</th>
+            <th >Title</th>
+            <th >Complainants</th>
+            <th >Respondents</th>
+            <th >Date</th>
+            <th >Actions</th>
             </tr>
         </thead>
         <tbody>

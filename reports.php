@@ -7,8 +7,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: login.php");
     exit;
 }
-include 'count_lupon.php';
 
+include 'count_lupon.php';
 include 'report_handler.php';
 
 
@@ -23,14 +23,22 @@ include 'report_handler.php';
     <title>Reports</title>
     <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="assets/css/styles.min.css" />
+<style>
+  .card {
+      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+
+      }
+    </style>
+
 
 </head>
 
-<body style="background-color: #eeeef6">
+<body style="background-color: #E8E8E7">
 
 
 <div class="container-fluid">
-<a href="user_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+<a href="user_dashboard.php" class="btn btn-dark m-1">Back to Dashboard</a>
 <br><br>
 
 
@@ -50,7 +58,7 @@ include 'report_handler.php';
     </div></div>    
     <br>   
 
-<h5 class="card-title mb-9 fw-semibold">Report Overview</h5><hr>
+<h5 class="card-title mb-9 fw-semibold">Report Overview</h5>
 
 
 
@@ -99,8 +107,8 @@ include 'report_handler.php';
                     
          </div>
             
-         <form method="POST"> 
-
+         <form method="POST">
+         <b>
     <b>NATURE OF CASES</b>
     <div class="row">
         <div class="col-md-3 mb-3">
@@ -125,6 +133,11 @@ include 'report_handler.php';
         </div>
 </div>
 <hr>
+
+
+
+
+
         <b>ACTION TAKEN - SETTLED</b>
         <div class="row">   
         <div class="col-md-3 mb-3">
@@ -155,7 +168,8 @@ include 'report_handler.php';
 
     <div>
        
-<b>ACTION TAKEN - UNSETTLED</b>
+
+    <b>ACTION TAKEN - UNSETTLED</b>
         <div class="row">
             <div class="col-md-3 mb-3">
                 <label for="pending">Pending:</label>

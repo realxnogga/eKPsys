@@ -11,6 +11,13 @@ include 'count_lupon.php';
 include 'report_handler.php';
 
 
+$userId = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
+$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +38,7 @@ include 'report_handler.php';
     <br><br><br><br>
     <div style="display: flex; align-items: center; justify-content: center;">
         <div style="text-align: center; display: flex; align-items: center;">
-            <img src="img/calamba.png" alt="Logo 1" style="width: 50px; height: 50px; margin-right: 40px; vertical-align: middle;">
+        <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;">
             <div class="sub-header">
                 CY LUPONG TAGAPAMAYAPA INCENTIVES AWARDS (LTIA)<br>
                 LTIA FORM 07-PERFORMANCE HIGHLIGHTS
@@ -151,7 +158,7 @@ html2pdf(newWindow.document.body, {
    <!-- Header Section -->
 <div style="display: flex; align-items: center; justify-content: center;">
     <div style="text-align: center; display: flex; align-items: center;">
-        <img src="img/calamba.png" alt="Logo 1" style="width: 90px; height: 90px; margin-right: 40px; vertical-align: middle;">
+    <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;">
         <div class="sub-header">
             CY LUPONG TAGAPAMAYAPA INCENTIVES AWARDS (LTIA)<br>
             LTIA FORM 07-PERFORMANCE HIGHLIGHTS
@@ -271,6 +278,7 @@ html2pdf(newWindow.document.body, {
 
     <br>
     <button onclick="generatePDF()" class="btn btn-dark m-1">Generate PDF</button>
+
 
 </body>
 </html>

@@ -95,11 +95,20 @@ function uploadFile($file, $directory) {
     <title>Settings</title>
     <link rel="shortcut icon" type="image/png" href="assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="assets/css/styles.min.css" />
+<style>
+
+.card {
+      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+
+      }
+    </style>
+
 </head>
 
-<body style="background-color: #eeeef6">
+<body style="background-color: #E8E8E7">
     <div class="container-fluid">
-        <a href="user_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+        <a href="user_dashboard.php" class="btn btn-dark m-1">Back to Dashboard</a>
         <br><br>
 
         <!-- Row 1 -->

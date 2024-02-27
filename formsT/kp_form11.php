@@ -158,12 +158,70 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+// Retrieve the profile picture name of the current user
+$query = "SELECT profile_picture FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['profile_picture'])) {
+    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $profilePicture = '../profile_pictures/defaultpic.jpg';
+}
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form11</title>
+    <title>KP Form 11 Tagalog</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
@@ -206,12 +264,12 @@ h5 {
     </a>
 </div>
             <h5> <b style="font-family: 'Times New Roman', Times, serif;"> Pormularyo ng KP Blg. 11 </b></h5>
-
-            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
-
-    <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
-        <br>
+ <div style="display:inline-block;text-align: center;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
+<div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
+<br>     
                 <h5 style="text-align: center;font-size: 18px;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center;font-size: 18px;">Lalawigan ng Laguna</h5>
                 <h5 class="header" style="text-align: center; font-size: 18px;">
@@ -228,10 +286,10 @@ h5 {
     ?>
     
 </h5>
-                <h5 style="text-align: center;font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5><br>
-                <h5 style="text-align: center;font-size: 18px;"><b style="font-size: 18px;font-family: 'Times New Roman', Times, serif;">TANGGAPAN NG  LUPONG TAGAPAMAYAPA </b></h5>
+    <h5 style="text-align: center;font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5><br>
+    <h5 style="text-align: center;font-size: 18px;"><b style="font-size: 18px;font-family: 'Times New Roman', Times, serif;">TANGGAPAN NG  LUPONG TAGAPAMAYAPA </b></h5>
             </div>
-</div>
+
 
             <?php
 $months = [
@@ -246,7 +304,7 @@ $currentYear = date('Y');
 <div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;" >
     <div class="input-field" style="float: right; width: 50%;">
         <!-- case num here -->
-        <p style="text-align: left; margin-left:30px; font-size: 18px;">Usaping Barangay Blg. <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+        <p style="text-align: left; margin-left:30px; font-size: 18px;">Usaping Brgy Blg. <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
     <?php echo !empty($cNum) ? $cNum : '&nbsp;'; ?></span></p>
 
     <p style="text-align: left; font-size: 18px; font-size: 18px; margin-left: 30px; margin-top: 0;">
@@ -324,11 +382,11 @@ echo $tagalogDate;
                 </div>
                 <br><br>
 
-                <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 550px; margin-right: auto;">
+                <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 440px; margin-right: auto;">
     <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;font-family: 'Times New Roman', Times, serif;">
         <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
     </span></p>
-    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center; margin-left: 450px; font-family: 'Times New Roman', Times, serif;  font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Punong Barangay/Tagapangulo ng Lupon</label>
+    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center; margin-left: 450px; font-family: 'Times New Roman', Times, serif;  font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Punong Barangay/ <br>Tagapangulo ng Lupon</label>
                
 
 

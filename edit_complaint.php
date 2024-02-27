@@ -121,13 +121,23 @@ $stmt->bindParam(':receivedDate', $formattedReceivedDate, PDO::PARAM_STR);
     <title>Edit Information</title>
     <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="assets/css/styles.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 </head>
-<body style="background-color: #eeeef6">
+
+<style>
+ .card {
+      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+
+      }
+    </style>
+<body style="background-color: #E8E8E7">
 
 
 <div class="container-fluid">
-<a href="user_complaints.php" class="btn btn-outline-dark m-1">Back to Complaints</a>
+<a href="user_complaints.php" class="btn btn-dark m-1">Back to Complaints</a>
 <br><br>
 
         <!--  Row 1 -->
@@ -142,7 +152,7 @@ $stmt->bindParam(':receivedDate', $formattedReceivedDate, PDO::PARAM_STR);
     </div></div>    
     <br>   
 
-                     <h5 class="card-title mb-9 fw-semibold">Edit Information</h5><hr>
+                     <h5 class="card-title mb-9 fw-semibold">Edit Information</h5>
                    <b>  
 
                   
@@ -156,9 +166,12 @@ $stmt->bindParam(':receivedDate', $formattedReceivedDate, PDO::PARAM_STR);
                             </div>
 
                             <div>
-                                <label class="form-control-label px-3">For:<span class="text-danger"> *</span></label>
-                                <input type="text" class="form-control" id="ForTitle" name="ForTitle" placeholder="Enter Name" onblur="validate(2)" required value="<?php echo $complaint['ForTitle']; ?>">
-                            </div>
+                        <label class="form-control-label px-3">For:<span class="text-danger" > *</span></label>
+                        <select class="form-control" id="ForTitle" name="ForTitle" required>
+                            <option value="<?php echo $complaint['ForTitle']; ?>"  selected><?php echo $complaint['ForTitle']; ?></option>
+                        </select>
+                    </div>
+
 
                             <div>
                                 <label class="form-control-label px-3">Complainants:<span class="text-danger"> *</span></label>
@@ -320,6 +333,67 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+$(document).ready(function () {
+            var suggestions = [
+                "Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)",
+                "Unlawful use of means of publication and unlawful utterances (Art. 154)",
+                "Alarms and Scandals (Art.155)",
+                "Using false certificates (Art. 175)",
+                "Using fictitious names and concealing true names (Art. 178)",
+                "Illegal use of uniform and insignias (Art. 179)",
+                "Physical injuries inflicted in a tumultuous affray (Art. 252)",
+                "Giving assistance to suicide (Art. 253)",
+                "Responsibility of participants in a duel (Art. 260)",
+                "Less serious physical injuries [which shall incapacitate the offended party for labor for ten (10) days or more, or shall require medical assistance for the same period] (Art. 265]",
+                "Slight physical injuries and maltreatment (Art. 266)",
+                "Unlawful arrest (Art. 269)",
+                "Inducing a minor to abandon his home (Art. 271)",
+                "Abandonment of persons in danger and abandonment of one's own victim (Art. 275)",
+                "Abandoning a minor (Art. 276)",
+                "Abandonment of minor by a person entrusted with his custody; indifference of parents (Art. 277)",
+                "Qualified trespass to dwelling (Art. 280)",
+                "Other forms of trespass (Art. 281)",
+                "Light threats (Art. 283)",
+                "Other light threats (Art. 285)",
+                "Grave coercion (Art. 286)",
+                "Light coercions and unjust taxation (Art. 287)",
+                "Other similar coercions (Compulsory purchase of merchandise and payment of wages by means of tokens) (Art. 288)",
+                "Discovering secrets through the seizure of correspondence (Art. 290)",
+                "Revealing secrets with abuse of office (if secrets are not revealed) (Art.291)",
+                "Theft (Art. 309)",
+                "Altering boundaries or landmarks (Art. 313)",
+                "Swindling or Estafa (Art. 315)",
+                "Other forms of swindling (Art. 316)",
+                "Swindling a minor (Art. 317)",
+                "Other deceits (Art. 318)",
+                "Removal, sale or pledge of mortgaged property (Art. 319)",
+                "Special cases of malicious mischief (Art. 328)",
+                "Other mischief (Art. 327, in relation to Art. 329)",
+                "Simple seduction (Art. 338)",
+                "Acts of lasciviousness with the consent of the offended party (Art. 339)",
+                "Threatening to publish and offer to prevent such publication for compensation (Art. 356)",
+                "Prohibited publication of acts referred to in the course of official proceedings (Art. 357)",
+                "Slander (Oral Defamation) (Art. 356)",
+                "Slander by Deed (Art. 359)",
+                "Incriminating Innocent Person (Art. 363)",
+                "Intriguing against honor (Art. 364)",
+                "Reckless imprudence and Simple negligence (Art. 365)",
+                "Violation of B.P. NO. 22 or the Bouncing Checks Law",
+                "Nuisance (Art. 694 of the Civil Code in the relation to Art. 695, for local ordinance with penal sanctions)",
+                "Violation of P.D. No. 1612 or the Anti-Fencing Law",
+                "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
+                "Others..."
+            ];
+
+            $('#ForTitle').select2({
+                placeholder: 'Select or start typing...',
+                data: suggestions.map(function (item) {
+                    return { id: item, text: item };
+                }),
+                tags: true,
+                tokenSeparators: [',', ' ']
+            });
+        });
 </script>
 <script src="edit_script.js"></script>
    

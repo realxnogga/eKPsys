@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Get the values of "Punong Barangay" and "Lupon Chairman" from POST
-    $punongBarangay = $_POST['punong_barangay'];
-    $luponChairman = $_POST['lupon_chairman'];
+    $punongBarangay = $_POST['punong_barangay'] ?? '';
+    $luponChairman = $_POST['lupon_chairman'] ?? '';
 
     try {
         // Use prepared statements to update the database for the current year's row

@@ -176,53 +176,261 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
+?>
+
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form10</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>KP Form 10 Tagalog</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
     
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
-
-<style>
-    /* Hide the number input arrows */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+    <style>
+        
+        body, h5, p, select, input, button {
+        font-size: 14px; /* Adjust the font size */
+        font-family: 'Times New Roman', Times, serif;
     }
 
-    /* Hide the number input arrows for Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
-        border: none;
-        width: 40px;
-        text-align: center;
+    .paper {
+        background: white;
+        margin: 0 auto;
+        margin-bottom: 0.2cm; /* Adjust margin bottom */
+        box-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        padding: 1%; /* Adjust the padding */
+        box-sizing: border-box;
+    }
+ /* Regular screen styles */
+ input[type="text"], input[type="number"] {
+    border: none;
+    border-bottom: 1px solid black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    text-align: left;
+    outline: none;
+    width: auto; /* Adjust width as necessary */
+}
 
-    }
-    h5 {
-        margin: 0;
-        padding: 0;
-    }
-    h3 {
-        margin: 0;
-        padding: 0;
-    }
-    @media print {
-    input[type="text"] {
+/* Print styles */
+@media print {
+    input[type="text"], input[type="number"] {
+        border: none !important;
         border-bottom: 1px solid black !important;
+        display: inline-block !important; /* Ensures the inputs are not ignored */
+    }
+    
+    /* Force borders to be printed */
+    input[type="text"]:after, input[type="number"]:after {
+        content: "";
+        display: block;
+        margin-top: -1px;
+        border-bottom: 1px solid black;
+    }
+    
+    /* Ensure text inputs are visible */
+    input[type="text"], input[type="number"], select {
+        color: black !important; /* Ensures text is black */
+        background-color: white !important; /* Ensures background is white */
+        -webkit-print-color-adjust: exact !important; /* For Chrome, Safari */
+        print-color-adjust: exact !important; /* Standard */
+    }
+        body, h5, p, select, input, button {
+        font-size: 14px; /* Adjust the font size */
+        font-family: 'Times New Roman', Times, serif;
     }
 }
-    </style>
+/* Add Bootstrap responsive classes for different screen sizes */
+@media (min-width: 992px) {
+    .paper {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: auto; /* Auto height to adapt to the content */
+    }
+
+    .paper[layout="landscape"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 21cm;
+    }
+}
+
+@media print {
+    .top-right-buttons {
+        display: none; /* Hide the button container */
+    }
+
+    .btn {
+        display: none !important; /* Hide all buttons with the class 'btn' */
+    }
+}
+
+@media (min-width: 1200px) {
+    .paper[size="A3"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 42cm;
+    }
+
+    .paper[size="A3"][layout="landscape"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 29.7cm;
+    }
+
+    .paper[size="A5"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 21cm;
+    }
+
+    .paper[size="A5"][layout="landscape"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 14.8cm;
+    }
+}
+        .profile-img{
+   width: 3cm;
+}
+
+.header {
+   text-align: center;
+   padding-inline: 4cm;
+}
+h5 {
+       margin: 0;
+       padding: 0;
+   }
+   body {
+    background: rgb(204, 204, 204);
+}
+
+.container {
+    margin: 0 auto;
+}
+
+.paper {
+    background: white;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+}
+.paper {
+    padding: 2%; /* Adjust the padding as needed */
+    /* Other styles */
+}
+@media print {
+    body {
+        font-size: 12pt; /* Adjust as needed */
+    }
+    .input-field {
+        max-width: 100%; /* Adjust as needed */
+        /* Other print styles for input fields */
+    }
+}
+
+/* Add Bootstrap responsive classes for different screen sizes */
+@media (min-width: 992px) {
+    .paper {
+        width: 21cm;
+        height: auto; /* Auto height to adapt to the content */
+    }
+
+    .paper[layout="landscape"] {
+        width: 29.7cm;
+        height: auto; /* Auto height to adapt to the content */
+    }
+}
+
+@media (min-width: 1200px) {
+    .paper[size="A3"] {
+        width: 29.7cm;
+        height: 42cm;
+    }
+
+    .paper[size="A3"][layout="landscape"] {
+        width: 42cm;
+        height: 29.7cm;
+    }
+
+    .paper[size="A5"] {
+        width: 14.8cm;
+        height: 21cm;
+    }
+
+    .paper[size="A5"][layout="landscape"] {
+        width: 21cm;
+        height: 14.8cm;
+    }
+}
+
+@media print {
+    body, .paper {
+        background: white;
+        margin: 0;
+        box-shadow: 0;
+    }
+}
+
+   @media print {
+  /* Adjust print styles here */
+  .input-field {
+    /* Example: Ensure input fields do not expand beyond their containers */
+    max-width: 100%;
+  }
+}
+
+
+   </style>
 </head>
 <body>
     <div class="container">
@@ -245,13 +453,17 @@ if ($user && !empty($user['profile_picture'])) {
             
             <div style="text-align: left; font-family: 'Times New Roman', Times, serif;">
                 <h5 style="font-size: 12px; font-weight: bold;">Pormularyo ng KP Blg. 10</h5>
-                <div style="position: relative; height: 1px; margin-right: 0px;">
-    <img src="<?php echo $profilePicture; ?>" alt="Logo" style="position: absolute; top: 50px; left: 50%; transform: translate(-50%, -50%); width: 100px;">
-</div><br><br><br><br><br><br><br>
+<div style="display:inline-block;text-align: center;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
+<div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
+<br>
                 <h5 style="text-align: center; font-size: 18px;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center; font-size: 18px;">Lalawigan ng Laguna</h5>
                 <h5 style="text-align: center; font-size: 18px;">
-                <?php
+
+    <?php
     $municipality = $_SESSION['municipality_name'];
 
     if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
@@ -310,15 +522,11 @@ if ($user && !empty($user['profile_picture'])) {
 <div style="text-align: justify; text-indent: 2em; font-size: 18px;; font-family: 'Times New Roman', Times, serif">
     Sa pamamagitan nito, kayo ay inaatasan na humarap sa akin sa ika-
 <input type="number" name="day" placeholder="day" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="1" max="31" value="<?php echo $appear_day; ?>" required> araw ng 
-        <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
-                    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="font-size: 18px; text-align: center;" value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
-        <?php else: ?>
-            <option style="font-size: 18px; text-align: center;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+<select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
-                </select>,
+</select>,
                 <input type="text" name="year" placeholder="year" size="1" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo date('Y'); ?>" required>
                 sa ganap na ika- <input type="time" id="time" name="time" size="5" style="font-size: 18px; border: none; border-bottom: 1px solid black;"  value="<?php echo $appear_time; ?>"required> ng umaga/hapon para sa pagbubuo ng Pangkat ng Tagapagkasundo, na siyang magkakasundo ng iyong alitan. Kung sakali’t di ninyo mapagkasunduan ang kasapian ng Pangkat, o mabigo kayong humarap sanasabing patsa para sa pagbubuo ng Pangkat, aking titiyakin ang kasapian nito sa pamamagitan ng palabunutan.
 </div>
@@ -349,7 +557,9 @@ if ($user && !empty($user['profile_picture'])) {
         <?php if ($id > 0): ?>
             <option style="font-size: 18px;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
         <?php else: ?>
-            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
+    <?php endforeach; ?>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
@@ -392,9 +602,9 @@ if ($user && !empty($user['profile_picture'])) {
     </div>
 </div>
  
-
 <script>
-        document.getElementById('downloadButton').addEventListener('click', function () {
+    var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable
+    document.getElementById('downloadButton').addEventListener('click', function () {
             // Elements to hide during PDF generation
             var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
             var saveButton = document.querySelector('input[name="saveForm"]');
@@ -419,13 +629,21 @@ if ($user && !empty($user['profile_picture'])) {
             // Hide the download button
             downloadButton.style.display = 'none';
 
-            // Use html2pdf to generate a PDF
-            html2pdf(pdfContent, {
-                margin: 10,
-                filename: 'your_page.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+     // Modify the filename option to include the barangay case number
+     html2pdf(pdfContent, {
+        margin: [10, 10, 10, 10],
+        filename: 'kp_form10_' + barangayCaseNumber + '.pdf', // Dynamic filename
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+        scale: 2, // Adjust the scale as necessary
+        width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
+        windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
+    },
+    jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+    }
             }).then(function () {
                 // Show the download button after PDF generation
                 downloadButton.style.display = 'inline-block';

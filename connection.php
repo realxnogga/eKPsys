@@ -1,8 +1,8 @@
 <?php
 $db_host = "localhost"; // Your database host
-$db_name = "eJusticeSys"; // Your database name
-$username = "root"; // Your database username
-$password = ""; // Your database password
+$db_name = "u681296935_ejusticesys"; // Your database name
+$username = "u681296935_adminDILG"; // Your database username
+$password = "Darkify18!"; // Your database password
 
 try {
     $conn = new PDO("mysql:host=$db_host;dbname=$db_name", $username, $password);

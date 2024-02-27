@@ -61,6 +61,8 @@ if ($luponsRow) {
 }
 
 $currentHearing = '';
+$existingRow = false; // Flag to indicate if an existing row is found
+
 // Fetch the current hearing from the case_progress table
 $fetchCurrentHearingQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = :complaintId";
 $stmt = $conn->prepare($fetchCurrentHearingQuery);
@@ -70,38 +72,104 @@ $currentHearingResult = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($currentHearingResult) {
     $currentHearing = $currentHearingResult['current_hearing'];
-}
-
-if ($currentHearing === '0') {
-    $currentHearingText = 'Not Set';
-
+    $existingRow = true; // Set flag to true if an existing row is found
 } else {
-    $currentHearingText = $currentHearing . ' Hearing';
+    $currentHearing = '0';
 }
 
+// Fetch the latest hearing value
+$fetchLatestHearingQuery = "SELECT latest_hearing FROM case_progress WHERE complaint_id = :complaintId";
+$stmt = $conn->prepare($fetchLatestHearingQuery);
+$stmt->bindParam(':complaintId', $_GET['id']);
+$stmt->execute();
+$latestHearingResult = $stmt->fetch(PDO::FETCH_ASSOC);
+$latestHearing = $latestHearingResult['latest_hearing'];
+
+// Determine the number of hearings to display based on the latest hearing
+$numHearings = intval(str_replace(['st', 'nd', 'rd', 'th'], '', $latestHearing));
+$numHearings = max(3, $numHearings); // Ensure a minimum of 3 hearings are displayed
+if (!$existingRow) {
+    // If no existing row, hide the minimum 3 hearings
+    $numHearings = 0;
+}
+
+// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-   // Handle form submission to update the hearing progress
-    $selectedHearing = $_POST['hearing'];
+    if (isset($_POST['hearing'])) {
+        // Update the current hearing value with ordinal suffix
+        $selectedHearing = $_POST['hearing'];
+        $currentHearing = $selectedHearing . getOrdinalSuffix($selectedHearing);
 
-    // Ensure the selected value is valid before updating
-    $validHearings = ['1st', '2nd', '3rd'];
-
-    if (in_array($selectedHearing, $validHearings)) {
         // Update the case_progress table with the selected hearing value
-        $updateHearingQuery = "UPDATE case_progress SET current_hearing = :selectedHearing WHERE complaint_id = :complaintId";
+        $updateHearingQuery = "UPDATE case_progress SET current_hearing = :currentHearing WHERE complaint_id = :complaintId";
         $stmt = $conn->prepare($updateHearingQuery);
-        $stmt->bindParam(':selectedHearing', $selectedHearing);
+        $stmt->bindParam(':currentHearing', $currentHearing);
         $stmt->bindParam(':complaintId', $_GET['id']);
-
         if ($stmt->execute()) {
-            $currentHearing = $selectedHearing;
-            $currentHearingText = $selectedHearing . ' Hearing';
+            // Database update successful
         } else {
-            echo $currentHearingText = "Data not found. Please go back to the Complaints table.";
+            // Database update failed
+            // Handle the error accordingly
+        }
+    } elseif (isset($_POST['add_hearing'])) {
+        if (!$existingRow) {
+            // If no existing row, add a new row with default values
+            $numHearings = 1; // Start from 1st hearing
+            $currentHearing = '1st'; // Set current hearing to 1st
+            $latestHearing = '1st'; // Set latest hearing to 1st
+
+            // Insert new row into the case_progress table
+            $insertNewRowQuery = "INSERT INTO case_progress (complaint_id, current_hearing, latest_hearing) VALUES (:complaintId, :currentHearing, :latestHearing)";
+            $stmt = $conn->prepare($insertNewRowQuery);
+            $stmt->bindParam(':complaintId', $_GET['id']);
+            $stmt->bindParam(':currentHearing', $currentHearing);
+            $stmt->bindParam(':latestHearing', $latestHearing);
+            if ($stmt->execute()) {
+                // New row added successfully
+            } else {
+                // Failed to add new row
+                // Handle the error accordingly
+            }
+        } else {
+            // Increment the number of hearings
+            $numHearings++;
+        
+            // Update the latest hearing value in the case_progress table
+            $latestHearing = $numHearings . getOrdinalSuffix($numHearings);
+            $updateLatestHearingQuery = "UPDATE case_progress SET latest_hearing = :latestHearing WHERE complaint_id = :complaintId";
+            $stmt = $conn->prepare($updateLatestHearingQuery);
+            $stmt->bindParam(':latestHearing', $latestHearing);
+            $stmt->bindParam(':complaintId', $_GET['id']);
+            if ($stmt->execute()) {
+                // Database update successful
+            } else {
+                // Database update failed
+                // Handle the error accordingly
+            }
         }
     }
 }
 
+// Set session variables for the current complaint ID and current hearing
+$_SESSION['current_complaint_id'] = $_GET['id'];
+$_SESSION['current_hearing'] = $currentHearing;
+
+// Function to get the ordinal suffix
+function getOrdinalSuffix($number) {
+    if (!is_numeric($number)) {
+        return ''; // Return an empty string if $number is not numeric
+    }
+    
+    if ($number % 100 >= 11 && $number % 100 <= 13) {
+        return 'th';
+    }
+    switch ($number % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+    }
+}
 
 // Set language session variable
 if (isset($_POST['language'])) {
@@ -111,10 +179,6 @@ if (isset($_POST['language'])) {
 
 // Define folder name based on selected language
 $folderName = ($_SESSION['language'] === 'tl') ? 'formsT' : 'forms';
-
-// Set session variables for the current complaint ID and current hearing
-$_SESSION['current_complaint_id'] = $_GET['id'];
-$_SESSION['current_hearing'] = $currentHearing;
 ?>
 
 
@@ -186,16 +250,24 @@ $_SESSION['current_hearing'] = $currentHearing;
     overflow: auto;
 }
 
+.card {
+      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+
+      }
+
     </style>
+
+
 </head>
 
-<body style="background-color: #eeeef6">
+<body style="background-color: #E8E8E7">
 
 
 <div class="container-fluid">
 
 
-    <a href="user_complaints.php" class="btn btn-outline-dark m-1">Back to Complaints</a>
+    <a href="user_complaints.php" class="btn btn-dark m-1">Back to Complaints</a>
     <br><br>
         <div class="row">
           <div class="col-lg-8 d-flex align-items-strech">
@@ -212,6 +284,26 @@ $_SESSION['current_hearing'] = $currentHearing;
     </div></div>    
     <br>   
 
+<div class="hearing-buttons">
+    <form method="POST">
+        <?php for ($i = 1; $i <= $numHearings; $i++) {
+            $suffix = 'th';
+            if ($i % 10 == 1 && $i != 11) {
+                $suffix = 'st';
+            } elseif ($i % 10 == 2 && $i != 12) {
+                $suffix = 'nd';
+            } elseif ($i % 10 == 3 && $i != 13) {
+                $suffix = 'rd';
+            }
+        ?>
+            <button type="submit" name="hearing" value="<?php echo $i . 'th'; ?>" class="btn <?php echo ($currentHearing === $i . 'th') ? 'btn-warning active' : 'btn-light'; ?> m-1"><?php echo $i . $suffix . ' Hearing'; ?></button>
+        <?php } ?>
+    </form>
+    <form method="POST">
+        <button type="submit" name="add_hearing" class="btn btn-primary m-1">Add Hearing</button>
+    </form>
+</div>
+
                      <h5 class="card-title mb-9 fw-semibold">Manage Case</h5><hr>
 
                      <h5 class="card-title mb-9 fw-semibold"><?php echo "Case Number:". $_SESSION['cNum']; ?></h5>
@@ -219,12 +311,12 @@ $_SESSION['current_hearing'] = $currentHearing;
                     <h5 class="card-title mb-9 fw-semibold"><?php echo "Complaint:". $_SESSION['cDesc']; ?></h5>
                     <hr>
 
-       <div class="language-toggle">
-        <form method="POST">
-            <button type="submit" button class="btn btn-light m-1" name="language" value="english" <?php echo ($_SESSION['language'] === 'english') ? 'class="active"' : ''; ?>>English Forms</button>
-            <button type="submit" button class="btn btn-dark m-1" name="language" value="tagalog" <?php echo ($_SESSION['language'] === 'tagalog') ? 'class="active"' : ''; ?>>Tagalog Forms</button>
-        </form>
-    </div>
+                    <h5 class="card-title mb-9 fw-semibold"><?php echo ucfirst($_SESSION['language']); ?> Forms</h5>
+
+                    <form method="POST">
+    <button type="submit" name="language" value="english" class="btn <?php echo ($_SESSION['language'] === 'english') ? 'btn-primary active' : 'btn-primary'; ?> m-1">English</button>
+    <button type="submit" name="language" value="tagalog" class="btn <?php echo ($_SESSION['language'] === 'tagalog') ? 'btn-primary active' : 'btn-primary'; ?> m-1">Tagalog</button>
+</form>
     
 <br>
 
@@ -267,7 +359,7 @@ $_SESSION['current_hearing'] = $currentHearing;
     $formPath = $languageFolder . $formFileName;
 
     // Display form buttons with data-form attribute
-    echo '<a href="' . $formPath . '?formID=' . $formID . '" class="open-form"><button class="btn btn-light m-1" data-form="' . $formFileName . '"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button></a>';
+    echo '<a href="' . $formPath . '?formID=' . $formID . '" class="open-form"><button class="btn btn-dark m-1" data-form="' . $formFileName . '"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button></a>';
 }
 
                             ?>
@@ -276,6 +368,9 @@ $_SESSION['current_hearing'] = $currentHearing;
                     </div>  
            
     </div>
+
+
+    
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const openFormButtons = document.querySelectorAll(".open-form");
@@ -300,23 +395,6 @@ $_SESSION['current_hearing'] = $currentHearing;
 </script>
 
 
-
-
-
-
-
-
-  <hr>  <!-- Set Hearing Progress Section -->
-    <div class="hearing-buttons">
-                        <form method="POST">
-    <button type="submit" name="hearing" value="1st" class="btn <?php echo ($currentHearing === '1st') ? 'btn-warning active' : 'btn-light'; ?> m-1">1st Hearing</button>
-    <button type="submit" name="hearing" value="2nd" class="btn <?php echo ($currentHearing === '2nd') ? 'btn-warning active' : 'btn-light'; ?> m-1">2nd Hearing</button>
-    <button type="submit" name="hearing" value="3rd" class="btn <?php echo ($currentHearing === '3rd') ? 'btn-warning active' : 'btn-light'; ?> m-1">3rd Hearing</button>
-</form>
-
-    </div>
-
-       
                     
 <hr>
                     <div class="columns-container">

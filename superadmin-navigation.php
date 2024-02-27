@@ -93,7 +93,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link" href="registeredMuni.php" aria-expanded="false">
+              <a class="sidebar-link" href="registeredmuni.php" aria-expanded="false">
                 <span>
                 <i class="ti ti-user"></i>
                 </span>

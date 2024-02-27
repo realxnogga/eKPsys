@@ -151,77 +151,223 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KP Form 13</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <title>KP Form 13 Tagalog</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
-
     
-
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+        
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
+    <style>
+        
+        body, h5, p, select, input, button {
+        font-size: 14px; /* Adjust the font size */
+        font-family: 'Times New Roman', Times, serif;
+    }
 
-</head>
-<style>
-     .profile-img{
-    width: 3cm;
+    .paper {
+        background: white;
+        margin: 0 auto;
+        margin-bottom: 0.2cm; /* Adjust margin bottom */
+        box-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        padding: 1%; /* Adjust the padding */
+        box-sizing: border-box;
+    }
+ /* Regular screen styles */
+ input[type="text"], input[type="number"] {
+    border: none;
+    border-bottom: 1px solid black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    text-align: left;
+    outline: none;
+    width: auto; /* Adjust width as necessary */
+}
+
+/* Print styles */
+@media print {
+    input[type="text"], input[type="number"] {
+        border: none !important;
+        border-bottom: 1px solid black !important;
+        display: inline-block !important; /* Ensures the inputs are not ignored */
+    }
+    
+    /* Force borders to be printed */
+    input[type="text"]:after, input[type="number"]:after {
+        content: "";
+        display: block;
+        margin-top: -1px;
+        border-bottom: 1px solid black;
+    }
+    
+    /* Ensure text inputs are visible */
+    input[type="text"], input[type="number"], select {
+        color: black !important; /* Ensures text is black */
+        background-color: white !important; /* Ensures background is white */
+        -webkit-print-color-adjust: exact !important; /* For Chrome, Safari */
+        print-color-adjust: exact !important; /* Standard */
+    }
+        body, h5, p, select, input, button {
+        font-size: 14px; /* Adjust the font size */
+        font-family: 'Times New Roman', Times, serif;
+    }
+}
+/* Add Bootstrap responsive classes for different screen sizes */
+@media (min-width: 992px) {
+    .paper {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: auto; /* Auto height to adapt to the content */
+    }
+
+    .paper[layout="landscape"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 21cm;
+    }
+}
+
+@media print {
+    .top-right-buttons {
+        display: none; /* Hide the button container */
+    }
+
+    .btn {
+        display: none !important; /* Hide all buttons with the class 'btn' */
+    }
+}
+
+@media (min-width: 1200px) {
+    .paper[size="A3"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 42cm;
+    }
+
+    .paper[size="A3"][layout="landscape"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 29.7cm;
+    }
+
+    .paper[size="A5"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 21cm;
+    }
+
+    .paper[size="A5"][layout="landscape"] {
+        width: calc(100% - 4%); /* Adjusted width considering left and right padding */
+        height: 14.8cm;
+    }
+}
+        .profile-img{
+   width: 3cm;
 }
 
 .header {
-    text-align: center;
-    padding-inline: 4cm;
+   text-align: center;
+   padding-inline: 4cm;
 }
-    /* Hide the number input arrows */
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+h5 {
+       margin: 0;
+       padding: 0;
+   }
+   body {
+    background: rgb(204, 204, 204);
+}
 
-    /* Hide the number input arrows for Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
-        border: none;
-        width: 30px;
+.container {
+    margin: 0 auto;
+}
 
-    }
-    h5{
-        margin:0;
-        padding:0;
-    }
-    @media print {
-        .page-break {
-            page-break-before: always;
-        }
-        input {
-        border-bottom: 1px solid black !important;
-    }
-      {
-        select[name="received_month"] {
-            border-bottom: 1px solid black; /* Set the desired border style and color */
-        }
-    }
-    }
-    .bottom-border {
-    border: none;
-    border-bottom: 1px solid black;
+.paper {
+    background: white;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+}
+.paper {
+    padding: 2%; /* Adjust the padding as needed */
+    /* Other styles */
 }
 @media print {
-    input[type="text"], input[type="number"], select {
-        border: none !important; /* Remove all borders */
-        border-bottom: 1px solid black !important; /* Apply bottom border only */
+    body {
+        font-size: 12pt; /* Adjust as needed */
+    }
+    .input-field {
+        max-width: 100%; /* Adjust as needed */
+        /* Other print styles for input fields */
     }
 }
-</style>
+
+/* Add Bootstrap responsive classes for different screen sizes */
+@media (min-width: 992px) {
+    .paper {
+        width: 21cm;
+        height: auto; /* Auto height to adapt to the content */
+    }
+
+    .paper[layout="landscape"] {
+        width: 29.7cm;
+        height: auto; /* Auto height to adapt to the content */
+    }
+}
+
+@media print {
+    body, .paper {
+        background: white;
+        margin: 0;
+        box-shadow: 0;
+    }
+}
+
+   @media print {
+  /* Adjust print styles here */
+  .input-field {
+    /* Example: Ensure input fields do not expand beyond their containers */
+    max-width: 100%;
+  }
+}
+
+
+   </style>
+</head>
 <body>
 <div class="container">
         <div class="paper">
@@ -243,13 +389,14 @@ if ($user && !empty($user['profile_picture'])) {
 
             </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">Pormularyo ng KP Blg. 13</b></h5>
 
-            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
-
-    <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
-        <br>
+                    <div style="display:inline-block;text-align: center;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
+<div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
+<br>
         <h5 class="header" style="font-size: 18px;">Republika ng Pilipinas</h5>
-        <h5 class="header" style="font-size: 18px;">Lalawigan ng</h5>
+        <h5 class="header" style="font-size: 18px;">Lalawigan ng Laguna</h5>
         <h5 class="header" style="text-align: center; font-size: 18px;">
     <?php
     $municipality = $_SESSION['municipality_name'];
@@ -403,7 +550,8 @@ SUBPOENA</b>
 
 
         <script>
-        document.getElementById('downloadButton').addEventListener('click', function () {
+    var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable
+    document.getElementById('downloadButton').addEventListener('click', function () {
             // Elements to hide during PDF generation
             var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
             var saveButton = document.querySelector('input[name="saveForm"]');
@@ -428,13 +576,21 @@ SUBPOENA</b>
             // Hide the download button
             downloadButton.style.display = 'none';
 
-            // Use html2pdf to generate a PDF
-            html2pdf(pdfContent, {
-                margin: 10,
-                filename: 'your_page.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+     // Modify the filename option to include the barangay case number
+     html2pdf(pdfContent, {
+        margin: [10, 10, 10, 10],
+        filename: 'kp_form13_' + barangayCaseNumber + '.pdf', // Dynamic filename
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+        scale: 2, // Adjust the scale as necessary
+        width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
+        windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
+    },
+    jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+    }
             }).then(function () {
                 // Show the download button after PDF generation
                 downloadButton.style.display = 'inline-block';

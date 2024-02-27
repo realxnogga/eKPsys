@@ -165,12 +165,59 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
 
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
+
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form1</title>
+    <title>KP Form 1 Tagalog</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -388,8 +435,8 @@ h5 {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
+    <a href="../user_lupon.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 130px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
     </a>
@@ -397,7 +444,10 @@ h5 {
                 </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">Pormularyo ng KP Blg. 1</b></h5>
 
 <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
+<div style="display:inline-block;text-align: center;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
 
 <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
         <br>
@@ -422,35 +472,40 @@ h5 {
             </div>
 </div>
 
-            <?php
+<div class="e" style="font-size: 18px; text-align: right; margin-right:40px;"> <br>
+        
+        <?php
+// Get the current date
+$currentDate = date('F d, Y');
+
 $months = [
-    'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'Nobyembre', 'Disyembre'
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
 ];
 
-$currentYear = date('Y');
-?>
-            <div style="text-align: right;">
-                <select id="monthInput" name="month" required style="width: 93px; height: 19px;font-size:18px; border: 1px solid black; border: none; border-bottom:1px solid black;">
-                    <?php
-                    $currentMonth = date('F');
-                    foreach ($months as $index => $month) {
-                        $monthNumber = $index + 1;
-                        $selected = ($month == $currentMonth) ? 'selected' : '';
-                        echo '<option value="' . $monthNumber . '" ' . $selected . '>' . $month . '</option>';
-                    }
-                    ?>
-                </select>
-                <input type="text" id="day" name="day" required style="width: 25px; height: 19px; font-size:18px; border: 1px solid black; border: none; border-bottom:1px solid black;">
-                <label for="day">,</label>
-                <input type="text" id="year" name="year" required style="width: 50px;font-size:18px; border: none; border-bottom:1px solid black;" value="<?php echo $currentYear; ?>">
+// Replace the month in English with its Tagalog equivalent
+$tagalogDate = strtr($currentDate, $months);
 
+// Print the formatted date
+echo $tagalogDate;
+?>
 
                 <h3 style="text-align: center;"><b style="font-size: 18px;font-family: 'Times New Roman', Times, serif;">PAABISO TUNGKOL SA PAGBUO NG LUPON</b></h3>
                 <form method="POST">
                 <div style="text-align: left;">
-					<p style="text-align: justify; font-size: 18px; margin-top: 0;">Sa lahat ng mga Kasapi ng Barangay at lahat ng iba pang kinauukulan:</p>
-					<p style="text-align: justify; font-size: 18px; text-indent: 1.5em;">Sa pagtalima sa Seksyon 1 (a. Kabanata 7, Pamagat Isa, Aklat III ng kodigo ng Pamahalaang lokal ng 1991 (Batas ng Republika Blg. 7160), ng Batas ng Katarungang Pambarangay, ang paabiso ay dito’y ibinibigay upang bumuo ng Lupong Tagapamayapa ng Barangay na ito. Ang mga taong isasaalangalang ko para sa paghirang ay ang mga sumusunod:</p>
-						<div style="display: flex;">
+                    <p style="text-align: justify; font-size: 18px; margin-top: 0;">Sa lahat ng mga Kasapi ng Barangay at lahat ng iba pang kinauukulan:</p>
+                    <p style="text-align: justify; font-size: 18px; text-indent: 1.5em;">Sa pagtalima sa Seksyon 1 (a. Kabanata 7, Pamagat Isa, Aklat III ng kodigo ng Pamahalaang lokal ng 1991 (Batas ng Republika Blg. 7160), ng Batas ng Katarungang Pambarangay, ang paabiso ay dito’y ibinibigay upang bumuo ng Lupong Tagapamayapa ng Barangay na ito. Ang mga taong isasaalangalang ko para sa paghirang ay ang mga sumusunod:</p>
+                        <div style="display: flex;">
     <div style="flex: 1; margin-left: 145px; ">
         <?php for ($i = 1; $i <= 10; $i++): ?>
             <?php $nameKey = "name$i"; ?>
@@ -466,9 +521,9 @@ $currentYear = date('Y');
     </div>
 </div>
 
-	</div>
+    </div>
 
-			<script>
+            <script>
 function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
         const iframe = document.getElementById('kp-form-iframe');
         iframe.src = `${formSrc}?punong_barangay=${punongBarangayValue}&lupon_chairman=${luponChairmanValue}`;
@@ -481,18 +536,18 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
         openAndLoadForm('forms/kp_form1.php', '<?= strtoupper($apptNames['punong_barangay'] ?? '') ?>', '<?= strtoupper($apptNames['lupon_chairman'] ?? '') ?>');
     });
 
-				function resetFields() {
+                function resetFields() {
 
-			document.getElementById('day').value = "";
+            document.getElementById('day').value = "";
         
 
-			var inputs = document.querySelectorAll('.paper div[style="display: flex;"] input[type="text"]');
+            var inputs = document.querySelectorAll('.paper div[style="display: flex;"] input[type="text"]');
 
-				inputs.forEach(function(input) {
+                inputs.forEach(function(input) {
             input.value = "";
-				});
-			}
-			</script>
+                });
+            }
+            </script>
 
 
                 <p style="text-align: justify; text-indent: 1.5em; font-size:18px;">Sila ay pinipili batay sa kanilang kaangkupan para sa tungkulin ng pagkakasundo na isinaalang-alang ang kanilang katapatan, walang kinikilingan, kalayaan ng pag-iisip, pagkamakatarungan, reputasyon sa pagkamatapat batay sa kanilang edad, katayuang pang lipunan, pagkamatiyaga, pagkamaparaan, madaling makibagay, malawak ang pag-iisip at iba pang kaugnay na dahilan. Ayon sa batas, iyon lamang tunay na naninirahan o nagtratrabaho sa barangay na hindi hayagang inaalisan ng karapatan ng batas ang nararapat na hirangin bilang kasapi ng Lupon.</p>
@@ -502,9 +557,9 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
                     Ang lahat ng tao ay inaanyayahan na kagyat na ipabatid sa aking ang kanilang pagsalungat kaya o pag-iindorso sa sinuman o lahat ng mga pinanukalang mga kasapi o magrekomenda sa akin ng iba pang mga tao na hindi kabilang sa talaan ni hindi lalampas ng 
                     <input type="number" name="day" placeholder="araw" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="1" max="31" value="<?php echo $appear_day; ?>" required> araw ng
     <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
-        <?php foreach ($months as $m): ?>
-            <option style="font-size: 18px; text-align: center;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endforeach; ?>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
+    <?php endforeach; ?>
     </select>,
     <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required>
 
@@ -512,7 +567,7 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
                     <?php if (!empty($message)) : ?>
             <p><?php echo $message; ?></p>
         <?php endif; ?>
-        <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position:fixed; right: 20px; top: 130px;">
+        <!-- <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position:fixed; right: 20px; top: 130px;"> -->
                 </form>
 
                 <?php if (!empty($errors)): ?>
@@ -524,88 +579,81 @@ function openAndLoadForm(formSrc, punongBarangayValue, luponChairmanValue) {
                 <?php endif; ?>
 
     
-	<body>
+    <body>
     <br>
     <p class="important-warning-text" style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-left: 450px; margin-right: auto;">
     <input type="text" id="positionInput" name="pngbrgy" style="font-family: 'Times New Roman', Times, serif; border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 18px;" size="25" value="<?= strtoupper($apptNames['punong_barangay'] ?? 'Punong Barangay') ?>">
     Punong Barangay
 </p>
 
-					<div><br><br>
+                    <div><br><br>
                     <i><p class="important-warning-text" style="text-align: justify; font-size: 18px;text-indent: 1.5em;">
                     MAHALAGA: 
                     Ang paabisong ito ay kinakailangang ipaskel sa tatlong (3) hayag na lugar sa <p  style="text-align: justify; font-size: 18px;text-indent: 1.5em;"> barangay ng di kukulangin sa 
-			
-					tatlong (3) linggo.
+            
+                    tatlong (3) linggo.
                     </p>
                     <p class="important-warning-text" style="text-align: justify; font-size: 18px; text-indent: 1.5em;">
                     BABALA:  Ang pagpunit o pagsira ng pabatid na ito ay sasailalim ng parusa nang naaayon sa <p  style="text-align: justify; font-size: 18px;text-indent: 1.5em;"> batas.
                     </p></i>
                     <br>
-					</div>
+                    </div>
         </div>
     </div>
-    
     <script>
     var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable
     document.getElementById('downloadButton').addEventListener('click', function () {
-            // Elements to hide during PDF generation
-            var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
-            var saveButton = document.querySelector('input[name="saveForm"]');
+        // Elements to hide during PDF generation
+        var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
+        
+        // Hide the specified buttons
+        buttonsToHide.forEach(function (button) {
+            button.style.display = 'none';
+        });
 
-            // Hide the specified buttons
+        // Remove borders for all input types and select
+        var inputFields = document.querySelectorAll('input, select');
+        inputFields.forEach(function (field) {
+            field.style.border = 'none';
+        });
+
+        var pdfContent = document.querySelector('.paper');
+        var downloadButton = document.getElementById('downloadButton');
+
+        // Hide the download button
+        downloadButton.style.display = 'none';
+
+        // Modify the filename option to include the barangay case number
+        html2pdf(pdfContent, {
+            margin: [10, 10, 10, 10],
+            filename: 'kp_form1_' + barangayCaseNumber + '.pdf', // Dynamic filename
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2, // Adjust the scale as necessary
+                width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
+                windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
+            },
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        }).then(function () {
+            // Show the download button after PDF generation
+            downloadButton.style.display = 'inline-block';
+
+            // Show the other buttons after PDF generation
             buttonsToHide.forEach(function (button) {
-                button.style.display = 'none';
+                button.style.display = 'inline-block';
             });
 
-            // Hide the Save button
-            saveButton.style.display = 'none';
-
-            // Remove borders for all input types and select
-            var inputFields = document.querySelectorAll('input, select');
+            // Restore borders for all input types and select
             inputFields.forEach(function (field) {
-                field.style.border = 'none';
-            });
-
-            var pdfContent = document.querySelector('.paper');
-            var downloadButton = document.getElementById('downloadButton');
-
-            // Hide the download button
-            downloadButton.style.display = 'none';
-
-     // Modify the filename option to include the barangay case number
-     html2pdf(pdfContent, {
-        margin: [10, 10, 10, 10],
-        filename: 'kp_form1_' + barangayCaseNumber + '.pdf', // Dynamic filename
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: {
-        scale: 2, // Adjust the scale as necessary
-        width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
-        windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
-    },
-    jsPDF: {
-        unit: 'mm',
-        format: 'a4',
-        orientation: 'portrait'
-    }
-            }).then(function () {
-                // Show the download button after PDF generation
-                downloadButton.style.display = 'inline-block';
-
-                // Show the Save button after PDF generation
-                saveButton.style.display = 'inline-block';
-
-                // Show the other buttons after PDF generation
-                buttonsToHide.forEach(function (button) {
-                    button.style.display = 'inline-block';
-                });
-
-                // Restore borders for all input types and select
-                inputFields.forEach(function (field) {
-                    field.style.border = ''; // Use an empty string to revert to default border
-                });
+                field.style.border = ''; // Use an empty string to revert to the default border
             });
         });
-    </script>
+    });
+</script>
+
 </body>
-</html>	
+</html> 

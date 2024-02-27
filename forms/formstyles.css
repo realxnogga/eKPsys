@@ -30,7 +30,7 @@
                 
                 .paper {
                     background-color: #fff; 
-                    width: auto;
+                    width: 800px;
                     margin: 0 auto;
                     padding: 20px;
                     border: none;
@@ -155,23 +155,4 @@
                     top: 1203px;
                     right: 130px;
                 }
-             /* Hide the number input arrows */
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        input,
-        select {
-            border: none;
-        }
-        .container {
-            position: relative;
-        }
-
-        #ComplainantRespondentContainer {
-            position: absolute;
-            top: -50px; /* Adjust the value to position it above the dropdown */
-            left: 580px; /* Adjust the value to position it horizontally */
-        }
+            

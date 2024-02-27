@@ -138,58 +138,162 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KP. FORM 16</title>
+    <title>KP Form 16 English</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
 
-    <style>
-        .profile-img{
-    width: 3cm;
+    <!-- here angle the link for responsive paper -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<style>        
+.profile-img{
+   width: 3cm;
 }
 
 .header {
-    text-align: center;
-    padding-inline: 4cm;
+   text-align: center;
+   padding-inline: 4cm;
 }
-    h5{
-        margin:0;
-        padding:0;
-    }
-    #buttons {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-    }
-    @media print {
-        #nameR {
-            resize: none; /* Disable resizing */
-        }
+h5 {
+       margin: 0;
+       padding: 0;
+   }
+   body {
+    background: rgb(204, 204, 204);
+}
 
-        #nameR::after {
-            content: none; /* Hide the resize handle icon */
-        }
+.container {
+    margin: 0 auto;
+}
+
+.paper {
+    background: white;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+}
+
+/* Add Bootstrap responsive classes for different screen sizes */
+@media (min-width: 992px) {
+    .paper {
+        width: 21cm;
+        height: auto;
     }
-    </style>
+
+    .paper[layout="landscape"] {
+        width: 29.7cm;
+        height: auto;
+    }
+}
+
+@media (min-width: 1200px) {
+    .paper[size="A3"] {
+        width: 29.7cm;
+        height: 42cm;
+    }
+
+    .paper[size="A3"][layout="landscape"] {
+        width: 42cm;
+        height: 29.7cm;
+    }
+
+    .paper[size="A5"] {
+        width: 14.8cm;
+        height: 21cm;
+    }
+
+    .paper[size="A5"][layout="landscape"] {
+        width: 21cm;
+        height: 14.8cm;
+    }
+}
+
+@media print {
+    body, .paper {
+        background: white;
+        margin: 0;
+        box-shadow: 0;
+    }
+}
+
+   @media print {
+  /* Adjust print styles here */
+  .input-field {
+    /* Example: Ensure input fields do not expand beyond their containers */
+    max-width: 100%;
+  }
+    .no-print {
+        display: none;
+    }
+}
+</style>
 </head>
 <body>
 <div class="container">
         <div class="paper">
-                <div class="top-right-buttons">
-                <!-- Print button -->
+               
+ <div class="top-right-buttons">
+    <button class="btn btn-primary print-button common-button" onclick="window.print()" style="position:fixed; right: 20px;">
+        <i class="fas fa-print button-icon"></i> Print
+    </button>
+    <button class="btn btn-success download-button common-button" id="downloadButton" style="position:fixed; right: 20px; top: 75px; ">
+        <i class="fas fa-file button-icon"></i> Download
+    </button>
+
+    <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+    </a>
+
 
             </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 16 </b></h5>
 
-            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
-
-    <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
-        <br>
+              <div style="display:inline-block;text-align: center;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
+<div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
+<br>
         <h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
         <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
         <h5 class="header" style="text-align: center; font-size: 18px;">
@@ -207,7 +311,7 @@ if ($user && !empty($user['profile_picture'])) {
 </h5>
         <h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
         <h5 class="header" style="font-size: 18px;">OFFICE OF THE LUPONG TAGAPAMAYAPA</h5>
-    </div>
+ 
 </div>
 <br>
 <br>
@@ -231,7 +335,7 @@ if ($user && !empty($user['profile_picture'])) {
     </div>
 </div>
 
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
+<div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
     <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
     <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
@@ -241,7 +345,7 @@ if ($user && !empty($user['profile_picture'])) {
 <p style="font-size: 18px;">- against -</p>
                 </div>
 
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
+<div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
     <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
     <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
@@ -249,26 +353,24 @@ if ($user && !empty($user['profile_picture'])) {
                 <div>
 <p style="font-size: 18px;"> Respondent/s </p> </div>
 
-<form method="POST">
-<h3 style="text-align: center; style= font-size: 18px;"><b style= "font-size: 18px;">AMMICABLE SETTLEMENT</b></h3>
 
+<h3 style="text-align: center; style= font-size: 18px;"><b style= "font-size: 18px;">AMMICABLE SETTLEMENT</b></h3>
+<form method="POST">
     <div style="text-align: justify; text-indent: 2em; margin-left: 1px; font-size: 18px;">We, complainant/s and respondent/s in the above-captioned case, do hereby agree to settle our dispute as follows:            
     </div>
     <br>
 
     <div class="a">
-<div id="nameR" name="nameR" style="text-decoration: underline; width: 700px; margin-left: 20.5px; height: auto; border: none; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"> Type here...
+<div id="settle" name="settle" style="text-decoration: underline; width: 700px; margin-left: 20.5px; height: auto; border: none; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true" required value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>"> Type here...
 </div>
 
 </div>
-
 </div>
+<p style="font-size: 18px; font-family: 'Times New Roman', Times, serif;"> and bind ourselves to comply honestly and faithfully with the above terms of settlement. </p>
 
-
-<p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 1px; text-indent: 1em;"> and bind ourselves to comply honestly and faithfully with the above terms of settlement. </p>
-
-<div style="font-size: 18px; font-family: 'Times New Roman', Times, serif;text-align: justify; text-indent: 0em; margin-left: 20.5px;"> Enter into this <input type="text" name="made_day" placeholder="day" size="5" value="<?php echo $existingMadeDay ?? ''; ?>" required> day of
-  <select name="made_month">
+<div style="font-size: 18px; font-family: 'Times New Roman', Times, serif;text-align: justify; text-indent: 2em">
+Enter into this  <input type="text" name="made_day" placeholder="day" size="5" style="text-align: center; border: none; border-bottom: 1px solid black; text-align: center; width: 30px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingMadeDay ?? ''; ?>" required> day of
+  <select name="made_month" style="text-align: center; height: 30px; border: none; border-bottom: 1px solid black;  font-size: 18px; font-family: 'Times New Roman', Times, serif;">
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
             <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
@@ -277,24 +379,19 @@ if ($user && !empty($user['profile_picture'])) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
-        
-
-        <?php if (!empty($message)) : ?>
-            <p><?php echo $message; ?></p>
-        <?php endif; ?>
-        <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
-</form></div><br>
+<input type="number" name="made_year" placeholder="year" style="width: 40px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
+</div>
+<br><br><br>
     <div style="display: flex; justify-content: space-between; font-size: 18px; text-align: center; ">
-    <div style="text-align: center; margin-left: 210px;">
-        <p style="font-size: 18px;font-family: 'Times New Roman', Times, serif; ">Complainant/s</p>
+    <div style="text-align: center; margin-left: 110px;">
+        <p style="font-size: 18px;font-family: 'Times New Roman', Times, serif; ">  Complainant/s</p>
         <ul style="margin-bottom: 10; padding: 0; list-style: none; font-size: 18px; text-align: center;">
         <span style="min-width: 30px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;font-family: 'Times New Roman', Times, serif;"><?php echo $cNames; ?></span>
            
         </ul>
     </div>
 
-    <div style="text-align: center; margin-right: 210px;font-family: 'Times New Roman', Times, serif;">
+    <div style="text-align: center; margin-right: 110px; font-family: 'Times New Roman', Times, serif;">
         <p style="font-size: 18px;font-family: 'Times New Roman', Times, serif; ">Respondent/s</p>
         <ul style="margin-bottom: 10; padding: 0; list-style: none; font-size: 18px; text-align: center;">
         <span style="min-width: 30px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;font-family: 'Times New Roman', Times, serif;"><?php echo $rspndtNames; ?></span>
@@ -303,42 +400,99 @@ if ($user && !empty($user['profile_picture'])) {
     </div>
 </div>
 
+<?php if (!empty($message)) : ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button no-print" style="position:fixed; right: 20px; top: 130px;">
+    </form>
 
   <div class="e">
-    <p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 1px; text-indent: 1em; ">ATTESTATION</p>
+  <br><br><p style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">ATTESTATION</p>
     <p style="font-size: 18px;font-family: 'Times New Roman', Times, serif; text-align: justify; text-indent: 2em; margin-left: 1px;">I hereby certify that the foregoing amicable settlement was entered into by the parties freely and 
     voluntarily, after I had explained to them the nature and consequence of such settlement.</p>
   </div><br><br>
 
-  <p class="important-warning-text" style="font-size: 18px; text-align: center; margin-left: 490px;  font-family: 'Times New Roman', Times, serif;">
-    <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+  <p class="important-warning-text" style="font-size: 18px; text-align: center; margin-left: 400px;  font-family: 'Times New Roman', Times, serif;">
+    <span style="min-width: 300px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
         <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
     </span>
-    <label style="font-size: 18px; font-family: 'Times New Roman', Times, serif; font-weight: normal;">Punong Barangay/Pangkat Chairman</span>
+    <label style="margin-top: 20px; font-size: 18px; font-family: 'Times New Roman', Times, serif; font-weight: normal;">Punong Barangay/Pangkat Chairman</span>
 </p>
 
-<form>
 
-                                  
-<?php if (!empty($message)) : ?>
-        <p><?php echo $message; ?></p>
-    <?php endif; ?>
-    <button class="btn btn-primary print-button common-button" onclick="window.print()" style="position: relative; right: -785px; top: -980px;">
-                    <i class="fas fa-print button-icon"></i> Print
-                </button>
-            
-    
 
-</form>
+<?php if (!empty($errors)): ?>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
 
-        <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-    <button class="btn common-button" style="margin-left: -125px; margin-top: -2030px;">
-        <i class="fas fa-arrow-left"></i> Back
-    </button>
-</a>
-</body>
-<br>
-<div class="blank-page">        
-       
+
+                
+<script>
+    var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable
+    document.getElementById('downloadButton').addEventListener('click', function () {
+            // Elements to hide during PDF generation
+            var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
+            var saveButton = document.querySelector('input[name="saveForm"]');
+
+            // Hide the specified buttons
+            buttonsToHide.forEach(function (button) {
+                button.style.display = 'none';
+            });
+
+            // Hide the Save button
+            saveButton.style.display = 'none';
+
+// Ensure input borders are visible for PDF generation
+var toInputs = document.querySelectorAll('input[name^="to"]');
+toInputs.forEach(function(input) {
+    input.style.borderBottom = '1px solid black';
+});
+
+            var pdfContent = document.querySelector('.paper');
+            var downloadButton = document.getElementById('downloadButton');
+
+            // Hide the download button
+            downloadButton.style.display = 'none';
+
+     // Modify the filename option to include the barangay case number
+     html2pdf(pdfContent, {
+        margin: [10, 10, 10, 10],
+        filename: 'kp_form16_' + barangayCaseNumber + '.pdf', // Dynamic filename
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+        scale: 2, // Adjust the scale as necessary
+        width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
+        windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
+    },
+    jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+    }
+            }).then(function () {
+                // Show the download button after PDF generation
+                downloadButton.style.display = 'inline-block';
+
+                // Show the Save button after PDF generation
+                saveButton.style.display = 'inline-block';
+
+                // Show the other buttons after PDF generation
+                buttonsToHide.forEach(function (button) {
+                    button.style.display = 'inline-block';
+                });
+
+                // Restore borders for all input types and select
+                inputFields.forEach(function (field) {
+                    field.style.border = ''; // Use an empty string to revert to default border
+                });
+            });
+        });
+    </script>
 </div>
+</div>
+</body>
 </html>

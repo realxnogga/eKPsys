@@ -28,11 +28,23 @@ if (!empty($searchInput)) {
     $query .= " ORDER BY MDate DESC";
 
 $result = $conn->query($query);
+$query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 0 AND FileID IS NOT NULL";
 
-
+// Function to get the ordinal suffix
+function getOrdinalSuffix($number) {
+    if ($number % 100 >= 11 && $number % 100 <= 13) {
+        return 'th';
+    }
+    switch ($number % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+    }
+}
 ?>
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -41,14 +53,30 @@ $result = $conn->query($query);
     <title>Complaints</title>
     <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="assets/css/styles.min.css" />
+<style>
+ /* Custom style for adjusting font size on the table */
+ .table {
+            font-size: 14px; /* Adjust the font size as needed */
+            font-weight: bold;
+        }
 
+        tr:hover {background-color: #D6EEEE;}
+
+
+        .card {
+      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+
+      }
+  
+    </style>
 </head>
 
-<body style="background-color: #eeeef6">
+<body style="background-color: #E8E8E7">
 
 
 <div class="container-fluid">
-<a href="user_dashboard.php" class="btn btn-outline-dark m-1">Back to Dashboard</a>
+<a href="user_dashboard.php" class="btn btn-dark m-1">Back to Dashboard</a>
 <br><br>
 
         <!--  Row 1 -->
@@ -62,9 +90,9 @@ $result = $conn->query($query);
     </div></div>    
     <br>   
 
-                     <h5 class="card-title mb-9 fw-semibold">Barangay Complaints</h5><hr>
+                     <h5 class="card-title mb-9 fw-semibold">Barangay Complaints</h5>
                    <b>  
-<br>
+
                    <form method="GET" action="" class="searchInput">
     <div style="display: flex; align-items: center;">
         <input type="text" class="form-control" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput" style="flex: 1; margin-right: 5px;">
@@ -73,19 +101,19 @@ $result = $conn->query($query);
     </div>
 </form>
 
-<br>
      
 <table class="table table-striped">
-        <thead class="thead-dark">
+        <thead class="thead">
         <tr>
-            <th style="width: 10%">No.</th>
-            <th style="width: 5%">Title</th>
-            <th style="width: 2%">Complainants</th>
-            <th style="width: 2%">Respondents</th>
-            <th style="width: 5%">Date</th>
-            <th style="width: 2%">Status</th>
-            <th style="width: 5%">Progress</th>
-            <th style="width: 10%">Actions</th>
+            <th>No.</th>
+            <th>Title</th>
+            <th>Complainants</th>
+            <th>Respondents</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Hearing</th>
+            <th>Actions</th>
+           
         </tr>
     </thead>
         
@@ -100,42 +128,37 @@ $result = $conn->query($query);
             <td><?= $row['CMethod'] ?></td>
 
             <?php
-            $complaintId = $row['id'];
-            $caseProgressQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = $complaintId";
-            $caseProgressResult = $conn->query($caseProgressQuery);
-            $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
+$complaintId = $row['id'];
+$caseProgressQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = $complaintId";
+$caseProgressResult = $conn->query($caseProgressQuery);
+$caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
+
+?>
+
+<td>
+    <?php if ($caseProgressRow): ?>
+        <?php $currentHearing = $caseProgressRow['current_hearing']; ?>
+        <?php if ($currentHearing === '0'): ?>
+            Not Set
+        <?php else: ?>
+            <?php 
+            // Replace 'th' with appropriate ordinal suffix
+            $ordinalHearing = str_replace('th', getOrdinalSuffix((int)$currentHearing), $currentHearing); 
             ?>
-
-            <td>
-                <?php if ($caseProgressRow): ?>
-                    <?php switch ($caseProgressRow['current_hearing']):
-                        case '0': ?>
-                            Not Set
-                            <?php break; ?>
-                        <?php case '1st': ?>
-                            1st Hearing
-                            <?php break; ?>
-                        <?php case '2nd': ?>
-                            2nd Hearing
-                            <?php break; ?>
-                        <?php case '3rd': ?>
-                            3rd Hearing
-                            <?php break; ?>
-                        <?php default: ?>
-                            Unknown
-                    <?php endswitch; ?>
-                <?php else: ?>
-                    Not Set
-                <?php endif; ?>
-            </td>
-
-            <td>
-    <a href="edit_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary"  title="Edit" data-placement="top"><i class="fas fa-edit"></i></a>
-    <a href="archive_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger" title="Archive" data-placement="top"><i class="fas fa-archive"></i></a>
-    <a href="manage_case.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-warning" title="Manage" data-placement="top"><i class="fas fa-folder"></i></a>
-
-
+            <?php echo $ordinalHearing; ?> Hearing
+        <?php endif; ?>
+    <?php else: ?>
+        Not Set
+    <?php endif; ?>
 </td>
+
+
+            <td>
+                <a href="edit_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-success"  title="Edit" data-placement="top"><i class="fas fa-edit"></i></a>
+                <a href="archive_complaint.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger" title="Archive" data-placement="top"><i class="fas fa-archive"></i></a>
+                <a href="manage_case.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-warning" title="Manage" data-placement="top"><i class="fas fa-folder"></i></a>
+                <a href="upload_file.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-primary" title="Manage" data-placement="top"><i class="fas fa-upload"></i> </a>
+            </td>
 
         </tr>
     <?php endwhile; ?>
@@ -181,8 +204,10 @@ $result = $conn->query($query);
                             <td>
                                 <a href='edit_complaint.php?id=${row.id}'>Edit</a> |
                                 <a href='archive_complaint.php?id=${row.id}'>Archive</a> |
-                                <a href='manage_case.php?id=${row.id}'>Manage</a>
+                                <a href='manage_case.php?id=${row.id}'>Manage</a> |
+                                <a href='upload_file.php?id=${row.id}'>Upload</a> <!-- Add Upload link -->
                             </td>
+                            <iframe id="uploadFrame" name="uploadFrame" width="100%" height="300" frameborder="0"></iframe>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -190,30 +215,11 @@ $result = $conn->query($query);
             }
         });
     </script> 
-            
-            
-   
-
-  
-
-      
-    </div></div>
-      
-
-              </div>
-
-              
-            </div>
-          </div></b>
-                    
-          </div>
-        </div>
-       
-       
-          
-    </div>
-  </div>
-
+</div>
+</div>
+</div>
+</b>
+</div>
+</div>
 </body>
-
 </html>

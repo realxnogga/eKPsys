@@ -15,10 +15,12 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
     align-items: center;
     justify-content: center;
     flex-direction: column;
-  }
+    -webkit-backface-visibility: hidden;
+    transform: translate3d(0, 0, 0); /* Add this line */
+}
 
   .sidebar-item img {
-    margin-bottom: 10px; /* Adjust as needed */
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -29,6 +31,18 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
     text-align: center;
   }
 </style>
+
+
+
+
+
+
+
+
+
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+
+
 <!--  Body Wrapper -->
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
@@ -49,9 +63,9 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
           <ul id="sidebarnav">
           <li class="sidebar-img">
     <span></span>
-    <span class="hide-menu text-center">
-        <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;">
-    </span>
+      <span class="hide-menu text-center">
+          <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;">
+      </span>
 </li>
 
             <br>
@@ -144,14 +158,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 <span class="hide-menu">Settings</span>
               </a>
             </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="about.php" aria-expanded="false">
-                <span>
-                <i class="ti ti-info-circle"></i>
-                </span>
-                <span class="hide-menu">About Us</span>
-              </a>
-            </li>
+       
           </ul>
         </nav>
         <!-- End Sidebar navigation -->

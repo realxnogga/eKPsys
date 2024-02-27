@@ -114,7 +114,6 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 
-
 // Retrieve the profile picture name of the current user
 $query = "SELECT profile_picture FROM users WHERE id = :userID";
 $stmt = $conn->prepare($query);
@@ -129,31 +128,54 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form20</title>
+    <title>KP Form 20 English</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- here angle the link for responsive paper -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="stylesheet" href="formstyles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-
-
-    
 </head>
 <style>
-     .profile-img{
-    width: 3cm;
-}
-
-.header {
-    text-align: center;
-    padding-inline: 4cm;
-}
     /* Hide the number input arrows */
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
@@ -165,32 +187,112 @@ if ($user && !empty($user['profile_picture'])) {
     input[type=number] {
         -moz-appearance: textfield;
         border: none;
-        width: 30px;
+        width: 40px;
+        text-align: center;
 
     }
-    h5{
-        margin:0;
-        padding:0;
+    h5 {
+        margin: 0;
+        padding: 0;
     }
-    @media print {
-        .page-break {
-            page-break-before: always;
-        }
-        input {
-        border-bottom: 1px solid black !important;
+    h3 {
+        margin: 0;
+        padding: 0;
     }
-      {
-        select[name="received_month"] {
-            border-bottom: 1px solid black; /* Set the desired border style and color */
-        }
+    .centered-line {
+        border-bottom: 1px ridge black;
+        display: inline-block;
+        min-width: 350px;
+        text-align: center;
     }
-    }
-    .bottom-border {
-    border: none;
-    border-bottom: 1px solid black;
+        
+.profile-img{
+   width: 3cm;
 }
 
+.header {
+   text-align: center;
+   padding-inline: 4cm;
+}
+h5 {
+       margin: 0;
+       padding: 0;
+   }
+   body {
+    background: rgb(204, 204, 204);
+}
+
+.container {
+    margin: 0 auto;
+}
+
+.paper {
+    background: white;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+}
+
+/* Add Bootstrap responsive classes for different screen sizes */
+@media (min-width: 992px) {
+    .paper {
+        width: 21cm;
+        height: 29.7cm;
+    }
+
+    .paper[layout="landscape"] {
+        width: 29.7cm;
+        height: 21cm;
+    }
+}
+
+@media (min-width: 1200px) {
+    .paper[size="A3"] {
+        width: 29.7cm;
+        height: 42cm;
+    }
+
+    .paper[size="A3"][layout="landscape"] {
+        width: 42cm;
+        height: 29.7cm;
+    }
+
+    .paper[size="A5"] {
+        width: 14.8cm;
+        height: 21cm;
+    }
+
+    .paper[size="A5"][layout="landscape"] {
+        width: 21cm;
+        height: 14.8cm;
+    }
+}
+
+@media print {
+    body, .paper {
+        background: white;
+        margin: 0;
+        box-shadow: 0;
+    }
+  /* Adjust print styles here */
+  .input-field {
+    /* Example: Ensure input fields do not expand beyond their containers */
+    max-width: 100%;
+  }
+  input[name="saveForm"] {
+            display: none;
+        }
+  
+  input[type="text"] {
+        border-bottom: 1px solid black !important;
+    }
+        /* Hide elements that should not be printed */
+        .btn, .top-right-buttons {
+            display: none !important;
+    }
+}
 </style>
+
 <body>
 <div class="container">
         <div class="paper">
@@ -211,11 +313,12 @@ if ($user && !empty($user['profile_picture'])) {
 
             </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 20 </b></h5>
 
-            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
-
-    <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
-        <br>
+             <div style="display:inline-block;text-align: center;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
+<div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
+<br>
         <h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
         <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
         <h5 class="header" style="text-align: center; font-size: 18px;">
@@ -232,8 +335,8 @@ if ($user && !empty($user['profile_picture'])) {
     ?>
 </h5>
         <h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-        <h5 class="header" style="font-size: 18px;">OFFICE OF THE LUPONG TAGAPAMAYAPA</h5>
-    </div>
+        <h5 class="header" style="font-size: 18px; margin-top: 5px;">OFFICE OF THE LUPONG TAGAPAMAYAPA</h5>
+   
 </div>
 <br>
 <br>
@@ -315,8 +418,8 @@ if ($user && !empty($user['profile_picture'])) {
             </div>
  
 
-<p style="text-align: justify; text-indent: 0em; margin-left: 1px; font-size: 18px;"> This <input style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" type="text" name="made_day" placeholder="day" size="5" value="<?php echo $existingMadeDay ?? ''; ?>" required> day of
-  <select style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" name="made_month">
+<p style="text-align: justify; text-indent: 2em; font-size: 18px;"> This <input style="width: 30px; text-align: center; border: none; border-bottom: 1px solid black; border-bottom: 1px solid black; font-size: 18px;" type="text" name="made_day" placeholder="day" size="5" value="<?php echo $existingMadeDay ?? ''; ?>" required> day of
+  <select style="height: 30px; text-align: center; border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" name="made_month">
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
             <option style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
@@ -331,98 +434,93 @@ if ($user && !empty($user['profile_picture'])) {
 </div>
 
 <br>
-    <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 570px; margin-right: auto;">
-    <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-        <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
-    </span> Lupon Secretary
+    <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 480px; margin-right: auto;">
+    <input style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+        </input> <p style="font-family: 'Times New Roman', Times, serif; font-size: 18px; margin-left: 560px;">Lupon Secretary
     </p>
     <br>
 </div>
 </p>
 <br>
-    <p style="font-family: 'Times New Roman', Times, serif; text-align: left; margin-top: 0;font-size: 18px; text-indent: 1em;">
+<p style="font-family: 'Times New Roman', Times, serif; text-align: left; margin-top: 0;font-size: 18px;">
         Attested:</p>
         <p class="important-warning-text" style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-left: -550px; margin-right: auto;">
     <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
         <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
     </span></p>
     <label id="punongbrgy" name="punongbrgy" size="25" style="font-family: 'Times New Roman', Times, serif; text-align: center; margin-left:  40px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Lupon Chairman</label>
-          
-
-<form>
+    
+    <form>
     <?php if (!empty($message)) : ?>
         <p><?php echo $message; ?></p>
     <?php endif; ?>
 
             
     <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position:fixed; right: 20px; top: 130px;">
+</form>
+    <script>
+var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable
+document.getElementById('downloadButton').addEventListener('click', function () {
+    // Elements to hide during PDF generation
+    var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
+    var saveButton = document.querySelector('input[name="saveForm"]');
 
-    
+// Hide the specified buttons
+buttonsToHide.forEach(function (button) {
+    button.style.display = 'none';
+});
 
-    </form>
+// Hide the Save button
+saveButton.style.display = 'none';
 
+// Ensure input borders are visible for PDF generation
+var toInputs = document.querySelectorAll('input[name^="to"]');
+toInputs.forEach(function(input) {
+    input.style.borderBottom = '1px solid black';
+});
 
-   
-<script>
-        document.getElementById('downloadButton').addEventListener('click', function () {
-            // Elements to hide during PDF generation
-            var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
-            var saveButton = document.querySelector('input[name="saveForm"]');
+var pdfContent = document.querySelector('.paper');
+var downloadButton = document.getElementById('downloadButton');
 
-            // Hide the specified buttons
-            buttonsToHide.forEach(function (button) {
-                button.style.display = 'none';
-            });
+// Hide the download button
+downloadButton.style.display = 'none';
 
-            // Hide the Save button
-            saveButton.style.display = 'none';
+     // Modify the filename option to include the barangay case number
+     html2pdf(pdfContent, {
+        margin: [10, 10, 10, 10],
+        filename: 'kp_form20_' + barangayCaseNumber + '.pdf', // Dynamic filename
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+        scale: 2, // Adjust the scale as necessary
+        width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
+        windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
+    },
+    jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+    }
+}).then(function () {
+    // Show the download button after PDF generation
+    downloadButton.style.display = 'inline-block';
 
-            // Remove borders for all input types and select
-            var inputFields = document.querySelectorAll('input, select');
-            inputFields.forEach(function (field) {
-                field.style.border = 'none';
-            });
+    // Show the Save button after PDF generation
+    saveButton.style.display = 'inline-block';
 
-            var pdfContent = document.querySelector('.paper');
-            var downloadButton = document.getElementById('downloadButton');
+    // Show the other buttons after PDF generation
+    buttonsToHide.forEach(function (button) {
+        button.style.display = 'inline-block';
+    });
 
-            // Hide the download button
-            downloadButton.style.display = 'none';
-
-            // Use html2pdf to generate a PDF
-            html2pdf(pdfContent, {
-                margin: 10,
-                filename: 'your_page.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            }).then(function () {
-                // Show the download button after PDF generation
-                downloadButton.style.display = 'inline-block';
-
-                // Show the Save button after PDF generation
-                saveButton.style.display = 'inline-block';
-
-                // Show the other buttons after PDF generation
-                buttonsToHide.forEach(function (button) {
-                    button.style.display = 'inline-block';
-                });
-
-                // Restore borders for all input types and select
-                inputFields.forEach(function (field) {
-                    field.style.border = ''; // Use an empty string to revert to default border
-                });
-            });
+    // Restore borders for all input types and select
+    inputFields.forEach(function (field) {
+        field.style.border = ''; // Use an empty string to revert to default border
         });
-    </script>
-
-           
-                </div>
-            </div>
-        </div>
-
-<br>           
+    });
+});
+</script>
+</div>
 </div>
 </body>
-
 </html>
+    

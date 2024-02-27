@@ -133,7 +133,7 @@ if ($action_submitted) {
         // Your actions/buttons for search results
         echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
         echo '<input type="hidden"  name="user_id" value="' . $verifiedUser['id'] . '">';
-        echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Unverify</button>';
+        echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Lock</button>';
         echo '</form>';
         echo '</td>';
         echo '<td>';
@@ -172,7 +172,7 @@ if ($action_submitted) {
         // Your actions/buttons for verified users
         echo '<form method="post"  action="' . $_SERVER['PHP_SELF'] . '">';
         echo '<input type="hidden" name="user_id" value="' . $verifiedUser['id'] . '">';
-        echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Unverify</button>';
+        echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Lock</button>';
         echo '</form>';
         echo '</td>';
         echo '<td>';

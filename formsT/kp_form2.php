@@ -1,9 +1,5 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
-?>
-
-<?php
 include 'connection.php';
 $forTitle = $_SESSION['forTitle'] ?? '';
 $cNames = $_SESSION['cNames'] ?? '';
@@ -11,12 +7,14 @@ $rspndtNames = $_SESSION['rspndtNames'] ?? '';
 $cDesc = $_SESSION['cDesc'] ?? '';
 $petition = $_SESSION['petition'] ?? '';
 $cNum = $_SESSION['cNum'] ?? '';
-
+$linkedNames = $_SESSION['linkedNames'] ?? [];
 $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 $complaintId = $_SESSION['current_complaint_id'] ?? '';
 $currentHearing = $_SESSION['current_hearing'] ?? '';
-$formUsed = 10;
+$formUsed = 2
+;
+
 
 // Fetch existing row values if the form has been previously submitted
 $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
@@ -165,26 +163,57 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form2</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KP Form 2 Tagalog</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="formstyles.css">
-    
-        
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
-    <style>
-        
-        body, h5, p, select, input, button {
+    <!-- here angle the link for responsive paper -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="formstyles.css">
+</head>
+<style>
+    .profile-img {
+        width: 3cm;
+    }
+
+    body, h5, p, select, input, button {
         font-size: 14px; /* Adjust the font size */
         font-family: 'Times New Roman', Times, serif;
     }
@@ -325,12 +354,12 @@ h5 {
 @media (min-width: 992px) {
     .paper {
         width: 21cm;
-        height: auto; /* Auto height to adapt to the content */
+        height: 29.7cm;
     }
 
     .paper[layout="landscape"] {
         width: 29.7cm;
-        height: auto; /* Auto height to adapt to the content */
+        height: 21cm;
     }
 }
 
@@ -372,14 +401,20 @@ h5 {
   }
 }
 
+p {
+    line-height: 1.5; /* This creates double line spacing for paragraph elements */
+}
+button {
+    font-family: 'Arial', sans-serif; /* Example font-family */
+    font-size: 16px; /* Example font-size */
+    font-weight: bold; /* Example font-weight */
+}
 
-   </style>
-</head>
+</style>
 <body>
-    <br>
-    <div class="container">
+<div class="container">
         <div class="paper">
-                   
+                
  <div class="top-right-buttons">
     <button class="btn btn-primary print-button common-button" onclick="window.print()" style="position:fixed; right: 20px;">
         <i class="fas fa-print button-icon"></i> Print
@@ -388,49 +423,53 @@ h5 {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
+    <a href="../user_lupon.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 130px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
     </a>
-               
-                </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">Pormularyo ng KP Blg. 2</b></h5>
-
-<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
-
+</div>
+            
+            <div style="text-align: left; font-family: 'Times New Roman', Times, serif;">
+                <h5><b>Pormularyo ng KP Blg. 2</b></h5>
+                <div style="position: relative; height: 1px; margin-right: 0px;">
+   <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+<div style="display:inline-block;text-align: center;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
 <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
-        <br>
-                <h5 style="text-align: center;font-size: 18px;">Republika ng Pilipinas</h5>
-                <h5 style="text-align: center;font-size: 18px;">Lalawigan ng Laguna</h5>
-                <h5 class="header" style="text-align: center; font-size: 18px;">
+<br>
+        <h5 style="text-align: center; font-size: 18px;">Republika ng Pilipinas</h5>
+        <h5 style="text-align: center; font-size: 18px;">Lalawigan ng Laguna</h5>
+        <h5 class="header" style="text-align: center; font-size: 18px;">
     <?php
     $municipality = $_SESSION['municipality_name'];
 
     if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-        echo 'Bayan ng ' . $municipality;
+        echo 'Municipality of ' . $municipality;
     } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-        echo 'Lungsod ng ' . $municipality;
+        echo 'City of ' . $municipality;
     } else {
-        echo 'ungsod/Bayan ng ' . $municipality;
+        echo 'City/Municipality of ' . $municipality;
     }
     ?>
-    
 </h5>
-                <h5 style="text-align: center;font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5><br>
-                <h5 style="text-align: center;font-size: 18px;"><b style="font-size: 18px;font-family: 'Times New Roman', Times, serif;">TANGGAPAN NG  LUPONG TAGAPAMAYAPA </b></h5>
+        <h5 style="text-align: center; font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
+        <h5 style="text-align: center; font-size: 18px; margin-top: 5px; ">TANGGAPAN NG  LUPONG TAGAPAMAYAPA</h5>
             </div>
-</div>
-
+            <br>
+            <br>
             <?php
-$months = [
-    'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'Nobyembre', 'Disyembre'
-];
+            $months = [
+                'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+            ];
 
-$currentYear = date('Y');
-?>
-            <div style="text-align: right;">
-                <select id="monthInput" name="month" required style="width: 93px; height: 19px;font-size:18px; border: 1px solid black; border: none; border-bottom:1px solid black;">
+            $currentYear = date('Y');
+            ?>
+
+<div style="text-align: right;">
+                <select id="monthInput" name="month" required style="text-align: center; width: 110px; height: 31px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
                     <?php
                     $currentMonth = date('F');
                     foreach ($months as $index => $month) {
@@ -440,31 +479,40 @@ $currentYear = date('Y');
                     }
                     ?>
                 </select>
-                <input type="text" id="day" name="day" required style="width: 25px; height: 19px; font-size:18px; border: 1px solid black; border: none; border-bottom:1px solid black;">
+                <input type="text" id="day" placeholder= "day" name="day" required style=" height: 30px; text-align: center; width: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
                 <label for="day">,</label>
-                <input type="text" id="year" name="year" required style="width: 50px;font-size:18px; border: none; border-bottom:1px solid black;" value="<?php echo $currentYear; ?>">
+                <input type="text" id="year" name="year" required style=" height: 30px; text-align: center; width: 45px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $currentYear; ?>">
 
+                <br>
+<br><h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> <b style= "font-size: 18px;">
+PAGHIRANG</b>
 
-                <h3 style="text-align: center;"><b style="font-size: 18px;font-family: 'Times New Roman', Times, serif;">PAGHIRANG</b></h3>
-                <form method="POST">
-                <div style="text-align: left;">
-				<br><p style="text-align: justify; font-size: 12px; margin-top: 0;font-size: 18px;font-family: 'Times New Roman', Times, serif;">PARA KAY:
-    <input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; font-size: 18px;font-family: 'Times New Roman', Times, serif;">
+<br><br><br><p style="text-align: justify; font-size: 18px; margin-top: 0; font-family: 'Times New Roman', Times, serif;">PARA KAY:
+    <input type="text" id="recipient" name="recipient" list="nameList" required style="border: none; border-bottom: 1px solid black;">
     <datalist id="nameList">
         <?php foreach ($linkedNames as $name): ?>
             <option value="<?php echo $name; ?>">
         <?php endforeach; ?>
     </datalist>
 </p>
-				<p style="text-align: justify; font-size: 12px; text-indent: 1.5em;font-size: 18px;font-family: 'Times New Roman', Times, serif;">Bilang pag-alinsunod sa kabanata 7, Pamagat Isa, Aklat III, ng kodigo ng Pamahalaang lokal ng 1991 (Batas ng Republika Blg. 7160), ikaw ay hinihirang bilang KASAPI ng Lupong Tagapamayapa ng Barangay na ito na magkakabisa sa sandaling makapanumpa sa iyong tungkulin at hanggang ang bagong Lupon ay muling mabuo sa ikatlong taon kasunod ng iyong pagkakahirang.
-				</p><br><br><br><br>
-				</div>
+                <p style="text-align: justify; font-size: 18px; text-indent: 2em; font-family: 'Times New Roman', Times, serif;">Bilang pag-alinsunod sa kabanata 7, Pamagat Isa, Aklat III, ng kodigo ng Pamahalaang lokal ng 1991 (Batas ng Republika Blg. 7160), ikaw ay hinihirang bilang KASAPI ng Lupong Tagapamayapa ng Barangay na ito na magkakabisa sa sandaling makapanumpa sa iyong tungkulin at hanggang ang bagong Lupon ay muling mabuo sa ikatlong taon kasunod ng iyong pagkakahirang.
+                </p><br><br><br><br>
+                </div>
 
-		        <?php if (!empty($message)) : ?>
-            <p><?php echo $message; ?></p>
-        <?php endif; ?>
-        <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position:fixed; right: 20px; top: 130px;">
-                </form>
+            <script>
+                function resetFields() {
+                // Clear the value of the day input field
+            document.getElementById('day').value = "";
+        
+                // Get all input elements within the specified div
+            var inputs = document.querySelectorAll('.paper div[style="display: flex;"] input[type="text"]');
+        
+                // Clear the value of each input field
+                inputs.forEach(function(input) {
+            input.value = "";
+                });
+            }
+            </script>
 
                 <?php if (!empty($errors)): ?>
                     <ul>
@@ -474,85 +522,74 @@ $currentYear = date('Y');
                     </ul>
                 <?php endif; ?>
 
-	<body>
-
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 470px; margin-right: auto;font-size: 18px;font-family: 'Times New Roman', Times, serif;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 12px;font-size: 18px;font-family: 'Times New Roman', Times, serif;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
-    Punong Barangay
+    <p class="important-warning-text" style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 18px; margin-left: 450px; margin-right: auto;">
+    <input type="text" id="positionInput" name="pngbrgy" style="font-family: 'Times New Roman', Times, serif; border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 18px;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
+    <br>    <p style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-top: 15px; margin-left: 450px;">Punong Barangay</p>
 </p>
 
-
-	<p style="text-align: justify; margin-left: 0;font-size: 18px;font-family: 'Times New Roman', Times, serif;">Pinatunayan:</p>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 570px; margin-left: auto;font-size: 18px;font-family: 'Times New Roman', Times, serif;">
+<br><br><p style="text-align: justify; margin-left: 0;font-size: 18px;font-family: 'Times New Roman', Times, serif;">Pinatunayan:</p>
+    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 500px; margin-top: 30px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
     <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;font-size: 18px;font-family: 'Times New Roman', Times, serif;" size="25">
-	Kalihim ng Barangay
-	</p>
+    <p style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-top: 15px; margin-right: 490px;">Kalihim ng Barangay
+    </p></p>
     </div>
     </div>
-    <div class="blank-page"></div>
-    </body>
-        </div><br><br><br><br><br> 
 
-        <script>
+<script>
     var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable
     document.getElementById('downloadButton').addEventListener('click', function () {
-            // Elements to hide during PDF generation
-            var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
-            var saveButton = document.querySelector('input[name="saveForm"]');
+        // Elements to hide during PDF generation
+        var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
+        
+        // Hide the specified buttons
+        buttonsToHide.forEach(function (button) {
+            button.style.display = 'none';
+        });
 
-            // Hide the specified buttons
+// Ensure input borders are visible for PDF generation
+var toInputs = document.querySelectorAll('input[name^="to"]');
+toInputs.forEach(function(input) {
+    input.style.borderBottom = '1px solid black';
+});
+
+        var pdfContent = document.querySelector('.paper');
+        var downloadButton = document.getElementById('downloadButton');
+
+        // Hide the download button
+        downloadButton.style.display = 'none';
+
+        // Modify the filename option to include the barangay case number
+        html2pdf(pdfContent, {
+            margin: [10, 10, 10, 10],
+            filename: 'kp_form2_' + barangayCaseNumber + '.pdf', // Dynamic filename
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2, // Adjust the scale as necessary
+                width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
+                windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
+            },
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        }).then(function () {
+            // Show the download button after PDF generation
+            downloadButton.style.display = 'inline-block';
+
+            // Show the other buttons after PDF generation
             buttonsToHide.forEach(function (button) {
-                button.style.display = 'none';
+                button.style.display = 'inline-block';
             });
 
-            // Hide the Save button
-            saveButton.style.display = 'none';
-
-            // Remove borders for all input types and select
-            var inputFields = document.querySelectorAll('input, select');
+            // Restore borders for all input types and select
             inputFields.forEach(function (field) {
-                field.style.border = 'none';
-            });
-
-            var pdfContent = document.querySelector('.paper');
-            var downloadButton = document.getElementById('downloadButton');
-
-            // Hide the download button
-            downloadButton.style.display = 'none';
-
-     // Modify the filename option to include the barangay case number
-     html2pdf(pdfContent, {
-        margin: [10, 10, 10, 10],
-        filename: 'kp_form2_' + barangayCaseNumber + '.pdf', // Dynamic filename
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: {
-        scale: 2, // Adjust the scale as necessary
-        width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
-        windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
-    },
-    jsPDF: {
-        unit: 'mm',
-        format: 'a4',
-        orientation: 'portrait'
-    }
-            }).then(function () {
-                // Show the download button after PDF generation
-                downloadButton.style.display = 'inline-block';
-
-                // Show the Save button after PDF generation
-                saveButton.style.display = 'inline-block';
-
-                // Show the other buttons after PDF generation
-                buttonsToHide.forEach(function (button) {
-                    button.style.display = 'inline-block';
-                });
-
-                // Restore borders for all input types and select
-                inputFields.forEach(function (field) {
-                    field.style.border = ''; // Use an empty string to revert to default border
-                });
+                field.style.border = ''; // Use an empty string to revert to the default border
             });
         });
-    </script>
+    });
+</script>
+</div>        
+</div>
 </body>
-</html>	
+</html>

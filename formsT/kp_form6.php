@@ -166,12 +166,57 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
 
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
+?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kp_form6</title>
+    <title>KP Form 6 Tagalog</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -373,12 +418,15 @@ h5 {
     max-width: 100%;
   }
 }
-
+button {
+    font-family: 'Arial', sans-serif; /* Example font-family */
+    font-size: 16px; /* Example font-size */
+    font-weight: bold; /* Example font-weight */
+}
 
    </style>
 </head>
 <body>
-    <br>
     <div class="container">
         <div class="paper">
                    
@@ -390,19 +438,20 @@ h5 {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
+    <a href="../user_lupon.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 130px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
     </a>
                
                 </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">Pormularyo ng KP Blg. 6</b></h5>
 
-<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
-
+ <div style="display:inline-block;text-align: center;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
 <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
-        <br>
+<br>
                 <h5 style="text-align: center;font-size: 18px;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center;font-size: 18px;">Lalawigan ng Laguna</h5>
                 <h5 class="header" style="text-align: center; font-size: 18px;">
@@ -419,39 +468,46 @@ h5 {
     ?>
     
 </h5>
-                <h5 style="text-align: center;font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5><br>
-                <h5 style="text-align: center;font-size: 18px;"><b style="font-size: 18px;font-family: 'Times New Roman', Times, serif;">TANGGAPAN NG  LUPONG TAGAPAMAYAPA </b></h5>
-            </div>
+                <h5 style="text-align: center;font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
+                <h5 style="text-align: center;font-size: 18px;">
+                <h5 style="text-align: center; font-size: 18px; margin-top: 5px;">TANGGAPAN NG  LUPONG TAGAPAMAYAPA</h5>
+         
 </div>
 
-            <?php
+          
+<div class="e" style="font-size: 18px; text-align: right; margin-right: 40px; font-family: 'Times New Roman', Times, serif;"> <br>
+        
+        <?php
+// Get the current date
+$currentDate = date('F d, Y');
+
 $months = [
-    'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'Nobyembre', 'Disyembre'
+    'Enero' => 'January',
+    'Pebrero' => 'February',
+    'Marso' => 'March',
+    'Abril' => 'April',
+    'Mayo' => 'May',
+    'Hunyo' => 'June',
+    'Hulyo' => 'July',
+    'Agosto' => 'August',
+    'Setyembre' => 'September',
+    'Oktubre' => 'October',
+    'Nobyember' => 'November',
+    'Disyembre' => 'December'
 ];
 
-$currentYear = date('Y');
+// Replace the month in English with its Tagalog equivalent
+$tagalogDate = strtr($currentDate, $months);
+
+// Print the formatted date
+echo $tagalogDate;
 ?>
-            <div style="text-align: right;">
-                <select id="monthInput" name="month" required style="width: 93px; height: 19px;font-size:18px; border: 1px solid black; border: none; border-bottom:1px solid black;">
-                    <?php
-                    $currentMonth = date('F');
-                    foreach ($months as $index => $month) {
-                        $monthNumber = $index + 1;
-                        $selected = ($month == $currentMonth) ? 'selected' : '';
-                        echo '<option value="' . $monthNumber . '" ' . $selected . '>' . $month . '</option>';
-                    }
-                    ?>
-                </select>
-                <input type="text" id="day" name="day" required style="width: 25px; height: 19px; font-size:18px; border: 1px solid black; border: none; border-bottom:1px solid black;">
-                <label for="day">,</label>
-                <input type="text" id="year" name="year" required style="width: 50px;font-size:18px; border: none; border-bottom:1px solid black;" value="<?php echo $currentYear; ?>">
 
-
-                <h3 style="text-align: center;"><b style="font-size: 18px;font-family: 'Times New Roman', Times, serif;">PAGBAWI NG PAGHIRANG</b></h3>
-	
+                <h3 style="text-align: center;"><b style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">PAGBAWI NG PAGHIRANG</b></h3>
+    
                 <form method="POST">
                 <div style="text-align: left;">
-				<br><p style="text-align: justify; font-size: 12px; margin-top: 0;font-size: 18px;font-family: 'Times New Roman', Times, serif;">KAY:
+                <br><p style="text-align: justify; font-size: 12px; margin-top:0; font-size: 18px;font-family: 'Times New Roman', Times, serif;">TO:
     <input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; font-size: 18px;font-family: 'Times New Roman', Times, serif;">
     <datalist id="nameList">
         <?php foreach ($linkedNames as $name): ?>
@@ -459,9 +515,10 @@ $currentYear = date('Y');
         <?php endforeach; ?>
     </datalist>
 </p>
-				<p style="text-align: justify; font-size: 12px; font-size: 18px;font-family: 'Times New Roman', Times, serif;"> Matapos ang karampatang pagdinig at sa pagsang-ayon ng nakararami sa lahat ng mga Kasapi ng Lupong Tagapamayapa ng Barangay na ito, ang paghirang sa iyo bilang Kasapi nito ay binabawi na magkakabisa sa sandaling tanggapin ito, batay sa sumusunod na kadahilanan/mga kadahilanan: </p>
-				
-				<!-- Use PHP to set the checkbox status based on some condition -->
+                <p style="text-align: justify; font-size: 12px; font-size: 18px; text-indent: 2em; font-family: 'Times New Roman', Times, serif;">
+              Matapos ang karampatang pagdinig at sa pagsang-ayon ng nakararami sa lahat ng mga Kasapi ng Lupong Tagapamayapa ng Barangay na ito, ang paghirang sa iyo bilang Kasapi nito ay binabawi na magkakabisa sa sandaling tanggapin ito, batay sa sumusunod na kadahilanan/mga kadahilanan: 
+            </p>        
+                <!-- Use PHP to set the checkbox status based on some condition -->
                 <?php
     $isChecked = false; // Replace this with your own condition to determine if the checkbox should be checked or not
 ?>
@@ -474,18 +531,19 @@ $currentYear = date('Y');
 <!-- Create the first checkbox with PHP inline with the first input -->
 <input type="checkbox" name="my_checkbox1" <?php if ($isChecked1) echo "checked"; ?>>
 <span style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">-
-    kawalan ng kakayahan sa pagtupad ng mga tungkulin ng inyong tanggapan na ipinakita sa pamamagitan ng
+kawalan ng kakayahan sa pagtupad ng mga tungkulin ng inyong tanggapan na ipinakita sa pamamagitan ng
     <input type="text" id="day1" name="day1" required style="width: 330px; height: 20px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" required>.
 </span>
 <br>
 <!-- Create the second checkbox with PHP inline with the second input -->
 <input type="checkbox" name="my_checkbox2" <?php if ($isChecked2) echo "checked"; ?>>
 <span style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">-
-    hindi naangkop sa dahilan ng  
-    <input type="text" id="day2" name="day2" required style="width: 330px; height: 20px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" required><br>
+hindi naangkop sa dahilan ng    
+<input type="text" id="day2" name="day2" required style="width: 330px; height: 20px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" required><br>
     (Markahan kung alin ang angkop at ipaliwanag o tiyakin ang kilos/mga kilos o pagkukulang/mga pagkukulang na siyang 
-    kadahilanan/mga kadahilanan sa pagbawi.) 
-    <br><br><br>
+    kadahilanan/mga kadahilanan sa pagbawi.)
+ 
+    <br>
 </span>
 
 
@@ -496,17 +554,16 @@ $currentYear = date('Y');
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-
-	<body>
    
-    <p class="important-warning-text" style="text-align: center; margin-left: 470px; margin-right: auto;font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-    <input type="text" id="positionInput" name="pngbrgy" style="font-size: 18px; font-family: 'Times New Roman', Times, serif;border: none; border-bottom: 1px solid black; outline: none; text-align: center;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
-    Punong Barangay/ Kalihim ng Lupon
+    <p class="important-warning-text" style="text-align: center; margin-left: 380px; margin-right: auto;font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+    <input type="text" id="positionInput" name="pngbrgy" style="font-size: 18px; font-family: 'Times New Roman', Times, serif; border: none; border-bottom: 1px solid black; outline: none; text-align: center;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
+    <p style=" margin-left: 420px; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px;"> Punong Barangay/ Kalihim ng Lupon
 </p>
+<br>
 
-<br><br>
-			<b style="text-align: justify; text-indent: 4em;font-size: 18px; font-family: 'Times New Roman', Times, serif;">SUMASANG-AYON </b>
-					<div style="display: flex;">
+            <p style="text-align: justify; text-indent: 4em;font-size: 18px; margin-left:25px; font-family: 'Times New Roman', Times, serif;">SUMASANG-AYON
+            </p>
+                    <div style="display: flex;">
                 <div style="flex: 1; margin-left: 95px;">
                     <?php for ($i = 1; $i <= 6; $i++): ?>
                         <?php $formattedIndex = sprintf("%02d", $i); ?>
@@ -515,106 +572,104 @@ $currentYear = date('Y');
                 </div>
                 <div style="flex: 1; margin-left: 10px;">
                     <?php for ($i = 7; $i <= 11; $i++): ?>
-						<?php $formattedIndex = sprintf("%02d", $i); ?>
+                        <?php $formattedIndex = sprintf("%02d", $i); ?>
                         <p style="margin: 0;font-size: 18px; font-family: 'Times New Roman', Times, serif;"><?php echo $formattedIndex; ?>. <input type="text" name="appointed_lupon_<?php echo $formattedIndex; ?>" style="width: 210px; margin-bottom: 5px;"></p>
                     <?php endfor; ?>
                 </div>
             </div>
         </div><br><br>
-				</div>
+                </div>
 
-		
-			 <p style="text-align: justify; text-indent: 4em; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-             Tinanggap ngayong ika - 
-                    <input style=" font-size: 18px; font-family: 'Times New Roman', Times, serif; border:none; border-bottom:1px solid black;" type="text" name="day" placeholder="araw" size="1" required> araw ng
-                <select style=" border:none; border-bottom:1px solid black;font-size: 18px; font-family: 'Times New Roman', Times, serif;" name="month" required>
-                    <option style=" border:none; border-bottom:1px solid black;font-size: 18px; font-family: 'Times New Roman', Times, serif;"  value="">Buwan</option>
-                    <?php foreach ($months as $month): ?>
-                        <option style=" border:none; border-bottom:1px solid black;font-size: 18px; font-family: 'Times New Roman', Times, serif;"  value="<?php echo $month; ?>"><?php echo $month; ?></option>
-                    <?php endforeach; ?>
-                </select> ,
-                <input style="border:none; border-bottom: 1px solid black;font-size: 18px;font-family: 'Times New Roman', Times, serif;" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.            
-            
+        
+                <form method="POST">
+            <div style="text-align: justify; text-indent: 2em; font-size: 18px; font-family: 'Times New Roman', Times, serif">
+            Tinanggap ngayong ika - 
+            <input type="number" name="received_day" placeholder="day" min="1" max="31" style="text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedDay ?? ''; ?>">
+            araw ng
+            <select name="received_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option style="font-size: 18px;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+        <?php else: ?>
+            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>,
+<input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required>.</div>
                     </p>
                     <?php if (!empty($message)) : ?>
             <p><?php echo $message; ?></p>
         <?php endif; ?>
-        <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position:fixed; right: 20px; top: 130px;">
-                </form>
-	
-	<br><br>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 470px; margin-right: auto;font-size: 18px;font-family: 'Times New Roman', Times, serif;">
+    </form>
+    
+    <br><br>
+    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 380px; margin-right: auto;font-size: 18px;font-family: 'Times New Roman', Times, serif;">
     <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; font-size: 18px;font-family: 'Times New Roman', Times, serif;" size="25">
-	(Lagda)
-	</p><br>
-	<b style="text-align: justify; font-size: 12px; margin-top: 0;font-size: 18px;font-family: 'Times New Roman', Times, serif;"> BIGYAN – PANSIN:</b>
-	<p style="text-align: justify; font-size: 12px; text-indent: 1.5em;font-size: 18px;font-family: 'Times New Roman', Times, serif;"> Ang mga kasapi ng lupon na sumasang-ayon sa pagbawi ay kailangang personal na lumagda p magkintal ng hinlalaki  sa kinauukulang  mga patlang sa itaas.  Ang pagbawi ay dapat sang-ayunan ng mahigit sa kalahati ng kabuuang bilag ng mga kasapi ng lupon kabilang ang Punong Barangay at ang kinauukulang kasapi.</p>
-	
+    <p style=" margin-left: 530px; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px;">(Lagda)
+    </p><br>
+    <b style="text-align: justify; font-size: 12px; margin-top: 0;font-size: 18px;font-family: 'Times New Roman', Times, serif;">BIGYAN – PANSIN:
+</b>
+    <p style="text-align: justify; font-size: 12px; text-indent: 2em;font-size: 18px;font-family: 'Times New Roman', Times, serif;">
+    Ang mga kasapi ng lupon na sumasang-ayon sa pagbawi ay kailangang personal na lumagda p magkintal ng hinlalaki  sa kinauukulang  mga patlang sa itaas.  Ang pagbawi ay dapat sang-ayunan ng mahigit sa kalahati ng kabuuang bilag ng mga kasapi ng lupon kabilang ang Punong Barangay at ang kinauukulang kasapi.
+    
+</p>    
     <div class="blank-page"></div>
     </body>
         </div>
-		
-		
+        
         <script>
     var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable
     document.getElementById('downloadButton').addEventListener('click', function () {
-            // Elements to hide during PDF generation
-            var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
-            var saveButton = document.querySelector('input[name="saveForm"]');
+        // Elements to hide during PDF generation
+        var buttonsToHide = document.querySelectorAll('.top-right-buttons button');
+        
+        // Hide the specified buttons
+        buttonsToHide.forEach(function (button) {
+            button.style.display = 'none';
+        });
 
-            // Hide the specified buttons
+// Ensure input borders are visible for PDF generation
+var toInputs = document.querySelectorAll('input[name^="to"]');
+toInputs.forEach(function(input) {
+    input.style.borderBottom = '1px solid black';
+});
+
+        var pdfContent = document.querySelector('.paper');
+        var downloadButton = document.getElementById('downloadButton');
+
+        // Hide the download button
+        downloadButton.style.display = 'none';
+
+        // Modify the filename option to include the barangay case number
+        html2pdf(pdfContent, {
+            margin: [10, 10, 10, 10],
+            filename: 'kp_form6_' + barangayCaseNumber + '.pdf', // Dynamic filename
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2, // Adjust the scale as necessary
+                width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
+                windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
+            },
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        }).then(function () {
+            // Show the download button after PDF generation
+            downloadButton.style.display = 'inline-block';
+
+            // Show the other buttons after PDF generation
             buttonsToHide.forEach(function (button) {
-                button.style.display = 'none';
+                button.style.display = 'inline-block';
             });
 
-            // Hide the Save button
-            saveButton.style.display = 'none';
-
-            // Remove borders for all input types and select
-            var inputFields = document.querySelectorAll('input, select');
+            // Restore borders for all input types and select
             inputFields.forEach(function (field) {
-                field.style.border = 'none';
-            });
-
-            var pdfContent = document.querySelector('.paper');
-            var downloadButton = document.getElementById('downloadButton');
-
-            // Hide the download button
-            downloadButton.style.display = 'none';
-
-     // Modify the filename option to include the barangay case number
-     html2pdf(pdfContent, {
-        margin: [10, 10, 10, 10],
-        filename: 'kp_form6_' + barangayCaseNumber + '.pdf', // Dynamic filename
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: {
-        scale: 2, // Adjust the scale as necessary
-        width: pdfContent.clientWidth, // Set a fixed width based on the on-screen width of the content
-        windowWidth: document.documentElement.offsetWidth // Set the window width to match the document width
-    },
-    jsPDF: {
-        unit: 'mm',
-        format: 'a4',
-        orientation: 'portrait'
-    }
-            }).then(function () {
-                // Show the download button after PDF generation
-                downloadButton.style.display = 'inline-block';
-
-                // Show the Save button after PDF generation
-                saveButton.style.display = 'inline-block';
-
-                // Show the other buttons after PDF generation
-                buttonsToHide.forEach(function (button) {
-                    button.style.display = 'inline-block';
-                });
-
-                // Restore borders for all input types and select
-                inputFields.forEach(function (field) {
-                    field.style.border = ''; // Use an empty string to revert to default border
-                });
+                field.style.border = ''; // Use an empty string to revert to the default border
             });
         });
-    </script>
+    });
+</script>
 </body>
-</html>	
+</html> 

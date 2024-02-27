@@ -1,10 +1,6 @@
 <?php
 session_start();
 include 'connection.php';
-// include 'header.php';
-include 'superadmin-navigation.php';
- // include 'admin-nav.php';
- include 'functions.php';
 
 // Check if the user is a superadmin
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
@@ -75,8 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 <head>
     <title>Manage Account</title>
-    <link rel="stylesheet" type="text/css" href="style copy.css">
-     <?php include 'functions.php';?>
      <style>
 /* Style for the background color */
 body {

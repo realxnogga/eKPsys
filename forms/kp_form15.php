@@ -34,12 +34,15 @@ $months = array(
 $currentMonth = date('F'); 
 $currentDay = date('j');
 $existOfficer = '';
+$existScenario  ='';
+$existOfficer ='';
+$existSettlement ='';
 
 $id = $_GET['formID'] ?? '';
 
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT received_date, officer FROM hearings WHERE id = :id";
+    $query = "SELECT received_date, officer, scenario_info, settlement FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -57,7 +60,9 @@ if (!empty($id)) {
         $existingReceivedMonth = $receivedDate->format('F');
         $existingReceivedYear = $receivedDate->format('Y');
 
+        $existScenario =$row['scenario_info'];
         $existOfficer = $row['officer'];
+        $existSettlement = $row['settlement'];
 
     }
 }
@@ -69,7 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $receivedMonth = $_POST['received_month'] ?? '';
     $receivedYear = $_POST['received_year'] ?? '';
     $officer = $_POST['officer'];
-
+    $scenario = $_POST['scenario'];
+    $settlement = $_POST['settlement'];
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
     // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
@@ -83,13 +89,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer)
-              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer, scenario_info, settlement)
+              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer, :scenario, :settlement)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               received_date = VALUES(received_date),
-                        officer = VALUES(officer)";
+                        officer = VALUES(officer),
+              scenario_info = VALUES(scenario_info),
+              settlement = VALUES(settlement);";
 
 
      $stmt = $conn->prepare($query);
@@ -98,7 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':receivedDate', $receivedDate);
     $stmt->bindParam(':officer', $officer);
-    
+    $stmt->bindParam(':scenario', $scenario);
+    $stmt->bindParam(':settlement', $settlement);
     if ($stmt->execute()) {
         $message = "Form submit successful.";
     } else {
@@ -449,7 +458,7 @@ follows:
     <?php endforeach; ?>
 </datalist>
 <p class="important-warning-text" style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 380px; margin-right: auto;">
-    <input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList" style="border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><br>Member
+    <input type="text" name="scenario" size="25" value="<?php echo $existScenario; ?>" required list="officerList" style="border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><br>Member
 </p>
 <datalist id="officerList">
     <?php foreach ($names as $name): ?>
@@ -463,7 +472,7 @@ follows:
 
   <div class="d">
     <p style="text-align: left; font-size: 18px; margin-right: 400px;  font-family: 'Times New Roman', Times, serif;"> 
-    ATTESTED: <br><input type="text" id="attsd" name="attsd" size="30" style="border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;"></p>
+    ATTESTED: <br><input type="text" id="attsd" name="settlement" size="30" style="border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;" value="<?php echo $existSettlement; ?>"></p>
     <p style="text-align: left; font-family: 'Times New Roman', Times, serif; font-size: 18px;  margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">Punong Barangay/Lupon Secretary **</p>
     <p style="text-indent: 2em; text-align: left; font-size: 18px; margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">* To be signed by either, whoever made the arbitration award.</p>
     <p style="text-indent: 2em; text-align: left; font-size: 18px; margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">** To be signed by the Punong Barangay if the award is made by the Pangkat Chairman, and by the Lupon Secretary if the award is made by the Punong Barangay.</p>

@@ -13,6 +13,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 $user_id = $_SESSION['user_id'];
 
 include 'lupon_handler.php';
+
+// Check if the language is set in the session, if not, set it to a default value
+if (!isset($_SESSION['language'])) {
+    $_SESSION['language'] = 'english'; // Set default language to English
+}
+
 ?>
 
 

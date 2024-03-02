@@ -34,11 +34,14 @@ $currentMonth = date('F');
 $currentDay = date('j');
 
 $id = $_GET['formID'] ?? '';
-
+$existScenario  ='';
+$existOfficer ='';
+$existSettlement ='';
+$existSubpoena ='';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date FROM hearings WHERE id = :id";
+    $query = "SELECT appear_date, made_date, scenario_info, officer, settlement, subpoena FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -66,10 +69,21 @@ if (!empty($id)) {
         $existingMadeDay = $madeDate->format('j');
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
+
+        $existScenario =$row['scenario_info'];
+        $existOfficer = $row['officer'];
+        $existSettlement = $row['settlement'];
+        $existSubpoena =$row['subpoena'];
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    $officer = $_POST['officer'];
+    $scenario = $_POST['scenario'];
+    $settlement = $_POST['settlement'];
+    $subpoena = $_POST['subpoena'];
+
     // Get form inputs
     $madeDay = $_POST['made_day'] ?? '';
     $madeMonth = $_POST['made_month'] ?? '';
@@ -91,13 +105,17 @@ if ($appearTimestamp !== false) {
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, officer, scenario_info, settlement, subpoena)
+              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :officer, :scenario, :settlement, :subpoena)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               appear_date = VALUES(appear_date),
-              made_date = VALUES(made_date)";
+              made_date = VALUES(made_date),
+              officer = VALUES(officer),
+              scenario_info = VALUES(scenario_info),
+              settlement = VALUES(settlement),
+              subpoena = VALUES(subpoena);";
 
 
      $stmt = $conn->prepare($query);
@@ -106,6 +124,10 @@ if ($appearTimestamp !== false) {
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':appearDate', $appearTimestamp);
     $stmt->bindParam(':madeDate', $madeDate);
+    $stmt->bindParam(':officer', $officer);
+    $stmt->bindParam(':scenario', $scenario);
+    $stmt->bindParam(':settlement', $settlement);
+    $stmt->bindParam(':subpoena', $subpoena);
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -430,17 +452,17 @@ SUBPOENA </b>
     <br><br>
     <p style="font-size: 18px;"> TO:
       <span style="display: inline-block; width: 45%; text-align: center;">
-      <input type="text" name="to1" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value=" " placeholder=" ">
+      <input type="text" name="scenario" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value="<?php echo $existOfficer; ?>" placeholder=" ">
       </span>
       <span style="display: inline-block; width: 45%; text-align: center;">
-      <input type="text" name="to1" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value=" " placeholder=" ">
+      <input type="text" name="officer" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value="<?php echo $existScenario; ?>" placeholder=" ">
       </span>
       <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style="display: inline-block; width: 45%; text-align: center;">
-      <input type="text" name="to1" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value=" " placeholder=" ">
+      <input type="text" name="settlement" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value="<?php echo $existSettlement; ?>" placeholder=" ">
       </span>
       <span style="display: inline-block; width: 45%; text-align: center;">
-      <input type="text" name="to1" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value=" " placeholder=" ">
+      <input type="text" name="subpoena" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value="<?php echo $existSubpoena; ?>" placeholder=" ">
       </span>
     </p>
   </div>

@@ -427,7 +427,7 @@ echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p
             <br><div class="form-group" style="text-align: justify;">
                 <div class="label"></div>
                 <div class="input-field">
-                    <br><br><p style="font-size: 18px;"> TO: <input type="text" name="scenario" id="to" size="30" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existScenario; ?>"> </p>
+                    <br><br><p style="font-size: 18px;"> TO: <input type="text" name="scenario" id="to" size="30" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existScenario; ?>"  list="officerList"> </p>
             </div>
             </div>
 

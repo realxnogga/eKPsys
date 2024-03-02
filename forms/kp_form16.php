@@ -366,7 +366,7 @@ h5 {
     <br>
 
     <div class="a">
-<textarea name="settlement" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true" required><?php echo $existingSettlement; ?></textarea>
+<textarea name="settlement" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true" required><?php echo $existingSettlement; ?></textarea>
 
 </div>
 </div>

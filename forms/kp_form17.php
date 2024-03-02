@@ -34,11 +34,16 @@ $currentMonth = date('F');
 $currentDay = date('j');
 
 $id = $_GET['formID'] ?? '';
-
+$existingFraudCheck = '';
+$existingFraudText = '';
+$existingViolenceCheck = '';
+$existingViolenceText = '';
+$existingIntimidationCheck = '';
+$existingIntimidationText = '';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT made_date, received_date, resp_date FROM hearings WHERE id = :id";
+    $query = "SELECT * FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -64,7 +69,13 @@ if (!empty($id)) {
         $existingRespMonth = $respDate->format('F');
         $existingRespYear = $respDate->format('Y');
 
-
+         // Fetching existing variables for the inputs
+        $existingFraudCheck = $row['fraud_check'];
+        $existingFraudText = $row['fraud_text'];
+        $existingViolenceCheck = $row['violence_check'];
+        $existingViolenceText = $row['violence_text'];
+        $existingIntimidationCheck = $row['intimidation_check'];
+        $existingIntimidationText = $row['intimidation_text'];
     }
 }
 
@@ -83,20 +94,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $respMonth = $_POST['resp_month'] ?? '';
     $respYear = $_POST['resp_year'] ?? '';
     
+    $fraudCheck = isset($_POST['fraudcheck']) ? 1 : 0;
+    $fraudText = $_POST['fraudtext'] ?? '';
+
+    $violenceCheck = isset($_POST['violencecheck']) ? 1 : 0;
+    $violenceText = $_POST['violencetext'] ?? '';
+
+    $intimidationCheck = isset($_POST['intimidationcheck']) ? 1 : 0;
+    $intimidationText = $_POST['intimidationtext'] ?? '';
+
+
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
     $respDate = createDateFromInputs($respDay, $respMonth, $respYear);
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date, resp_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate, :respDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date, resp_date,fraud_check, fraud_text, violence_check, violence_text, intimidation_check, intimidation_text)
+              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate, :respDate,:fraudCheck, :fraudText, :violenceCheck, :violenceText, :intimidationCheck, :intimidationText)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               made_date = VALUES(made_date),
               received_date = VALUES(received_date),
-              resp_date = VALUES(resp_date)
+              resp_date = VALUES(resp_date),
+              fraud_check = VALUES(fraud_check),
+              fraud_text = VALUES(fraud_text),
+              violence_check = VALUES(violence_check),
+              violence_text = VALUES(violence_text),
+              intimidation_check = VALUES(intimidation_check),
+              intimidation_text = VALUES(intimidation_text)
               ";
 
 
@@ -107,6 +134,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':madeDate', $madeDate);
     $stmt->bindParam(':receivedDate', $receivedDate);
     $stmt->bindParam(':respDate', $respDate);
+    $stmt->bindParam(':fraudCheck', $fraudCheck);
+    $stmt->bindParam(':fraudText', $fraudText);
+    $stmt->bindParam(':violenceCheck', $violenceCheck);
+    $stmt->bindParam(':violenceText', $violenceText);
+    $stmt->bindParam(':intimidationCheck', $intimidationCheck);
+    $stmt->bindParam(':intimidationText', $intimidationText);
 
     
     if ($stmt->execute()) {
@@ -127,7 +160,6 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 
-
 // Retrieve the profile picture name of the current user
 $query = "SELECT profile_picture FROM users WHERE id = :userID";
 $stmt = $conn->prepare($query);
@@ -142,8 +174,36 @@ if ($user && !empty($user['profile_picture'])) {
     // Default profile picture if the user doesn't have one set
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
-?>
 
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
+?>
 
 <!DOCTYPE html>
 <html>
@@ -154,13 +214,13 @@ if ($user && !empty($user['profile_picture'])) {
     <link rel="stylesheet" href="formstyles.css">
 
     <style>
-    .profile-img{
-    width: 3cm;
+  .profile-img{
+   width: 3cm;
 }
 
 .header {
-    text-align: center;
-    padding-inline: 4cm;
+   text-align: center;
+   padding-inline: 4cm;
 }
     /* Hide the number input arrows */
     input[type=number]::-webkit-inner-spin-button,
@@ -211,36 +271,50 @@ if ($user && !empty($user['profile_picture'])) {
 <body>
 <div class="container">
         <div class="paper">
-                <div class="top-right-buttons">
-                <!-- Print button -->
+                          
+ <div class="top-right-buttons">
+    <button class="btn btn-primary print-button common-button" onclick="window.print()" style="position:fixed; right: 20px;">
+        <i class="fas fa-print button-icon"></i> Print
+    </button>
+    <button class="btn btn-success download-button common-button" id="downloadButton" style="position:fixed; right: 20px; top: 75px; ">
+        <i class="fas fa-file button-icon"></i> Download
+    </button>
+
+    <a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+    </a>
+
 
             </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 17 </b></h5>
+     <div style="display:inline-block;text-align: center;">
+            <img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
 
-            <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-    <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 100px; width: 100px;">
-
+<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
     <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
         <br>
         <h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
         <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
         <h5 class="header" style="text-align: center; font-size: 18px;">
-    <?php
-    $municipality = $_SESSION['municipality_name'];
+        <?php
+$municipality = $_SESSION['municipality_name'];
+$isCity = in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Santa Rosa']);
+$isMunicipality = !$isCity;
 
-    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-        echo 'Municipality of ' . $municipality;
-    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-        echo 'City of ' . $municipality;
-    } else {
-        echo 'City/Municipality of ' . $municipality;
-    }
-    ?>
+if ($isCity) {
+    echo 'City of ' . $municipality;
+} elseif ($isMunicipality) {
+    echo 'Municipality of ' . $municipality;
+} else {
+    echo 'City/Municipality of ' . $municipality;
+}
+?>
 </h5>
         <h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
         <h5 class="header" style="font-size: 18px;">OFFICE OF THE LUPONG TAGAPAMAYAPA</h5>
     </div>
-</div>
-<br>
 <br>
 
                 <?php
@@ -285,45 +359,45 @@ if ($user && !empty($user['profile_picture'])) {
     </div>
     <br>
 
-    <div style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+<div style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">
     <div class="checkbox-container">
-        <input type="checkbox" id="fraudCheckbox">
+        <input type="checkbox" id="fraudCheckbox" name="fraudcheck" <?php if(isset($existingFraudCheck) && $existingFraudCheck == 1) echo "checked"; ?>>
         <label for="fraudCheckbox" class="checkbox-label"> Fraud. (State details)</label>
     </div>
     <div class="a">
-        <div id="nameR" name="nameR" style="text-decoration: underline; width: 700px; height: auto; border:none; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"> State details here.........................................................................................................................</div>
+        <textarea id="fraudtext" name="fraudtext" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"><?php echo $existingFraudText; ?></textarea>
     </div>
 
     <div class="checkbox-container">
-        <input type="checkbox" id="violenceCheckbox">
+        <input type="checkbox" id="violenceCheckbox" name="violencecheck" <?php if(isset($existingViolenceCheck) && $existingViolenceCheck == 1) echo "checked"; ?>>
         <label for="violenceCheckbox" class="checkbox-label"> Violence. (State details)</label>
     </div>
     <div class="a">
-        <div id="nameR" name="nameR" style="text-decoration: underline; width: 700px; height: auto; border:none;  overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"> State details here.........................................................................................................................</div>
+        <textarea id="violencetext" name="violencetext" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"><?php echo $existingViolenceText; ?></textarea>
     </div>
 
     <div class="checkbox-container">
-        <input type="checkbox" id="intimidationCheckbox">
+        <input type="checkbox" id="intimidationCheckbox" name="intimidationcheck" <?php if(isset($existingIntimidationCheck) && $existingIntimidationCheck == 1) echo "checked"; ?>>
         <label for="intimidationCheckbox" class="checkbox-label"> Intimidation. (State details)</label>
     </div>
     <div class="a">
-        <div id="nameR" name="nameR" style="text-decoration: underline; width: 700px; height: auto; border:none;  overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"> State details here.........................................................................................................................</div>
+        <textarea id="intimidationtext" name="intimidationtext" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"><?php echo $existingIntimidationText; ?></textarea>
     </div>
 </div>
 
+
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;font-size: 18px;font-family: 'Times New Roman', Times, serif; "> This
-    <input type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>"> day of
-    <select name="made_month" required>
+    <input style="text-align:center; font-size: 18px;font-family: 'Times New Roman', Times, serif; " type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>"> day of
+    <select style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" name="made_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+            <option style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
         <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                
-                <input type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.</div> 
+                <input style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.</div> 
 <br>
 <div style="display: flex; justify-content: space-between; font-size: 18px; text-align: center; ">
     <div style="text-align: center; margin-left: 210px;">
@@ -342,20 +416,20 @@ if ($user && !empty($user['profile_picture'])) {
         </ul>
     </div>
 </div>
-
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px;font-family: 'Times New Roman', Times, serif; "> SUBSCRIBED AND SWORN TO before me this <input type="text" name="resp_day" placeholder="day" size="5" value="<?php echo $existingRespDay ?? ''; ?>"> day of
-  <select name="resp_month" required>
+<br>
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px;font-family: 'Times New Roman', Times, serif; "> SUBSCRIBED AND SWORN TO before me this <input style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" type="text" name="resp_day" placeholder="day" size="5" value="<?php echo $existingRespDay ?? ''; ?>"> day of
+  <select style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" name="resp_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
+            <option style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
         <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>">.
+<input  style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>">.
                 
-</div><br>
+</div><br><br><br>
 <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 550px; margin-right: auto;">
     <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
         <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
@@ -364,27 +438,21 @@ if ($user && !empty($user['profile_picture'])) {
                
 <br>
 <br>
-<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px; "> Received and filed * this <input type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>">  of
+<div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px; "> Received and filed * this <input style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>">  of
                 
 
-                <select name="received_month" required>
+                <select style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" name="received_month" required>
                <?php foreach ($months as $m): ?>
                    <?php if ($id > 0): ?>
-                       <option value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+                       <option style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
                    <?php else: ?>
-                       <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+                       <option style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
                    <?php endif; ?>
                <?php endforeach; ?>
            </select> ,
-                                               <input type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">
+                                               <input style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">
                                                </div>
-                                           <?php if (!empty($message)) : ?>
-                                               <p><?php echo $message; ?></p>
-                                           <?php endif; ?>
-                                           <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
-                                       </form>                   
-</div><br>
-
+                                          
 
 <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 550px; margin-right: auto;">
     <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
@@ -400,20 +468,14 @@ said grounds.
 <?php if (!empty($message)) : ?>
         <p><?php echo $message; ?></p>
     <?php endif; ?>
-    <button class="btn btn-primary print-button common-button" onclick="window.print()" style="position: relative; right: -785px; top: -1298px;">
-                    <i class="fas fa-print button-icon"></i> Print
-                </button>
+   
             
                 <?php if (!empty($message)) : ?>
         <p><?php echo $message; ?></p>
     <?php endif; ?>
-    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button">
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button no-print" style="position:fixed; right: 20px; top: 130px;">
 </form>
-<a href="../manage_case.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-    <button class="btn common-button" style="margin-left: -330px; margin-top: -2595px;">
-        <i class="fas fa-arrow-left"></i> Back
-    </button>
-</a>
+
 <script>
         document.getElementById('downloadButton').addEventListener('click', function () {
             // Elements to hide during PDF generation

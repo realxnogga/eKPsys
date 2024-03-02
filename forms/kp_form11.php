@@ -33,13 +33,14 @@ $months = array(
 
 $currentMonth = date('F'); 
 $currentDay = date('j');
-$existOfficer = '';
+$existOfficer='';
+$existScenario = '';
 
 $id = $_GET['formID'] ?? '';
 
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT received_date, officer FROM hearings WHERE id = :id";
+    $query = "SELECT received_date, officer, scenario_info FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -58,7 +59,7 @@ if (!empty($id)) {
         $existingReceivedYear = $receivedDate->format('Y');
 
         $existOfficer = $row['officer'];
-
+        $existScenario = $row['scenario_info'];
     }
 }
 
@@ -69,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $receivedMonth = $_POST['received_month'] ?? '';
     $receivedYear = $_POST['received_year'] ?? '';
     $officer = $_POST['officer'];
+    $scenario = $_POST['scenario'];
 
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
@@ -83,13 +85,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer)
-              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer, scenario_info)
+              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer, :scenario)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               received_date = VALUES(received_date),
-                        officer = VALUES(officer)";
+                        officer = VALUES(officer),
+                        scenario_info = VALUES(scenario_info);
+                        ";
 
 
      $stmt = $conn->prepare($query);
@@ -98,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':receivedDate', $receivedDate);
     $stmt->bindParam(':officer', $officer);
+    $stmt->bindParam(':scenario', $scenario);
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -186,6 +191,7 @@ if ($user && !empty($user['city_logo'])) {
     // Default profile picture if the user doesn't have one set
     $citylogo = '../city_logo/defaultpic.jpg';
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -417,10 +423,11 @@ echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p
 </div>
 
 
-            <br<div class="form-group" style="text-align: justify;">
+            <form method="POST">
+            <br><div class="form-group" style="text-align: justify;">
                 <div class="label"></div>
                 <div class="input-field">
-                    <br><br><p style="font-size: 18px;"> TO: <input type="text" name="to" id="to" size="30" style="font-size: 18px; border: none; border-bottom: 1px solid black;"> </p>
+                    <br><br><p style="font-size: 18px;"> TO: <input type="text" name="scenario" id="to" size="30" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existScenario; ?>"> </p>
             </div>
             </div>
 
@@ -444,7 +451,6 @@ echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p
 <br><br><br><br><br><br>
 
 
-            <form method="POST">
             <div style="text-align: justify; text-indent: 3em; font-size: 18px; font-family: 'Times New Roman', Times, serif">
             Received this
             <input type="number" name="received_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedDay ?? ''; ?>">

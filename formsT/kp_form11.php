@@ -216,6 +216,7 @@ if ($user && !empty($user['city_logo'])) {
     // Default profile picture if the user doesn't have one set
     $citylogo = '../city_logo/defaultpic.jpg';
 }
+
 ?>
 
 <!DOCTYPE html>

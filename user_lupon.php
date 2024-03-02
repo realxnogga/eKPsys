@@ -209,7 +209,6 @@ function setLanguage(language) {
 <button type="button"  class="btn btn-light m-1" id="clear-button" name="clear">Clear All</button>
                    </form>
 
-
        
     </div></div>
        

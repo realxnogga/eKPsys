@@ -36,7 +36,7 @@ $id = $_GET['formID'] ?? '';
 
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT made_date FROM hearings WHERE id = :id";
+    $query = "SELECT made_date, fraud_check, violence_check, fourth_check, officer, settlement, intimidation_check FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -54,6 +54,13 @@ if (!empty($id)) {
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
 
+        $existingFraudCheck = $row['fraud_check'];
+        $existingViolenceCheck = $row['violence_check'];
+        $existingIntimidationCheck = $row['intimidation_check'];
+        $existingFourthCheck = $row['fourth_check'];
+
+        $existingOfficer = $row['officer'];
+        $existingSettlement = $row['settlement'];
     }
 }
 
@@ -63,6 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $madeMonth = $_POST['made_month'] ?? '';
     $madeYear = $_POST['made_year'] ?? '';
 
+    $fraudCheck = isset($_POST['fraudcheck']) ? 1 : 0;
+    $violenceCheck = isset($_POST['violencecheck']) ? 1 : 0;
+    $intimidationCheck = isset($_POST['intimidationcheck']) ? 1 : 0;
+    $fourthCheck = isset($_POST['fourthcheck']) ? 1 : 0;
+    
+    $officer = $_POST['officer'] ?? '';
+    $settlement = $_POST['settlement'] ?? '';
+    
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
 
@@ -82,12 +97,18 @@ if ($existingForm14Count > 0) {
 else{
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, fraud_check, violence_check, fourth_check, officer, settlement, intimidation_check)
+              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :fraudCheck, :violenceCheck, :fourthCheck, :officer, :settlement,:intimidationCheck)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
-              made_date = VALUES(made_date)
+              made_date = VALUES(made_date),
+              fraud_check = VALUES(fraud_check),
+              violence_check = VALUES(violence_check),
+              fourth_check = VALUES(fourth_check),
+              officer = VALUES(officer),
+              settlement = VALUES(settlement),
+              intimidation_check = VALUES(intimidation_check)
               ";
 
 
@@ -96,6 +117,15 @@ else{
     $stmt->bindParam(':currentHearing', $currentHearing);
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':madeDate', $madeDate);
+    
+    $stmt->bindParam(':fraudCheck', $fraudCheck);
+    $stmt->bindParam(':violenceCheck', $violenceCheck);
+    $stmt->bindParam(':fourthCheck', $fourthCheck);
+    $stmt->bindParam(':intimidationCheck', $intimidationCheck);
+
+    $stmt->bindParam(':officer', $officer);
+    $stmt->bindParam(':settlement', $settlement);
+   
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -375,30 +405,43 @@ $currentYear = date('Y');
         <div style="text-align: left;">
         <p style="text-align: justify; margin-top: 0; font-size: 18px;">This is to certify that:</p>
             <!-- <p style="text-align: justify; text-indent: 1.5em;">1. There has been a personal confrontation between the parties before the Punong Barangay/Pangkat ng Tagapagkasundo; </p> -->
-                    <div class="form" style="text-align: left;">
+
+
+    <div class="form" style="text-align: left;">
     <div class="checkbox" style="text-align: left;text-indent: 1.5em;">
-        
+        <input type="checkbox" id="checkbox1" name="fraudcheck" <?php if(isset($existingFraudCheck) && $existingFraudCheck == 1) echo "checked"; ?>>
         <label for="checkbox1"style="text-indent: 0em; margin-left: 2px; font-size: 18px;">
      1. There was a personal confrontation between the parties before the Punong Barangay but mediation failed;
 
     </p></div>
 </div>
-            <div class="form" style="text-align: left;">
+
+
+    <div class="form" style="text-align: left;">
     <div class="checkbox" style="text-align: left;text-indent: 1.5em;">
-        
-        <label for="checkbox1"style="text-indent: 0em; margin-left: 2px; font-size: 18px;">
+        <input type="checkbox" id="checkbox2" name="intimidationcheck" <?php if(isset($existingIntimidationCheck) && $existingIntimidationCheck == 1) echo "checked"; ?>>
+        <label for="checkbox2"style="text-indent: 0em; margin-left: 2px; font-size: 18px;">
         2. The Punong Barangay set the meeting of the parties for the constitution of the Pangkat;
 
     </p>
 </div>
-                    <div class="form" style="text-align: left;">
+
+
+    <div class="form" style="text-align: left;">
     <div class="checkbox" style="text-align: left; text-indent: 1.5em;">
-        
-        <label for="checkbox1"style="text-indent: 0em; margin-left: 2px; font-size: 18px;">3. The respondent willfully failed or refused to appear without justifiable reason at the conciliation proceedings before the
+        <input type="checkbox" id="checkbox3" name="violencecheck" <?php if(isset($existingViolenceCheck) && $existingViolenceCheck == 1) echo "checked"; ?>>
+        <label for="checkbox3"style="text-indent: 0em; margin-left: 2px; font-size: 18px;">3. The respondent willfully failed or refused to appear without justifiable reason at the conciliation proceedings before the
 Pangkat; and
 </p>
 </div>
- <p style="text-indent: 2em; margin-left: 2px; font-size: 18px;">4. Therefore, the corresponding complaint for the dispute may now be filed in court/government office.</p>
+
+    <div class="form" style="text-align: left;">
+    <div class="checkbox" style="text-align: left; text-indent: 1.5em;">
+        <input type="checkbox" id="checkbox4" name="fourthcheck" <?php if(isset($existingFourthCheck) && $existingFourthCheck == 1) echo "checked"; ?>>
+        <label for="checkbox4"style="text-indent: 0em; margin-left: 2px; font-size: 18px;">4. Therefore, the corresponding complaint for the dispute may now be filed in court/government office.
+</p>
+</div>
+
 
             
 
@@ -431,8 +474,8 @@ Pangkat; and
         <?php endif; ?>
 
         <br><br><p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 500px; margin-right: auto;">
-        <input type="text" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
-        value="<?php echo !empty($pSecretary) ? htmlspecialchars($pSecretary) : ''; ?>"> Pangkat Secretary
+        <input type="text" name="officer" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingOfficer) ? $existingOfficer : ''; ?>"> Pangkat Secretary
     </p>
     <br>
 </div>
@@ -441,8 +484,8 @@ Pangkat; and
     <p style="text-align: left; margin-top: 0;font-size: 18px; text-indent: 0em;">
         Attested by:</p>
         <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: -530px; margin-right: auto;">
-        <input type="text" style="min-width: 182px; font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" 
-        value="<?php echo !empty($pChairman) ? htmlspecialchars($pChairman) : ''; ?>">
+        <input type="text" name="settlement" style="min-width: 182px; font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>">
 </p>
     <label id="pChairman" name="pChairman" size="25" style="text-align: center; margin-left:  30px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Pangkat Chairman</label>
      

@@ -38,7 +38,7 @@ $id = $_GET['formID'] ?? '';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT made_date,received_date, officer,settlement FROM hearings WHERE id = :id";
+    $query = "SELECT made_date, officer,settlement FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -51,16 +51,12 @@ if (!empty($id)) {
       // Extract and format the timestamp values
        
        $madeDate = new DateTime($row['made_date']);
-        $receivedDate = new DateTime($row['received_date']);
 
    
         $existingMadeDay = $madeDate->format('j');
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
 
-        $existingReceivedDay = $receivedDate->format('j');
-        $existingReceivedMonth = $receivedDate->format('F');
-        $existingReceivedYear = $receivedDate->format('Y');
         $existingOfficer = $row['officer'];
         $existingSettlement = $row['settlement'];
 
@@ -76,13 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
  
-    $receivedDay = $_POST['received_day'] ?? '';
-    $receivedMonth = $_POST['received_month'] ?? '';
-    $receivedYear = $_POST['received_year'] ?? '';
-
-    // Logic to handle date and time inputs
-    $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
-
     $officer = $_POST['officer'] ?? '';
 
     $settlement = $_POST['settlement'] ?? '';
@@ -102,13 +91,12 @@ if ($existingForm14Count > 0) {
 
 else{
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date, officer, settlement)
-    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate, :officer, :settlement)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, officer, settlement)
+    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :officer, :settlement)
     ON DUPLICATE KEY UPDATE
     hearing_number = VALUES(hearing_number),
     form_used = VALUES(form_used),
     made_date = VALUES(made_date),
-    received_date = VALUES(received_date),
     officer = VALUES(officer),
     settlement = VALUES(settlement)
     ";
@@ -119,7 +107,6 @@ $stmt->bindParam(':complaintId', $complaintId);
 $stmt->bindParam(':currentHearing', $currentHearing);
 $stmt->bindParam(':formUsed', $formUsed);
 $stmt->bindParam(':madeDate', $madeDate);
-$stmt->bindParam(':receivedDate', $receivedDate);
 $stmt->bindParam(':officer', $officer);
 $stmt->bindParam(':settlement', $settlement);
 
@@ -335,11 +322,6 @@ h5 {
         }
         input {
         border-bottom: 1px solid black !important;
-    }
-      {
-        select[name="received_month"] {
-            border-bottom: 1px solid black; /* Set the desired border style and color */
-        }
     }
     }
     .bottom-border {

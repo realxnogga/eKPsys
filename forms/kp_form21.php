@@ -59,6 +59,7 @@ if (!empty($id)) {
         $existingReceivedDay = $receivedDate->format('j');
         $existingReceivedMonth = $receivedDate->format('F');
         $existingReceivedYear = $receivedDate->format('Y');
+        
         $existingOfficer = $row['officer'];
         $existingSettlement = $row['settlement'];
     }

@@ -38,7 +38,7 @@ $id = $_GET['formID'] ?? '';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT made_date,received_date, officer,settlement FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -50,23 +50,42 @@ if (!empty($id)) {
 
       // Extract and format the timestamp values
        
-      $madeDate = new DateTime($row['made_date']);
-       
-      $existingMadeDay = $madeDate->format('j');
-      $existingMadeMonth = $madeDate->format('F');
-      $existingMadeYear = $madeDate->format('Y');
+       $madeDate = new DateTime($row['made_date']);
+        $receivedDate = new DateTime($row['received_date']);
+
+   
+        $existingMadeDay = $madeDate->format('j');
+        $existingMadeMonth = $madeDate->format('F');
+        $existingMadeYear = $madeDate->format('Y');
+
+        $existingReceivedDay = $receivedDate->format('j');
+        $existingReceivedMonth = $receivedDate->format('F');
+        $existingReceivedYear = $receivedDate->format('Y');
+        $existingOfficer = $row['officer'];
+        $existingSettlement = $row['settlement'];
 
   }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Get form inputs
-  $madeDay = $_POST['made_day'] ?? '';
-  $madeMonth = $_POST['made_month'] ?? '';
-  $madeYear = $_POST['made_year'] ?? '';
+ // Get form inputs
+    $madeDay = $_POST['made_day'] ?? '';
+    $madeMonth = $_POST['made_month'] ?? '';
+    $madeYear = $_POST['made_year'] ?? '';
 
-  // Logic to handle date and time inputs
-  $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
+    // Logic to handle date and time inputs
+    $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
+ 
+    $receivedDay = $_POST['received_day'] ?? '';
+    $receivedMonth = $_POST['received_month'] ?? '';
+    $receivedYear = $_POST['received_year'] ?? '';
+
+    // Logic to handle date and time inputs
+    $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
+
+    $officer = $_POST['officer'] ?? '';
+
+    $settlement = $_POST['settlement'] ?? '';
 
   // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
   $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
@@ -83,12 +102,15 @@ if ($existingForm14Count > 0) {
 
 else{
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
-    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date, officer, settlement)
+    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate, :officer, :settlement)
     ON DUPLICATE KEY UPDATE
     hearing_number = VALUES(hearing_number),
     form_used = VALUES(form_used),
-    made_date = VALUES(made_date)
+    made_date = VALUES(made_date),
+    received_date = VALUES(received_date),
+    officer = VALUES(officer),
+    settlement = VALUES(settlement)
     ";
 
 
@@ -97,6 +119,10 @@ $stmt->bindParam(':complaintId', $complaintId);
 $stmt->bindParam(':currentHearing', $currentHearing);
 $stmt->bindParam(':formUsed', $formUsed);
 $stmt->bindParam(':madeDate', $madeDate);
+$stmt->bindParam(':receivedDate', $receivedDate);
+$stmt->bindParam(':officer', $officer);
+$stmt->bindParam(':settlement', $settlement);
+
 
 if ($stmt->execute()) {
 $message = "Form submit successful.";
@@ -117,13 +143,6 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 
-function createTimestampFromInputs($day, $month, $year, $time) {
-    if (!empty($day) && !empty($month) && !empty($year) && !empty($time)) {
-        return date('Y-m-d H:i:s', strtotime("$year-$month-$day $time"));
-    } else {
-        return null; 
-    }
-}
 // Retrieve the profile picture name of the current user
 $query = "SELECT profile_picture FROM users WHERE id = :userID";
 $stmt = $conn->prepare($query);
@@ -420,17 +439,17 @@ h5 {
                 <p style="font-size: 18px;"> Complainant/s/Respondent/s state as follows: </p>
     <div>
 
-   <div style="font-size: 18px; text-align: justify; text-indent: 0em; margin-left: 38.5px;"> 1. On  <input type="text" name="made_day" placeholder="day" size="5" style="width: 30px; border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingMadeDay ?? ''; ?>" required> day of
-  <select name="made_month" style="height: 30px; border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+   <div style="font-size: 18px; text-align: justify; text-indent: 0em; margin-left: 38.5px;"> 1. On  <input type="number" name="made_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay; ?>"> day of
+ <select name="made_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option style="border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+            <option style="font-size: 18px;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
         <?php else: ?>
-            <option style="border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="made_year" placeholder="year" style="width: 44px; border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
+<input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? date('Y'); ?>">.
         
 
     
@@ -457,56 +476,21 @@ this case.
 </div>
 </div>
 <br>
-<input style="text-align: center; margin-left: 20px; font-size: 18px; border:none; border-bottom: 1px solid black;" type="text" name="year" id="dateInput" placeholder="Date" size="15" value="">
+<input style="text-align: center; margin-left: 20px; font-size: 18px; border:none; border-bottom: 1px solid black;" type="text" name="officer" id="dateInput" placeholder="Date" size="15" value="<?php echo isset($existingOfficer) ? $existingOfficer : date('F j, Y') ?>">
 <p style="font-size: 18px; margin-top: 10px; margin-left: 80px;"> (Date) </p><br>
-<script>
-    // Get current date
-    const currentDate = new Date();
 
-    // Format the date as M/Day/Year
-    const options = { month: 'short', day: 'numeric', year: 'numeric' };
-    const formattedDate = currentDate.toLocaleDateString('en-US', options);
-
-    // Set the formatted date as the input value
-    document.getElementById('dateInput').value = formattedDate;
-</script>
 
 
 <div style="position: relative;">
-    <br>
-    <div class="form-group" style="text-align: justify; text-indent: 0em; margin-right: 20.5px; font-family: 'Times New Roman', Times, serif;">
-    <div id="NamesContent" style="margin-left: 470px; margin-right: auto; min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-        <!-- PHP variables $cNames and $rspndtNames will be inserted here dynamically -->
-    </div>
-  
+    <br><p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 435px; margin-right: auto;">
+    <input type="text" name="settlement" style="min-width: 182px; font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>"></p> 
+    <label id="pChairman" name="pChairman" size="25" style="text-align: center; margin-left:  470px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 250px;">
 
-
-    <select id="ComplainantRespondentSelector" name="Complainant/s/Respondent/s" onchange="ComplainantRespondents()" style="border:none;  font-size: 18px; text-align: right; margin-left: 470px; margin-right: auto;" required>
-        <option  style="border:none;  font-size: 18px;" value="" disabled selected>Complainant/s/Respondent/s</option>
-        <option  style="border:none;  font-size: 18px;" value="Complainant">Complainant/s</option>
-        <option  style="border:none; font-size: 18px;" value="Respondent">Respondent/s</option>  
-    </select>
+    Complainants/Respondent/s/</label>
 </div>
 
-<script>
-    function ComplainantRespondents() {
-        var selectedOption = document.getElementById("ComplainantRespondentSelector").value;
-        var cNames = '<?php echo !empty($cNames) ? $cNames : ''; ?>';
-        var rspndtNames = '<?php echo !empty($rspndtNames) ? $rspndtNames : ''; ?>';
 
-        var namesContent = document.getElementById("NamesContent");
-
-        if (selectedOption === "Complainant") {
-            // Update the content for complainant names
-            namesContent.innerHTML = '<p style="font-size: 18px;">' + cNames + '</p>';
-        } else if (selectedOption === "Respondent") {
-            // Update the content for respondent names
-            namesContent.innerHTML = '<p style="font-size: 18px;">' + rspndtNames + '</p>';
-        }
-    }
-</script>
-
-<form>
     <?php if (!empty($message)) : ?>
         <p><?php echo $message; ?></p>
     <?php endif; ?>

@@ -56,10 +56,13 @@ if (!empty($id)) {
 
         $existingFraudCheck = $row['fraud_check'];
         $existingViolenceCheck = $row['violence_check'];
+        $existingFourthCheck = $row['fourth_check'];
+
         $existingIntimidationText = $row['intimidation_text'];
         $existingViolenceText = $row['violence_text'];
-        $existingFourthCheck = $row['fourth_check'];
+
         $existingOfficer = $row['officer'];
+
     }
 }
 
@@ -71,9 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $fraudCheck = isset($_POST['fraudcheck']) ? 1 : 0;
     $violenceCheck = isset($_POST['violencecheck']) ? 1 : 0;
+    $fourthCheck = isset($_POST['fourthcheck']) ? 1 : 0;
+    
     $intimidationText = $_POST['intimidationtext'] ?? '';
     $violenceText = $_POST['violencetext'] ?? '';
-    $fourthCheck = isset($_POST['fourthcheck']) ? 1 : 0;
+    
     $officer = $_POST['officer'] ?? '';
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
@@ -102,9 +107,10 @@ else{
               made_date = VALUES(made_date),
               fraud_check = VALUES(fraud_check),
               violence_check = VALUES(violence_check),
+              fourth_check = VALUES(fourth_check),
+              
               intimidation_text = VALUES(intimidation_text),
               violence_text = VALUES(violence_text),
-              fourth_check = VALUES(fourth_check),
               officer = VALUES(officer)
               ";
 
@@ -114,11 +120,13 @@ else{
     $stmt->bindParam(':currentHearing', $currentHearing);
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':madeDate', $madeDate);
+
     $stmt->bindParam(':fraudCheck', $fraudCheck);
     $stmt->bindParam(':violenceCheck', $violenceCheck);
+    $stmt->bindParam(':fourthCheck', $fourthCheck);
+   
     $stmt->bindParam(':intimidationText', $intimidationText);
     $stmt->bindParam(':violenceText', $violenceText);
-    $stmt->bindParam(':fourthCheck', $fourthCheck);
     $stmt->bindParam(':officer', $officer);
 
     if ($stmt->execute()) {

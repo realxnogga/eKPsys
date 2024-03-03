@@ -405,7 +405,7 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'formsT' : 'forms';
     <?php
     $formButtons = [
     'KP 7', 'KP 8', 'KP 9', 'KP 10', 'KP 11', 'KP 12', 'KP 13', 'KP 14', 'KP 15', 'KP 16', 'KP 17',
-    'KP 18', 'KP 19', 'KP 20', 'KP 20 - A', 'KP 20 - B', 'KP 21', 'KP 22', 'KP 23', 'KP 24', 'KP 25'
+    'KP 18', 'KP 19', 'KP 20', 'KP 21', 'KP 22', 'KP 23', 'KP 24', 'KP 25', 'KP 20 - A', 'KP 20 - B'
 ];
 
 foreach ($formButtons as $buttonText) {
@@ -433,6 +433,7 @@ foreach ($formButtons as $buttonText) {
     ?>
 </div>
 
+
 <script>
     // JavaScript to handle button clicks and redirection with formID and formUsed
     var buttons = document.querySelectorAll('.open-form');
@@ -441,6 +442,14 @@ foreach ($formButtons as $buttonText) {
             var formID = this.getAttribute('data-form-id');
             var formUsed = this.getAttribute('data-form-used');
             var folderName = '<?php echo $folderName; ?>'; // PHP variable for folder name
+
+            // Adjust formUsed based on special cases
+            if (formUsed == 26) {
+                formUsed = '20A';
+            } else if (formUsed == 27) {
+                formUsed = '20B';
+            }
+
             window.location.href = folderName + '/kp_form' + formUsed + '.php?formID=' + formID;
         });
     });

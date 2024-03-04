@@ -1,4 +1,4 @@
-  <?php
+<?php
   session_start();
   include 'connection.php';
   include 'index-navigation.php';
@@ -192,6 +192,15 @@
 
   */
 
+  .ten-card {
+      background-color: #E9FAE8 ;  
+      text-align: center;
+      background-image: url('img/pending.png');
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+
       .image-container {
           display: flex;
           justify-content: space-between;
@@ -285,11 +294,11 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   
 
 
@@ -301,6 +310,10 @@
 
   <div class="container-fluid">
       
+
+
+
+
 
           <div class="row">
       <div class="col-lg-8 align-items-strech">
@@ -439,6 +452,32 @@
             <div class="col-lg-4">
           <div class="row">
             <div class="col-lg-8">
+
+
+            <div class="card ten-card">
+                <div class="card-body">
+                  <div class="row align-items-start">
+                    <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                      Pending Cases
+                    </h5>
+                    <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                    <?php  if ($selected_month && $selected_month !== date('F Y')) {
+            echo $s_pending; // Display the selected month's value
+        } else {echo $pendingCount;} ?>
+  </p>
+          
+          <div class="col-8">
+                        
+                        </div>
+                      
+                      </div>
+                    </div>
+
+
+                  </div>
+
+
+
               <!-- Settled Cases Card -->
               <div class="card four-card">
                 <div class="card-body">
@@ -481,6 +520,13 @@
   </div>
   </div>
   </div>
+
+
+  
+
+
+
+  
   <a href="https://www.dilg.gov.ph/" class="card seven-card overflow-hidden" style="text-decoration: none;" target="_blank">
     <div class="card-body p-4">
       <div class="row align-items-start">

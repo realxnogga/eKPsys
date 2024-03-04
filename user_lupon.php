@@ -13,12 +13,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 $user_id = $_SESSION['user_id'];
 
 include 'lupon_handler.php';
-
-// Check if the language is set in the session, if not, set it to a default value
-if (!isset($_SESSION['language'])) {
-    $_SESSION['language'] = 'english'; // Set default language to English
-}
-
 ?>
 
 
@@ -213,7 +207,9 @@ function setLanguage(language) {
 <button type="submit" class="btn btn-success m-1" id="save-button" name="save">Appoint</button>
 <button type="submit"  class="btn btn-warning m-1" id="save-button" name="appoint">Notice</button>
 <button type="button"  class="btn btn-light m-1" id="clear-button" name="clear">Clear All</button>
-                   </form>
+<a href="upload_file_lupon.php" class="btn btn-sm btn-primary" title="Upload" data-placement="top"><i class="fas fa-upload"></i> </a>
+                  </form>
+
 
        
     </div></div>

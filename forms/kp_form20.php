@@ -36,7 +36,7 @@ $id = $_GET['formID'] ?? '';
 
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT made_date, fraud_check, violence_check, intimidation_text, violence_text, fourth_check, officer FROM hearings WHERE id = :id";
+    $query = "SELECT made_date, fraud_check, violence_check, intimidation_text, violence_text, fourth_check, officer, settlement FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -62,7 +62,7 @@ if (!empty($id)) {
         $existingViolenceText = $row['violence_text'];
 
         $existingOfficer = $row['officer'];
-
+        $existingSettlement = $row['settlement'];
     }
 }
 
@@ -80,6 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $violenceText = $_POST['violencetext'] ?? '';
     
     $officer = $_POST['officer'] ?? '';
+    $settlement = $_POST['settlement'] ?? '';
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
 
@@ -99,8 +100,8 @@ if ($existingForm14Count > 0) {
 else{
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, fraud_check, violence_check, intimidation_text, violence_text, fourth_check, officer)
-              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :fraudCheck, :violenceCheck, :intimidationText, :violenceText, :fourthCheck, :officer)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, fraud_check, violence_check, intimidation_text, violence_text, fourth_check, officer, settlement)
+              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :fraudCheck, :violenceCheck, :intimidationText, :violenceText, :fourthCheck, :officer, :settlement)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
@@ -111,7 +112,8 @@ else{
               
               intimidation_text = VALUES(intimidation_text),
               violence_text = VALUES(violence_text),
-              officer = VALUES(officer)
+              officer = VALUES(officer),
+              settlement = VALUES(settlement)
               ";
 
 
@@ -128,6 +130,7 @@ else{
     $stmt->bindParam(':intimidationText', $intimidationText);
     $stmt->bindParam(':violenceText', $violenceText);
     $stmt->bindParam(':officer', $officer);
+    $stmt->bindParam(':settlement', $settlement);
 
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -469,21 +472,22 @@ h5 {
 
 <br>
 <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 480px; margin-right: auto;">
-    <input name="officer" style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;" value="<?php echo isset($existingOfficer) ? $existingOfficer : ''; ?>">
+    <input name="officer" style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block; border-top: none; border-left: none; border-right: none;" value="<?php echo isset($existingOfficer) ? $existingOfficer : ''; ?>">
 </p>
-<p style="font-family: 'Times New Roman', Times, serif; font-size: 18px; margin-left: 560px;">Lupon Secretary</p>
+<p style="font-family: 'Times New Roman', Times, serif; font-size: 18px; margin-left: 560px;">Lupon Secretary
+</p>
+
     <br>
 </div>
 </p>
 <br>
 <p style="font-family: 'Times New Roman', Times, serif; text-align: left; margin-top: 0;font-size: 18px;">
         Attested:</p>
-        <p class="important-warning-text" style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-left: -550px; margin-right: auto;">
-    <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-        <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
-    </span></p>
-    <label id="punongbrgy" name="punongbrgy" size="25" style="font-family: 'Times New Roman', Times, serif; text-align: center; margin-left:  40px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Lupon Chairman</label>
-    
+        <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: -530px; margin-right: auto;">
+        <input type="text" name="settlement" style="min-width: 182px; font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>">
+</p>
+    <label id="pChairman" name="pChairman" size="25" style="text-align: center; margin-left:  30px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Pangkat Chairman</label>
 
     <?php if (!empty($message)) : ?>
         <p><?php echo $message; ?></p>

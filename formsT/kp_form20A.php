@@ -12,7 +12,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 $complaintId = $_SESSION['current_complaint_id'] ?? '';
 $currentHearing = $_SESSION['current_hearing'] ?? '';
-$formUsed = 21;
+$formUsed = 26;
 
 // Fetch existing row values if the form has been previously submitted
 $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
@@ -36,7 +36,7 @@ $id = $_GET['formID'] ?? '';
 
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT made_date FROM hearings WHERE id = :id";
+    $query = "SELECT made_date, fraud_check, violence_check, fourth_check, officer, settlement FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -54,6 +54,14 @@ if (!empty($id)) {
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
 
+        $existingFraudCheck = $row['fraud_check'];
+        $existingViolenceCheck = $row['violence_check'];
+        $existingFourthCheck = $row['fourth_check'];
+
+        $existingOfficer = $row['officer'];
+        $existingSettlement = $row['settlement'];
+        
+        
     }
 }
 
@@ -63,6 +71,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $madeMonth = $_POST['made_month'] ?? '';
     $madeYear = $_POST['made_year'] ?? '';
 
+    $fraudCheck = isset($_POST['fraudcheck']) ? 1 : 0;
+    $violenceCheck = isset($_POST['violencecheck']) ? 1 : 0;
+    $fourthCheck = isset($_POST['fourthcheck']) ? 1 : 0;
+    
+    $officer = $_POST['officer'] ?? '';
+    $settlement = $_POST['settlement'] ?? '';
+    
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
 
@@ -76,18 +91,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $existingForm14Count = $stmt->rowCount();
 
 if ($existingForm14Count > 0) {
-    $message = "There is already an existing KP Form 21 in this current hearing.";
+    $message = "There is already an existing KP Form 20A in this current hearing.";
 }
 
 else{
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, fraud_check, violence_check, fourth_check, officer, settlement)
+              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :fraudCheck, :violenceCheck, :fourthCheck, :officer, :settlement)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
-              made_date = VALUES(made_date)
+              made_date = VALUES(made_date),
+              fraud_check = VALUES(fraud_check),
+              violence_check = VALUES(violence_check),
+              fourth_check = VALUES(fourth_check),
+              officer = VALUES(officer),
+              settlement = VALUES(settlement)
               ";
 
 
@@ -96,6 +116,13 @@ else{
     $stmt->bindParam(':currentHearing', $currentHearing);
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':madeDate', $madeDate);
+
+    $stmt->bindParam(':fraudCheck', $fraudCheck);
+    $stmt->bindParam(':violenceCheck', $violenceCheck);
+    $stmt->bindParam(':fourthCheck', $fourthCheck);
+    $stmt->bindParam(':officer', $officer);
+    $stmt->bindParam(':settlement', $settlement);
+   
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -158,6 +185,22 @@ if ($user && !empty($user['city_logo'])) {
     // Default profile picture if the user doesn't have one set
     $citylogo = '../city_logo/defaultpic.jpg';
 }
+?>
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
 ?>
 <!DOCTYPE html>
 <html>
@@ -381,7 +424,7 @@ h5 {
     
     <div class="form-group" style="text-align: justify;">
         <div class="checkbox" style="text-align: left; text-indent: 2em;">
-            <input type="checkbox" id="checkbox1">
+            <input type="checkbox" id="checkbox1" name="fraudcheck" <?php if(isset($existingFraudCheck) && $existingFraudCheck == 1) echo "checked"; ?>>
             <label for="checkbox1" style="text-indent: 0em; margin-left: 1px; font-size: 18px;">
               1. Magkaroon ng personal na paghaharap sa pagitan ng mga panig sa harap ng Punong Barangay subalit nabigo ang pamamagitan;
             </label>
@@ -390,7 +433,7 @@ h5 {
 
     <div class="form-group" style="text-align: justify;">
         <div class="checkbox" style="text-align: left; text-indent: 2em;">
-            <input type="checkbox" id="checkbox2">
+            <input type="checkbox" id="checkbox2" name="violencecheck" <?php if(isset($existingViolenceCheck) && $existingViolenceCheck == 1) echo "checked"; ?>>
             <label for="checkbox2" style="text-indent: 0em; margin-left: 1px; font-size: 18px;">
                 2. Ang Pangkat ng Tagapagkasundo ay binuo subalit ang personal na paghaharap sa harap ng Pangkat ay hindi rin humantong sa pag-aayos; at
             </label>
@@ -398,7 +441,7 @@ h5 {
     </div>
     <div class="form-group" style="text-align: justify;">
         <div class="checkbox" style="text-align: left; text-indent: 2em;">
-        <input type="checkbox" id="checkbox3">
+        <input type="checkbox" id="checkbox3" name="fourthcheck" <?php if(isset($existingFourthCheck) && $existingFourthCheck == 1) echo "checked"; ?>>
         <label for="checkbox3" style="text-indent: 0em; margin-left: 1px; font-size: 18px;">
             3. Dahil  dito, ang kaukulang sumbong para  sa alitan ay maaari nang ihain sa hukuman/tanggapan ng pamahalaan.
         </label>
@@ -408,13 +451,9 @@ h5 {
             <br>
 
             <div style="text-align: justify; text-indent: 0em; margin-left: 38.5px;font-size: 18px;">  Ngayong ika -<input style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>"> araw ng
-    <select style="height: 30px; border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" name="made_month" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
-        <?php else: ?>
-            <option style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+            <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
                 
@@ -430,8 +469,8 @@ h5 {
             </ul>
         <?php endif; ?>
         <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 500px; margin-right: auto;">
-        <input type="text" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
-        value="<?php echo !empty($pSecretary) ? htmlspecialchars($pSecretary) : ''; ?>"> Kalihim ng Lupon
+        <input type="text" name="officer" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingOfficer) ? $existingOfficer : ''; ?>   "> Kalihim ng Lupon
     </p>
     <br>
 </div>
@@ -440,8 +479,8 @@ h5 {
     <p style="text-align: left; margin-top: 0;font-size: 18px; text-indent: 0em;">
         PINATUNAYAN:</p>
         <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: -530px; margin-right: auto;">
-        <input type="text" style="min-width: 182px; font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" 
-        value="<?php echo !empty($pChairman) ? htmlspecialchars($pChairman) : ''; ?>">
+        <input type="text" name="settlement" style="min-width: 182px; font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>">
 </p>
     <label id="pChairman" name="pChairman" size="25" style="text-align: center; margin-left:  30px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Pangulo ng Lupon</label>
           

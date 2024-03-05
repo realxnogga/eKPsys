@@ -34,11 +34,14 @@ $currentMonth = date('F');
 $currentDay = date('j');
 
 $id = $_GET['formID'] ?? '';
-
+$existScenario  ='';
+$existOfficer ='';
+$existSettlement ='';
+$existSubpoena ='';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date FROM hearings WHERE id = :id";
+    $query = "SELECT appear_date, made_date, scenario_info, officer, settlement, subpoena FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -66,10 +69,21 @@ if (!empty($id)) {
         $existingMadeDay = $madeDate->format('j');
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
+
+        $existScenario =$row['scenario_info'];
+        $existOfficer = $row['officer'];
+        $existSettlement = $row['settlement'];
+        $existSubpoena =$row['subpoena'];
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    $officer = $_POST['officer'];
+    $scenario = $_POST['scenario'];
+    $settlement = $_POST['settlement'];
+    $subpoena = $_POST['subpoena'];
+
     // Get form inputs
     $madeDay = $_POST['made_day'] ?? '';
     $madeMonth = $_POST['made_month'] ?? '';
@@ -91,13 +105,17 @@ if ($appearTimestamp !== false) {
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, officer, scenario_info, settlement, subpoena)
+              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :officer, :scenario, :settlement, :subpoena)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               appear_date = VALUES(appear_date),
-              made_date = VALUES(made_date)";
+              made_date = VALUES(made_date),
+              officer = VALUES(officer),
+              scenario_info = VALUES(scenario_info),
+              settlement = VALUES(settlement),
+              subpoena = VALUES(subpoena);";
 
 
      $stmt = $conn->prepare($query);
@@ -106,6 +124,10 @@ if ($appearTimestamp !== false) {
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':appearDate', $appearTimestamp);
     $stmt->bindParam(':madeDate', $madeDate);
+    $stmt->bindParam(':officer', $officer);
+    $stmt->bindParam(':scenario', $scenario);
+    $stmt->bindParam(':settlement', $settlement);
+    $stmt->bindParam(':subpoena', $subpoena);
     
     if ($stmt->execute()) {
         $message = "Form submit successful.";
@@ -180,6 +202,22 @@ if ($user && !empty($user['city_logo'])) {
     // Default profile picture if the user doesn't have one set
     $citylogo = '../city_logo/defaultpic.jpg';
 }
+?>
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
 ?>
 
 <!DOCTYPE html>
@@ -417,12 +455,7 @@ h5 {
 <br>
 <br>
 
-            <?php
-            $months = [
-                'Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'Nobyembre', 'Disyembre'];
-
-            $currentYear = date('Y');
-            ?>
+          
 
 <div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;" >
     <div class="input-field" style="float: right; width: 50%;">
@@ -463,18 +496,18 @@ SUBPOENA</b>
   <div class="input-field">
     <br><br>
     <p style="font-size: 18px;"> KAY: 
-      <span style="display: inline-block; width: 40%; text-align: center;">
-        <input type="text" name="to1" id="to1" style="font-size: 18px; width: 90%; border: none; border-bottom: 1px solid black;">
+    <span style="display: inline-block; width: 45%; text-align: center;">
+      <input type="text" name="scenario" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value="<?php echo $existOfficer; ?>" placeholder=" ">
       </span>
-      <span style="display: inline-block; width: 40%; text-align: center;">
-        <input type="text" name="to2" id="to2" style="font-size: 18px; width: 90%; border: none; border-bottom: 1px solid black;">
+      <span style="display: inline-block; width: 45%; text-align: center;">
+      <input type="text" name="officer" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value="<?php echo $existScenario; ?>" placeholder=" ">
       </span>
       <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <span style="display: inline-block; width: 40%; text-align: center;">
-        <input type="text" name="to3" id="to3" style="font-size: 18px; width: 90%; border: none; border-bottom: 1px solid black;">
+      <span style="display: inline-block; width: 45%; text-align: center;">
+      <input type="text" name="settlement" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value="<?php echo $existSettlement; ?>" placeholder=" ">
       </span>
-      <span style="display: inline-block; width: 40%; text-align: center;">
-        <input type="text" name="to4" id="to4" style="font-size: 18px; width: 90%; border: none; border-bottom: 1px solid black;">
+      <span style="display: inline-block; width: 45%; text-align: center;">
+      <input type="text" name="subpoena" id="to1" style="font-size: 18px; width: 95%; border: none; border-bottom: 1px solid black; display: inline-block;" value="<?php echo $existSubpoena; ?>" placeholder=" ">
       </span>
     </p>
   </div>
@@ -485,15 +518,9 @@ SUBPOENA</b>
                 <div style="text-align: justify;"><p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; text-align: justify; margin-left: 290px;">Mga Testigo</p> 
                 <p style="text-indent: 2em; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Sa pamamagitan nito, inaatasan kayo na humarap sa akin sa ika- 
                 <input type="number" name="day" placeholder="day" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="1" max="31" value="<?php echo $appear_day; ?>" required>araw ng
-        <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
-
-
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="font-size: 18px; text-align: center;" value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
-        <?php else: ?>
-            <option style="font-size: 18px; text-align: center;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+                <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
         <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required> sa ganap na ika-
@@ -505,15 +532,9 @@ SUBPOENA</b>
     <div style="text-align: justify;"><p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; text-align: justify; margin-left: 290px;"></p> 
                 <p style="text-indent: 2em; font-family: 'Times New Roman', Times, serif; font-size: 18px;"> Sa pamamagitan nito, inaatasan kayo na humarap sa akin sa ika- 
                 <input type="number" name="day" placeholder="day" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="1" max="31" value="<?php echo $appear_day; ?>" required>araw ng
-        <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
-
-
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="font-size: 18px; text-align: center;" value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
-        <?php else: ?>
-            <option style="font-size: 18px; text-align: center;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+                <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
         <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required> sa ganap na ika-

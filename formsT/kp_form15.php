@@ -34,12 +34,15 @@ $months = array(
 $currentMonth = date('F'); 
 $currentDay = date('j');
 $existOfficer = '';
+$existScenario  ='';
+$existOfficer ='';
+$existSettlement ='';
 
 $id = $_GET['formID'] ?? '';
 
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT received_date, officer FROM hearings WHERE id = :id";
+    $query = "SELECT received_date, officer, scenario_info, settlement FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -57,7 +60,9 @@ if (!empty($id)) {
         $existingReceivedMonth = $receivedDate->format('F');
         $existingReceivedYear = $receivedDate->format('Y');
 
+        $existScenario =$row['scenario_info'];
         $existOfficer = $row['officer'];
+        $existSettlement = $row['settlement'];
 
     }
 }
@@ -69,7 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $receivedMonth = $_POST['received_month'] ?? '';
     $receivedYear = $_POST['received_year'] ?? '';
     $officer = $_POST['officer'];
-
+    $scenario = $_POST['scenario'];
+    $settlement = $_POST['settlement'];
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
     // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
@@ -83,13 +89,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer)
-              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer, scenario_info, settlement)
+              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer, :scenario, :settlement)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               received_date = VALUES(received_date),
-                        officer = VALUES(officer)";
+                        officer = VALUES(officer),
+              scenario_info = VALUES(scenario_info),
+              settlement = VALUES(settlement);";
 
 
      $stmt = $conn->prepare($query);
@@ -98,7 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':receivedDate', $receivedDate);
     $stmt->bindParam(':officer', $officer);
-    
+    $stmt->bindParam(':scenario', $scenario);
+    $stmt->bindParam(':settlement', $settlement);
     if ($stmt->execute()) {
         $message = "Form submit successful.";
     } else {
@@ -187,6 +196,23 @@ if ($user && !empty($user['city_logo'])) {
     // Default profile picture if the user doesn't have one set
     $citylogo = '../city_logo/defaultpic.jpg';
 }
+?>
+
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
 ?>
 
 <!DOCTYPE html>
@@ -416,14 +442,11 @@ GAWAD NG PAGHAHATOL</b></h3><br>
      Ginawa ngayong ika- 
             <input type="number" name="received_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedDay ?? ''; ?>">
     araw ng 
-            <select name="received_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="font-size: 18px;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
-        <?php else: ?>
-            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+    <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
+
 </select>,
 <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required>.
         </div><br><br>
@@ -438,6 +461,7 @@ GAWAD NG PAGHAHATOL</b></h3><br>
         </label>
     </div><br><br><br><br>
 
+   
     <div class="a">
     <br><p class="important-warning-text" style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 380px; margin-right: auto;">
     <input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList" style="border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><br>  Kasapi
@@ -448,7 +472,7 @@ GAWAD NG PAGHAHATOL</b></h3><br>
     <?php endforeach; ?>
 </datalist>
 <p class="important-warning-text" style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 380px; margin-right: auto;">
-    <input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList" style="border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><br>Kasapi
+    <input type="text" name="scenario" size="25" value="<?php echo $existScenario; ?>" required list="officerList" style="border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><br>Kasapi
 </p>
 <datalist id="officerList">
     <?php foreach ($names as $name): ?>
@@ -462,7 +486,7 @@ GAWAD NG PAGHAHATOL</b></h3><br>
 
   <div class="d">
     <p style="text-align: left; font-size: 18px; margin-right: 400px;  font-family: 'Times New Roman', Times, serif;"> 
-    PINATUNAYAN: <br><input type="text" id="attsd" name="attsd" size="30" style="border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;"></p>
+    PINATUNAYAN: <br><input type="text" id="attsd" name="settlement" size="30" style="border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;" value="<?php echo $existSettlement; ?>"></p>
     <p style="text-align: left; font-family: 'Times New Roman', Times, serif; font-size: 18px;  margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">Punong Barangay/Kalihim ng Lupon</p>
     <p style="text-indent: 2em; text-align: left; font-size: 18px; margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">* Lalagdaan ng sinuman sa gumawa ng gawad ng paghahatol.</p>
     <p style="text-indent: 2em; text-align: left; font-size: 18px; margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">** Lalagdaan ng Punong Barangay kung ang gawad ay ginawa ng Tagapangulo ng Pangkat, at ng kalihim ng Lupon, kung ang gawad ay ginawa ng Punong Barangay</p>

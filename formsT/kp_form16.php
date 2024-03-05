@@ -34,11 +34,11 @@ $currentMonth = date('F');
 $currentDay = date('j');
 
 $id = $_GET['formID'] ?? '';
-
+$existingSettlement = '';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT appear_date, made_date, received_date, settlement FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -56,6 +56,8 @@ if (!empty($id)) {
       $existingMadeMonth = $madeDate->format('F');
       $existingMadeYear = $madeDate->format('Y');
 
+      $existingSettlement = $row['settlement'];
+
   }
 }
 
@@ -64,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $madeDay = $_POST['made_day'] ?? '';
   $madeMonth = $_POST['made_month'] ?? '';
   $madeYear = $_POST['made_year'] ?? '';
+  $settlement = $_POST['settlement'] ?? '';
 
   // Logic to handle date and time inputs
   $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
@@ -83,12 +86,13 @@ if ($existingForm14Count > 0) {
 
 else{
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
-    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, settlement)
+    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :settlement)
     ON DUPLICATE KEY UPDATE
     hearing_number = VALUES(hearing_number),
     form_used = VALUES(form_used),
-    made_date = VALUES(made_date)
+    made_date = VALUES(made_date),
+    settlement = VALUES(settlement)
     ";
 
 
@@ -97,6 +101,7 @@ $stmt->bindParam(':complaintId', $complaintId);
 $stmt->bindParam(':currentHearing', $currentHearing);
 $stmt->bindParam(':formUsed', $formUsed);
 $stmt->bindParam(':madeDate', $madeDate);
+$stmt->bindParam(':settlement', $settlement);
 
 if ($stmt->execute()) {
 $message = "Form submit successful.";
@@ -168,6 +173,23 @@ if ($user && !empty($user['city_logo'])) {
     $citylogo = '../city_logo/defaultpic.jpg';
 }
 ?>
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
+?>
+
 
 <!DOCTYPE html>
 <html>
@@ -361,7 +383,8 @@ h5 {
     <br>
 
     <div class="a">
-<div id="settle" name="settle" style="text-decoration: underline; width: 700px; margin-left: 20.5px; height: auto; border: none; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true" required value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>"> Type here...
+<textarea name="settlement" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true" required><?php echo $existingSettlement; ?></textarea>
+
 </div>
 
 </div>
@@ -370,13 +393,9 @@ h5 {
 
 <div style="font-size: 18px; font-family: 'Times New Roman', Times, serif;text-align: justify; text-indent: 2em">
 Pinagkasunduan ngayong ika- <input type="text" name="made_day" placeholder="day" size="5" style="text-align: center; border: none; border-bottom: 1px solid black; text-align: center; width: 30px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingMadeDay ?? ''; ?>" required> araw ng
-  <select name="made_month" style="text-align: center; height: 30px; border: none; border-bottom: 1px solid black;  font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
-        <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+<select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
 <input type="number" name="made_year" placeholder="year" style="width: 40px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.

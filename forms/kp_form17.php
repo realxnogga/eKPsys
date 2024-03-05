@@ -387,7 +387,7 @@ if ($isCity) {
 
 
     <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;font-size: 18px;font-family: 'Times New Roman', Times, serif; "> This
-    <input style="text-align:center; font-size: 18px;font-family: 'Times New Roman', Times, serif; " type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay; ?>"> day of
+    <input style="text-align:center; font-size: 18px;font-family: 'Times New Roman', Times, serif; " type="number" name="made_day" placeholder="day" min="1" max="31" value="<?php echo $existingMadeDay ?? ''; ?>"> day of
     <select style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" name="made_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
@@ -465,10 +465,6 @@ said grounds.
     </div>       
 </div>
 
-<?php if (!empty($message)) : ?>
-        <p><?php echo $message; ?></p>
-    <?php endif; ?>
-   
             
                 <?php if (!empty($message)) : ?>
         <p><?php echo $message; ?></p>

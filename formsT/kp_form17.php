@@ -34,11 +34,16 @@ $currentMonth = date('F');
 $currentDay = date('j');
 
 $id = $_GET['formID'] ?? '';
-
+$existingFraudCheck = '';
+$existingFraudText = '';
+$existingViolenceCheck = '';
+$existingViolenceText = '';
+$existingIntimidationCheck = '';
+$existingIntimidationText = '';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT made_date, received_date, resp_date FROM hearings WHERE id = :id";
+    $query = "SELECT * FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -64,7 +69,13 @@ if (!empty($id)) {
         $existingRespMonth = $respDate->format('F');
         $existingRespYear = $respDate->format('Y');
 
-
+         // Fetching existing variables for the inputs
+        $existingFraudCheck = $row['fraud_check'];
+        $existingFraudText = $row['fraud_text'];
+        $existingViolenceCheck = $row['violence_check'];
+        $existingViolenceText = $row['violence_text'];
+        $existingIntimidationCheck = $row['intimidation_check'];
+        $existingIntimidationText = $row['intimidation_text'];
     }
 }
 
@@ -83,20 +94,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $respMonth = $_POST['resp_month'] ?? '';
     $respYear = $_POST['resp_year'] ?? '';
     
+    $fraudCheck = isset($_POST['fraudcheck']) ? 1 : 0;
+    $fraudText = $_POST['fraudtext'] ?? '';
+
+    $violenceCheck = isset($_POST['violencecheck']) ? 1 : 0;
+    $violenceText = $_POST['violencetext'] ?? '';
+
+    $intimidationCheck = isset($_POST['intimidationcheck']) ? 1 : 0;
+    $intimidationText = $_POST['intimidationtext'] ?? '';
+
+
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
     $respDate = createDateFromInputs($respDay, $respMonth, $respYear);
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date, resp_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate, :respDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date, resp_date,fraud_check, fraud_text, violence_check, violence_text, intimidation_check, intimidation_text)
+              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate, :respDate,:fraudCheck, :fraudText, :violenceCheck, :violenceText, :intimidationCheck, :intimidationText)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               made_date = VALUES(made_date),
               received_date = VALUES(received_date),
-              resp_date = VALUES(resp_date)
+              resp_date = VALUES(resp_date),
+              fraud_check = VALUES(fraud_check),
+              fraud_text = VALUES(fraud_text),
+              violence_check = VALUES(violence_check),
+              violence_text = VALUES(violence_text),
+              intimidation_check = VALUES(intimidation_check),
+              intimidation_text = VALUES(intimidation_text)
               ";
 
 
@@ -107,6 +134,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':madeDate', $madeDate);
     $stmt->bindParam(':receivedDate', $receivedDate);
     $stmt->bindParam(':respDate', $respDate);
+    $stmt->bindParam(':fraudCheck', $fraudCheck);
+    $stmt->bindParam(':fraudText', $fraudText);
+    $stmt->bindParam(':violenceCheck', $violenceCheck);
+    $stmt->bindParam(':violenceText', $violenceText);
+    $stmt->bindParam(':intimidationCheck', $intimidationCheck);
+    $stmt->bindParam(':intimidationText', $intimidationText);
 
     
     if ($stmt->execute()) {
@@ -126,6 +159,7 @@ function createDateFromInputs($day, $month, $year) {
         return date('Y-m-d');
     }
 }
+
 // Retrieve the profile picture name of the current user
 $query = "SELECT profile_picture FROM users WHERE id = :userID";
 $stmt = $conn->prepare($query);
@@ -141,8 +175,52 @@ if ($user && !empty($user['profile_picture'])) {
     $profilePicture = '../profile_pictures/defaultpic.jpg';
 }
 
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
->
+
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -414,42 +492,41 @@ $currentYear = date('Y');
 (Lagyan ng tsek ang angkop)
     </div>
     <br>
-    <div class="a" style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-    <input type="checkbox" id="panlilinlangCheckbox" name="panlilinlangCheckbox" style="text-indent: 0em; margin-left: 20.5px;">
-    <label style="font-size: 18px; font-family: 'Times New Roman', Times, serif; font-weight: normal;" for="panlilinlangCheckbox"> Panlilinlang (Ipaliwanag)</label>
-    <div id="panlilinlangText" name="panlilinlangText" 
-    style="border-bottom: 1px solid black;  text-indent: 0em; margin-left: 20.5px; text-decoration: underline; width: 700px; height: auto; border:none; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" 
-    contenteditable="true"> <br></div>
-</div>
+    <div style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+    <div class="checkbox-container">
+        <input type="checkbox" id="fraudCheckbox" name="fraudcheck" <?php if(isset($existingFraudCheck) && $existingFraudCheck == 1) echo "checked"; ?>>
+        <label for="fraudCheckbox" class="checkbox-label"> Panlilinlang (Ipaliwanag)</label> </div>
+        <div class="a">
+        <textarea id="fraudtext" name="fraudtext" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"><?php echo $existingFraudText; ?></textarea>
+    </div>
 
-<div class="a" style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-    <input type="checkbox" id="karahasanCheckbox" name="karahasanCheckbox" style="text-indent: 0em; margin-left: 20.5px;">
-    <label style="font-size: 18px; font-family: 'Times New Roman', Times, serif; font-weight: normal;" for="karahasanCheckbox"> Karahasan (Ipaliwanag)</label>
-    <div id="karahasanText" name="karahasanText"  style="border-bottom: 1px solid black;  text-indent: 0em; margin-left: 20.5px; text-decoration: underline; width: 700px; height: auto; border:none; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" 
-    contenteditable="true"> <br></div>
-</div>
 
-<div class="a" style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-    <input type="checkbox" id="pananakotCheckbox" name="pananakotCheckbox" style="text-indent: 0em; margin-left: 20.5px;">
-    <label style="font-size: 18px; font-family: 'Times New Roman', Times, serif; font-weight: normal;" for="pananakotCheckbox"> Pananakot (Ipaliwanag)</label>
-    <div id="pananakotText" name="pananakotText"  style="border-bottom: 1px solid black;  text-indent: 0em; margin-left: 20.5px; text-decoration: underline; width: 700px; height: auto; border:none; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" 
-    contenteditable="true"> <br></div>
-</div>
+<div class="checkbox-container">
+        <input type="checkbox" id="violenceCheckbox" name="violencecheck" <?php if(isset($existingViolenceCheck) && $existingViolenceCheck == 1) echo "checked"; ?>>
+        <label for="violenceCheckbox" class="checkbox-label"> Karahasan (Ipaliwanag)</label>
+        </div>
+    <div class="a">
+        <textarea id="violencetext" name="violencetext" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"><?php echo $existingViolenceText; ?></textarea>
+    </div>
 
+    <div class="checkbox-container">
+        <input type="checkbox" id="intimidationCheckbox" name="intimidationcheck" <?php if(isset($existingIntimidationCheck) && $existingIntimidationCheck == 1) echo "checked"; ?>>
+        <label for="intimidationCheckbox" class="checkbox-label">  Pananakot (Ipaliwanag)</label>
+        </div>
+    <div class="a">
+        <textarea id="intimidationtext" name="intimidationtext" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"><?php echo $existingIntimidationText; ?></textarea>
+    </div>
+    </div>
 
 <br>
 
-    <div style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; text-align: justify; text-indent: 0em; margin-left: 20.5px;">Ngayong ika- <input  style="text-align:center; font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " type="text" name="day" placeholder="araw" size="1" required> araw ng
-    <select style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " name="made_month" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option  style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
-        <?php else: ?>
-            <option  style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; "  value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+    <div style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; text-align: justify; text-indent: 0em; margin-left: 20.5px;">Ngayong ika- <input  style="font-size: 18px; text-align:center; font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " type="text" name="resp_day" placeholder="araw" size="5" value="<?php echo $existingRespDay ?? ''; ?>"> araw ng
+    <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
- <input  style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; "  type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.              
+                <input style="font-size: 18px;font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black;" type="number" name="made_year" size="1" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">             
 </div> <br>
 <div style="display: flex; justify-content: space-between; font-size: 18px; text-align: center; ">
     <div style="text-align: center; margin-left: 10px;">
@@ -468,13 +545,9 @@ $currentYear = date('Y');
 </div><br>
 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px;  font-family: 'Times New Roman', Times, serif;"> NILAGDAAN at PINANUMPAAN sa harap ko ngayong ika- 
 <input  style="font-size: 18px; text-align:center; font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " type="text" name="resp_day" placeholder="araw" size="5" value="<?php echo $existingRespDay ?? ''; ?>"> araw ng
-  <select style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " name="resp_month" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
-        <?php else: ?>
-            <option style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+<select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
 <input style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>">.
@@ -488,13 +561,9 @@ $currentYear = date('Y');
 </p>
 
 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px; font-family: 'Times New Roman', Times, serif; ">Tinangap at inihain ngayong ika- <input  style="font-size: 18px; text-align:center; font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " type="text" name="resp_day" placeholder="araw" size="5" value="<?php echo $existingRespDay ?? ''; ?>"> araw ng
-  <select style="text-align:center; font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " name="resp_month" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
-        <?php else: ?>
-            <option style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+<select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
 <input style="font-size: 18px;  font-family: 'Times New Roman', Times, serif; border:none; border-bottom: 1px solid black; " type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>">.

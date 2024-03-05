@@ -223,6 +223,22 @@ if ($user && !empty($user['city_logo'])) {
     $citylogo = '../city_logo/defaultpic.jpg';
 }
 ?>
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -455,26 +471,17 @@ h5 {
      <p style="font-size: 18px;  text-indent: 2.8em; text-align: justify; ">
   Sa pamamagitan nito,  inaatasan ka na humarap sa akin/Pangkat sa ika-
   <input type="number" name="day" placeholder="day" min="1" max="31" style="width: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $appear_day; ?>" required>  araw ng
-                <select name="month" style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" required>
-
-                    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;"value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
-        <?php else: ?>
-            <option style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+  <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
                 </select>,
                 
                 <input type="text" name="year" placeholder="year" size="1" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo isset($appear_year) ? $appear_year : date('Y'); ?>" required>sa ganap na ika-<input type="time" id="time" name="time" size="5" style="text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;"  value="<?php echo $appear_time; ?>"required> ng umaga/hapon upang ipaliwanag kung bakit ka di-humarap para sa pamamagitan/pag-aayos na nakatakda noong
                 <input type="number" name="resp_day" placeholder="day" min="1" max="31" style="width: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingRespDay ?? ''; ?>" required>  of
-                <select name="resp_month" style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
-        <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+                <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
                 
@@ -484,13 +491,9 @@ h5 {
 <br>
 <br>
 <p style="text-align: left; font-size: 18px; text-indent: 2em; ">Ngayong ika-<input type="number" name="made_day" placeholder="day" min="1" max="31" style="width: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay; ?>"> araw ng 
-    <select name="made_month" style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
-        <?php else: ?>
-            <option style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+<select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
                 
@@ -511,13 +514,9 @@ h5 {
 <div style="text-align: left; font-size: 18px; text-indent: 2em; ">
 
 Pinaabisuhan  ngayong <input type="text" name="received_day" placeholder="day" size="5" style="width: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedDay ?? ''; ?>"> araw ng
-  <select name="received_month" style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
-        <?php else: ?>
-            <option style="height: 30px; text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+<select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
 <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">.

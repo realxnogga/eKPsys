@@ -476,7 +476,7 @@ follows:
     <p style="text-align: left; font-family: 'Times New Roman', Times, serif; font-size: 18px;  margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">Punong Barangay/Lupon Secretary **</p>
     <p style="text-indent: 2em; text-align: left; font-size: 18px; margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">* To be signed by either, whoever made the arbitration award.</p>
     <p style="text-indent: 2em; text-align: left; font-size: 18px; margin-right: 1px;  font-family: 'Times New Roman', Times, serif;">** To be signed by the Punong Barangay if the award is made by the Pangkat Chairman, and by the Lupon Secretary if the award is made by the Punong Barangay.</p>
-  </div>        
+    </div>        
   <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
 </form>
         </div>

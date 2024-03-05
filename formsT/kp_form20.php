@@ -36,7 +36,7 @@ $id = $_GET['formID'] ?? '';
 
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT made_date FROM hearings WHERE id = :id";
+    $query = "SELECT made_date, fraud_check, violence_check, intimidation_text, violence_text, fourth_check, officer, settlement FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -54,6 +54,15 @@ if (!empty($id)) {
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
 
+        $existingFraudCheck = $row['fraud_check'];
+        $existingViolenceCheck = $row['violence_check'];
+        $existingFourthCheck = $row['fourth_check'];
+
+        $existingIntimidationText = $row['intimidation_text'];
+        $existingViolenceText = $row['violence_text'];
+
+        $existingOfficer = $row['officer'];
+        $existingSettlement = $row['settlement'];
     }
 }
 
@@ -63,6 +72,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $madeMonth = $_POST['made_month'] ?? '';
     $madeYear = $_POST['made_year'] ?? '';
 
+    $fraudCheck = isset($_POST['fraudcheck']) ? 1 : 0;
+    $violenceCheck = isset($_POST['violencecheck']) ? 1 : 0;
+    $fourthCheck = isset($_POST['fourthcheck']) ? 1 : 0;
+    
+    $intimidationText = $_POST['intimidationtext'] ?? '';
+    $violenceText = $_POST['violencetext'] ?? '';
+    
+    $officer = $_POST['officer'] ?? '';
+    $settlement = $_POST['settlement'] ?? '';
     // Logic to handle date and time inputs
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
 
@@ -82,12 +100,20 @@ if ($existingForm14Count > 0) {
 else{
 
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, fraud_check, violence_check, intimidation_text, violence_text, fourth_check, officer, settlement)
+              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :fraudCheck, :violenceCheck, :intimidationText, :violenceText, :fourthCheck, :officer, :settlement)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
-              made_date = VALUES(made_date)
+              made_date = VALUES(made_date),
+              fraud_check = VALUES(fraud_check),
+              violence_check = VALUES(violence_check),
+              fourth_check = VALUES(fourth_check),
+              
+              intimidation_text = VALUES(intimidation_text),
+              violence_text = VALUES(violence_text),
+              officer = VALUES(officer),
+              settlement = VALUES(settlement)
               ";
 
 
@@ -96,7 +122,16 @@ else{
     $stmt->bindParam(':currentHearing', $currentHearing);
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':madeDate', $madeDate);
-    
+
+    $stmt->bindParam(':fraudCheck', $fraudCheck);
+    $stmt->bindParam(':violenceCheck', $violenceCheck);
+    $stmt->bindParam(':fourthCheck', $fourthCheck);
+   
+    $stmt->bindParam(':intimidationText', $intimidationText);
+    $stmt->bindParam(':violenceText', $violenceText);
+    $stmt->bindParam(':officer', $officer);
+    $stmt->bindParam(':settlement', $settlement);
+
     if ($stmt->execute()) {
         $message = "Form submit successful.";
     } else {
@@ -157,6 +192,23 @@ if ($user && !empty($user['city_logo'])) {
     // Default profile picture if the user doesn't have one set
     $citylogo = '../city_logo/defaultpic.jpg';
 }
+?>
+
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
 ?>
 <!DOCTYPE html>
 <html>
@@ -382,50 +434,47 @@ h5 {
     <p style="text-align: justify; margin-top: 0; font-size: 18px;">Ito ay nagpapatunay  na:</p>
     
     <div class="form" style="text-align: left; font-size: 18px;">
-        <div class="checkbox" style="text-align: left; text-indent: 2em;">
-            <input type="checkbox" id="checkbox1">
-            <label for="checkbox1" style="text-indent: 0em; margin-left: 1px; font-size: 18px;"> 1. Nagkaroon ng personal na paghaharap sa pagitan ng mga panig sa harap ng Punong Barangay/Pangkat ng Tagapagkasundo;</label>
+    <div class="checkbox" style="text-align: left; text-indent: 2em;">
+        <input type="checkbox" id="checkbox1" name="fraudcheck" <?php if(isset($existingFraudCheck) && $existingFraudCheck == 1) echo "checked"; ?>>
+        <label for="checkbox1" style="text-indent: 0em; margin-left: 1px; font-size: 18px;"> 1. Nagkaroon ng personal na paghaharap sa pagitan ng mga panig sa harap ng Punong Barangay/Pangkat ng Tagapagkasundo;</label>
         </div>
     </div>
 
     <div class="form" style="text-align: left; font-size: 18px;">
-        <div class="checkbox" style="text-align: left; text-indent: 2em;">
-            <input type="checkbox" id="checkbox2">
-            <label for="checkbox2" style="text-indent: 0em; margin-left: 1px; font-size: 18px;"> 2. Nagkaroon ng pag-aayos;</label>
+    <div class="checkbox" style="text-align: left; text-indent: 2em;">
+        <input type="checkbox" id="checkbox2" name="violencecheck" <?php if(isset($existingViolenceCheck) && $existingViolenceCheck == 1) echo "checked"; ?>>
+        <label for="checkbox2" style="text-indent: 0em; margin-left: 1px; font-size: 18px;"> 2. Nagkaroon ng pag-aayos;</label>
         </div>
     </div>
 
     <p style="text-align: justify; text-indent: 0em; margin-left: 2px; font-size: 18px;">
-        <div class="form" style="text-align: left; font-size: 18px;">
-            <div class="checkbox" style="text-align: left; text-indent: 2em;">
-                <input type="checkbox" id="checkbox3">
-                <label for="checkbox3" style="text-indent: 0em; margin-left: 1px; font-size: 18px;">
+    <div class="form" style="text-align: left; font-size: 18px;">
+        <div class="checkbox" style="text-align: left; text-indent: 2em;">
+            <input type="checkbox" id="checkbox3" name="intimidationcheck" <?php if(isset($existingIntimidationText) && !empty($existingIntimidationText)) echo "checked"; ?>>
+            <label for="checkbox3" style="text-indent: 0em; margin-left: 1px; font-size: 18px;">
                    3. Ang kasunduan sa pag-aayos ay tinanggihan sa isang salaysay na pinanumpaan sa harap ng Punong Barangay sa pamamagitan ng
-                    <input style="border:none; border-bottom:1px solid black" type="text" name="name" id="name" placeholder=" " required> sa kadahilanan ng
-                    <input style="border:none; border-bottom:1px solid black" type="text" name="name" id="name" placeholder=" " required>; at
+                   <input style="border:none; border-bottom:1px solid black" type="text" name="intimidationtext" id="name" value="<?php echo isset($existingIntimidationText) ? $existingIntimidationText : ''; ?>" required> sa kadahilanan ng
+                   <input style="border:none; border-bottom:1px solid black" type="text" name="violencetext" id="name" value="<?php echo isset($existingViolenceText) ? $existingViolenceText : ''; ?>" required>; at
                 </label>
             </div>
         </div>
     </p>
 
     <p style="text-align: justify; text-indent: 0em; margin-left: 2px; font-size: 18px;">
-        <div class="form" style="text-align: left; font-size: 18px;">
-            <div class="checkbox" style="text-align: left; text-indent: 2em;">
-                <input type="checkbox" id="checkbox4">
-                <label for="checkbox4" style="text-indent: 0em; margin-left: 1px; font-size: 18px;">
+    <div class="form" style="text-align: left; font-size: 18px;">
+        <div class="checkbox" style="text-align: left; text-indent: 2em;">
+            <input type="checkbox" id="checkbox4" name="fourthcheck" <?php if(isset($existingFourthCheck) && $existingFourthCheck == 1) echo "checked"; ?>>
+            <label for="checkbox4" style="text-indent: 0em; margin-left: 1px; font-size: 18px;">
                    4. Dahil dito, ang kaukulang sumbong para sa alitan ay maaari ngayong ihain sa hukuman/tanggapan ng pamahalaan.
                 </label>
             </div>
- 
+            </div>
+            </p>
 
 <p style="text-align: justify; text-indent: 2em; font-size: 18px;"> Ngayong ika - <input style="width: 30px; text-align: center; border: none; border-bottom: 1px solid black; border-bottom: 1px solid black; font-size: 18px;" type="text" name="made_day" placeholder="day" size="5" value="<?php echo $existingMadeDay ?? ''; ?>" required> araw ng
-  <select style="height: 30px; text-align: center; border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" name="made_month">
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
-        <?php else: ?>
-            <option style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+<select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
 <input style="border: none; border-bottom: 1px solid black; border-bottom: 1px solid black;  width:44px; font-size: 18px;" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
@@ -434,21 +483,24 @@ h5 {
 </div>
 
 <br>
-    <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 480px; margin-right: auto;">
-    <input style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-        </input> <p style="font-family: 'Times New Roman', Times, serif; font-size: 18px; margin-left: 560px;">Kalihim ng Lupon
-    </p>
+<p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 480px; margin-right: auto;">
+    <input name="officer" style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block; border-top: none; border-left: none; border-right: none;" value="<?php echo isset($existingOfficer) ? $existingOfficer : ''; ?>">
+</p>
+<p style="font-family: 'Times New Roman', Times, serif; font-size: 18px; margin-left: 560px;">Kalihim ng Lupon
+</p>
+
+
     <br>
 </div>
 </p>
 <br>
-<p style="font-family: 'Times New Roman', Times, serif; text-align: left; margin-top: 0;font-size: 18px;">
+<p style="text-align: left; margin-top: 0;font-size: 18px; text-indent: 0em;">
         Pinatunayan:</p>
-        <p class="important-warning-text" style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-left: -550px; margin-right: auto;">
-    <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-        <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
-    </span></p>
-    <label id="punongbrgy" name="punongbrgy" size="25" style="font-family: 'Times New Roman', Times, serif; text-align: center; margin-left:  40px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Pangulo ng Lupon</label>
+        <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: -530px; margin-right: auto;">
+        <input type="text" name="settlement" style="min-width: 182px; font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>">
+</p>
+    <label id="pChairman" name="pChairman" size="25" style="text-align: center; margin-left:  30px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Pangulo ng Lupon</label>
     
     <form>
     <?php if (!empty($message)) : ?>

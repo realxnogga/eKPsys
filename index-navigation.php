@@ -143,6 +143,14 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
               <span class="hide-menu">OTHERS</span>
             </li>
             <li class="sidebar-item">
+              <a class="sidebar-link" href="user_manual.php" aria-expanded="false">
+                <span>
+                <i class="ti ti-book"></i>
+                </span>
+                <span class="hide-menu">User Manual</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
               <a class="sidebar-link" href="user_logs.php" aria-expanded="false">
                 <span>
                 <i class="ti ti-address-book"></i>

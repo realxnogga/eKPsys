@@ -20,6 +20,11 @@ include 'functions.php';
         box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
         border-radius: 15px;
     }
+    .card img {
+            max-width: 70%; /* Set the maximum width to 100% of the parent container */
+            max-height: auto; /* Maintain the aspect ratio */
+            margin-right: 10px;
+        }
 </style>
 </head>
 
@@ -60,8 +65,20 @@ include 'functions.php';
         </ul>
         <div class="tab-content mt-3">
             <div class="tab-pane fade show active" id="content1">
-                <h5 class="card-title mb-9 fw-semibold">User Manual - Tab 1 Content</h5>
-                <!-- Add your tab content here -->
+                <h2 id="section1">1. Register</h2>
+                    <b><p>To register, go to the link <a href="https://ekpsystem.online/ekpsys/registration.php" target="_blank">https://ekpsystem.online/ekpsys/registration.php</a>.</p>
+                    <img src="img/img1.png" alt="Image Description"><br><br>
+                    <p>a. Select your Municipality: (Ex. <span style="color: red;">Los Baños</span>)</p>
+                    <p>b. Enter "brgy" and then your barangay name for the username. (Ex. <span style="color: red;">brgybatongmalake</span>)</p>
+
+
+
+
+                <h2 id="section2">2. Getting Started</h2>
+                    <p>To get started with the XYZ application, follow these steps:</p></b>
+    <ol>
+        <!-- Your Getting Started content here -->
+    </ol>
             </div>
             <div class="tab-pane fade" id="content2">
                 <h5 class="card-title mb-9 fw-semibold">User Manual - Tab 2 Content</h5>

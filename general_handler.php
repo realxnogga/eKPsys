@@ -7,6 +7,8 @@ $userId = $_SESSION['user_id'];
 $message = '';
 $error = '';
 
+$usertype = $_SESSION['user_type'];
+
 // Process form submissions for updating user data
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve and sanitize form data
@@ -57,9 +59,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $updateStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 
         if ($updateStmt->execute()) {
-            // After processing the form data
-header("Location: user-settings.php#account-general");
-exit();
+
+            if ($usertype === "user") {
+         header('Location: user-settings.php');
+         exit();
+}
+        elseif ($usertype === "superadmin") {
+    header('Location: sa-settings.php');
+    exit();
+        }
+        elseif($usertype === "admin"){
+      header('Location: admin-settings.php');
+    exit();
+            
+        }
 
         } else {
             // Update failed

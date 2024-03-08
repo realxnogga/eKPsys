@@ -3,7 +3,6 @@ session_start();
 include 'connection.php';
 include 'index-navigation.php';
 
-$usertype = $_SESSION['user_type'];
 
 $userId = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");

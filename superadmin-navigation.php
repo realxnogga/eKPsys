@@ -120,14 +120,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 <span class="hide-menu">Settings</span>
               </a>
             </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="about.php" aria-expanded="false">
-                <span>
-                <i class="ti ti-info-circle"></i>
-                </span>
-                <span class="hide-menu">About Us</span>
-              </a>
-            </li>
           </ul>
         </nav>
         <!-- End Sidebar navigation -->

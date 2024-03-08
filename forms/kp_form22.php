@@ -402,7 +402,7 @@ h5 {
     <div>
     <p style="text-indent: 2.8em; text-align: justify;font-size: 18px;">
     This is to certify that after prior notice and hearing,  
-            <input id="officerInput" style="font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" placeholder="Complaint/s Name" min="<?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>" name="officer" value="<?php echo isset($existingOfficer) ? $existingOfficer : $cNames; ?>"> (name)
+            <input id="officerInput" style="font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" placeholder="Complaint/s Name" min="<?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>" name="officer" value="<?php echo isset($existingOfficer) ? $existingOfficer : $rspndtNames; ?>"> (name)
 have been found to have willfully failed or refused to appear without justifiable reason before the Punong Barangay/Pangkat ng
 Tagapagkasundo and therefore respondent/s is/are barred from filing his/their counterclaim (if any) arising from the complaint in
 court/government office.

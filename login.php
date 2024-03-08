@@ -177,46 +177,52 @@
 
         <!-- Existing Login Card (Aligned on the Right) -->
         <div class="col-md-8 col-lg-6 col-xxl-4">
-          <div class="card mb-0">
-            <div class="overlay"></div> <!-- Black overlay -->
-            <div class="card-body">
-              <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100"></a>
-              <div class="text-center">
-                <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;"
-                  class="align-middle"><br><br>
-                <b><h5 class="card-title mb-9 fw-semibold">Login</h5></b>
-              </div>
-              <?php
-                // Check if the 'error' query parameter is present in the URL
-                if (isset($_GET['error']) && $_GET['error'] === 'invalid_credentials') {
-                    // Display the error message below the input fields
-                    echo '<div class="alert alert-danger" role="alert">Invalid email or password. Please try again.</div>';
-                } elseif (isset($_GET['error']) && $_GET['error'] === 'not_verified') {
-                    // Display the error message below the input fields
-                    echo '<div class="alert alert-danger" role="alert">This account is not verified yet. Please contact your Admin.</div>';
-                }
-              ?>
-              <form action="login_handler.php" method="POST">
-                <div class="form-row">
-                  <div class="col">
-                    <label for="exampleInputEmail1" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" name="email">
-                  </div>
-                </div><br>
-                <div class="form-row">
-                  <div class="col">
-                    <label for="exampleInputEmail1" class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password">
-                  </div>
-                </div><br>
-                <b><p>Don't have an account? <a href="registration.php">Sign up here</a>.</p></b>
-                <div><input type="submit" class="btn btn-primary w-100"></div><br>
-                <b><p><a href="javascript:void(0);" onclick="location.href='forgot_pass.php';"
-                      style="font-size:16px;">Forgot Password?</a></p></b>
-              </form>
-            </div>
+  <div class="card mb-0">
+    <div class="overlay"></div> <!-- Black overlay -->
+    <div class="card-body">
+      <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100"></a>
+      <div class="text-center">
+        <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;"
+          class="align-middle"><br><br>
+        <b><h5 class="card-title mb-9 fw-semibold">Login</h5></b>
+      </div>
+      <?php
+        // Check if the 'error' query parameter is present in the URL
+        if (isset($_GET['error']) && $_GET['error'] === 'invalid_credentials') {
+            // Display the error message below the input fields
+            echo '<div class="alert alert-danger" role="alert">Invalid email or password. Please try again.</div>';
+        } elseif (isset($_GET['error']) && $_GET['error'] === 'not_verified') {
+            // Display the error message below the input fields
+            echo '<div class="alert alert-danger" role="alert">This account is not verified yet. Please contact your Admin.</div>';
+        }
+
+        // Check if the 'message' query parameter is present in the URL
+        if (isset($_GET['message'])) {
+            // Display the message below the input fields
+            echo '<div class="alert alert-warning" role="alert">' . htmlspecialchars($_GET['message']) . '</div>';
+        }
+      ?>
+      <form action="login_handler.php" method="POST">
+        <div class="form-row">
+          <div class="col">
+            <label for="exampleInputEmail1" class="form-label">Email Address</label>
+            <input type="email" class="form-control" name="email">
           </div>
-        </div>
+        </div><br>
+        <div class="form-row">
+          <div class="col">
+            <label for="exampleInputEmail1" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password">
+          </div>
+        </div><br>
+        <b><p>Don't have an account? <a href="registration.php">Sign up here</a>.</p></b>
+        <div><input type="submit" class="btn btn-primary w-100"></div><br>
+        <b><p><a href="javascript:void(0);" onclick="location.href='forgot_pass.php';"
+              style="font-size:16px;">Forgot Password?</a></p></b>
+      </form>
+    </div>
+  </div>
+</div>
       </div>
     </div>
   </div>

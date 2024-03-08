@@ -12,7 +12,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 $complaintId = $_SESSION['current_complaint_id'] ?? '';
 $currentHearing = $_SESSION['current_hearing'] ?? '';
-$formUsed = 27;
+$formUsed = 25;
 
 // Fetch existing row values if the form has been previously submitted
 $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
@@ -38,7 +38,7 @@ $id = $_GET['formID'] ?? '';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT made_date, received_date, scenario_info, officer, settlement, subpoena FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -50,11 +50,23 @@ if (!empty($id)) {
 
       // Extract and format the timestamp values
        
-      $madeDate = new DateTime($row['made_date']);
+        $madeDate = new DateTime($row['made_date']);
+        $receivedDate = new DateTime($row['received_date']);
        
-      $existingMadeDay = $madeDate->format('j');
-      $existingMadeMonth = $madeDate->format('F');
-      $existingMadeYear = $madeDate->format('Y');
+   
+        $existingMadeDay = $madeDate->format('j');
+        $existingMadeMonth = $madeDate->format('F');
+        $existingMadeYear = $madeDate->format('Y');
+
+        $existingReceivedDay = $receivedDate->format('j');
+        $existingReceivedMonth = $receivedDate->format('F');
+        $existingReceivedYear = $receivedDate->format('Y');
+
+       
+        $existingScenarioInfo = $row['scenario_info'];
+        $existingOfficer = $row['officer'];
+        $existingSettlement = $row['settlement'];
+        $existingSubpoena = $row['subpoena'];
 
   }
 }
@@ -65,8 +77,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $madeMonth = $_POST['made_month'] ?? '';
   $madeYear = $_POST['made_year'] ?? '';
 
+  $receivedDay = $_POST['received_day'] ?? '';
+  $receivedMonth = $_POST['received_month'] ?? '';
+  $receivedYear = $_POST['received_year'] ?? '';
+
+
   // Logic to handle date and time inputs
   $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
+  $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
+
+    $scenario_info = $_POST['scenario_info'] ?? '';
+    $officer = $_POST['officer'] ?? '';
+    $settlement = $_POST['settlement'] ?? '';
+    $subpoena = $_POST['subpoena'] ?? '';
 
   // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
   $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
@@ -83,13 +106,19 @@ if ($existingForm14Count > 0) {
 
 else{
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
-    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date, scenario_info, officer, settlement, subpoena)
+    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate, :respDate, :scenario_info, :officer, :settlement, :subpoena)
     ON DUPLICATE KEY UPDATE
     hearing_number = VALUES(hearing_number),
     form_used = VALUES(form_used),
-    made_date = VALUES(made_date)
-    ";
+    made_date = VALUES(made_date),
+    received_date = VALUES(received_date),
+    
+    scenario_info = VALUES(scenario_info),
+    officer = VALUES(officer),
+    settlement = VALUES(settlement),
+    subpoena = VALUES(subpoena)";
+
 
 
 $stmt = $conn->prepare($query);
@@ -97,6 +126,12 @@ $stmt->bindParam(':complaintId', $complaintId);
 $stmt->bindParam(':currentHearing', $currentHearing);
 $stmt->bindParam(':formUsed', $formUsed);
 $stmt->bindParam(':madeDate', $madeDate);
+$stmt->bindParam(':receivedDate', $receivedDate);
+$stmt->bindParam(':scenario_info', $scenario_info);
+$stmt->bindParam(':officer', $officer);
+$stmt->bindParam(':settlement', $settlement);
+$stmt->bindParam(':subpoena', $subpoena);
+
 
 if ($stmt->execute()) {
 $message = "Form submit successful.";
@@ -167,6 +202,23 @@ if ($user && !empty($user['city_logo'])) {
     // Default profile picture if the user doesn't have one set
     $citylogo = '../city_logo/defaultpic.jpg';
 }
+?>
+
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
 ?>
 <!DOCTYPE html>
 <html>
@@ -393,14 +445,10 @@ h5 {
 
 <div>
     <p style="text-indent: 2.0em; text-align: justify; font-size: 18px;">
-    SAPAGKAT,   noong <input type="number" name="resp_day" placeholder="day" min="1" max="31" style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingRespDay ?? ''; ?>" required> araw ng
-                <select name="resp_month" style="height: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" required>
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
-        <?php else: ?>
-            <option style="text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+    SAPAGKAT,   noong <input type="text" name="made_day" placeholder="day" size="5" style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay ?? ''; ?>" required> araw ng
+    <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
                 
@@ -408,14 +456,15 @@ h5 {
          isang matiwasay na pag-aayos ang nilagdaan ng mga panig sa usaping binabanggit sa itaas  (o isang gawad ng paghahatol ang ibinigay ng Punong Barangay / Pangkat  ng Tagapagkasundo);
                 <br> <p style="text-indent: 2.0em; text-align: justify; font-size: 18px;">SAPAGKAT, ang mga tuntunin at mga kondisyon ng pag-aayos, ang bahaging nagbibigay desisyon ng gawad ay mababasa tulad ng sumusunod:
 <br>   <div class="a">
-        <div id="nameR" name="nameR" style="text-indent: 2.0em; text-decoration: underline; width: 700px; height: auto; border:none;border-bottom: 1px solid black; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"> State details here..................................................................................................................</div>
+       <textarea id="scenario_info" name="scenario_info" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"><?php echo $existingScenarioInfo ?? ''; ?></textarea>
     </div>
 
 
+ 
+ <br>
  <p style="text-indent: 2.0em; text-align: justify;font-size: 18px;">
-SAPAGKAT, ang mga tuntunin at mga kondisyon ng pag-aayos, ang bahaging nagbibigay desisyon ng gawad ay mababasa tulad ng sumusunod: <br>
- <p style="text-indent: 2.0em; text-align: justify;font-size: 18px;">
- SAPAGKAT, ang obligadong panig<input style="display: inline-block; border: none; border-bottom: 1px solid black; font-size: 18px; width: 300px;" type="text" placeholder="Enter Complainant/s or Respondent/s Name" value="<?php echo (isset($cNames) ? htmlspecialchars($cNames, ENT_QUOTES) : '') . '/' . (isset($rspndtNames) ? htmlspecialchars($rspndtNames, ENT_QUOTES) : ''); ?>" />
+ SAPAGKAT, ang obligadong panig<input type="text" name="officer" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingOfficer) ? $existingOfficer : ''; ?>">
 ay hindi pa kusang-loob na tumutupad sa binanggit na pag-aayos/gawad ng paghahatol, sa loob ng limang (5) araw mula sa petsa ng pagdinig sa panukala sa pagpapatupad;
 
 
@@ -423,8 +472,10 @@ ay hindi pa kusang-loob na tumutupad sa binanggit na pag-aayos/gawad ng paghahat
  DAHIL DITO, sa pangalan ng Lupong Tagapamayapa at sa kapangyarihang
 ibinigay sa akin at ng Lupon sa pamamagitan ng Batas at mga Alintuntunin ng
 Katarungang Pambarangay, akin gagawin upang maisakatuparan mula sa mga kalakal at
-mga personal na ari-arian ni <input style="display: inline-block; border: none; border-bottom: 1px solid black; font-size: 18px; width: 300px;" type="text" placeholder="Enter Complainant/s or Respondent/s Name" value="<?php echo (isset($cNames) ? htmlspecialchars($cNames, ENT_QUOTES) : '') . '/' . (isset($rspndtNames) ? htmlspecialchars($rspndtNames, ENT_QUOTES) : ''); ?>" />
- (pangalan ng obligadong panig) ang halagang <input style="font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" type="text" />
+mga personal na ari-arian ni<input type="text" name="settlement" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>">
+ (pangalan ng obligadong panig) ang halagang <input type="text" name="subpoena" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSubpoena) ? $existingSubpoena : ''; ?>">
 pinagkasunduan sa nasabing (Ilahad ang halaga ng pag-aayos o gawad)
 nasabing matiwasay na pag-aayos (o sa inihatol sa nasabing gawad sa paghahatol),
 maliban kung ang kusang-loob na pagtupad sa nasabing pag-aayos o gawad ay ginawa sa
@@ -433,13 +484,9 @@ sandaling matanggap ito.
 
 
             <div style="text-align: justify; text-indent: 0em; margin-left: 30px;font-size: 18px;"> Nilagdaan ngayong ika <input type="text" name="made_day" placeholder="day" size="5" style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay ?? ''; ?>" required> araw ng 
-  <select name="made_month" style="height: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;">
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
-        <?php else: ?>
-            <option style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+            <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
 <input type="number" name="made_year" placeholder="year" style="text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.

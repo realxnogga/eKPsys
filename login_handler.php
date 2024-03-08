@@ -16,6 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user) {
             if ($user['user_type'] !== 'user' || $user['verified']) {
+                // Check if another user with the same barangay is already logged in
+                if (isset($_SESSION['barangay_id']) && $_SESSION['status'] === 'loggedin') {
+                    if ($_SESSION['barangay_id'] === $user['barangay_id']) {
+                        // Another user from the same barangay is already logged in, prevent login
+                        $message = "Your account is already open in another device.";
+                        header("Location: login.php?error=already_logged_in&message=" . urlencode($message));
+                        exit;
+                    }
+                }
+
                 // Check if the provided password matches the hashed password
                 if (password_verify($password, $user['password'])) {
                     // Start the session and store user information in session variables
@@ -26,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['first_name'] = $user['first_name']; // Store first name
                     $_SESSION['last_name'] = $user['last_name'];   // Store last name
                     $_SESSION['barangay_id'] = $user['barangay_id']; // Store barangay ID
+                    $_SESSION['status'] = 'loggedin'; // Set status to logged in
 
                     // Log user activity
                     logUserActivity($user['id'], "User logged in");
@@ -91,7 +102,4 @@ function logUserActivity($user_id, $activity) {
     $stmt->execute();
     $stmt = null; // Close the cursor
 }
-
-
-
 ?>

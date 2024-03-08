@@ -12,7 +12,7 @@ $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 $complaintId = $_SESSION['current_complaint_id'] ?? '';
 $currentHearing = $_SESSION['current_hearing'] ?? '';
-$formUsed = 25;
+$formUsed = 23;
 
 // Fetch existing row values if the form has been previously submitted
 $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
@@ -168,7 +168,22 @@ if ($user && !empty($user['city_logo'])) {
     $citylogo = '../city_logo/defaultpic.jpg';
 }
 ?>
-
+<?php
+$tagalogMonths = array(
+    'January' => 'Enero',
+    'February' => 'Pebrero',
+    'March' => 'Marso',
+    'April' => 'Abril',
+    'May' => 'Mayo',
+    'June' => 'Hunyo',
+    'July' => 'Hulyo',
+    'August' => 'Agosto',
+    'September' => 'Setyembre',
+    'October' => 'Oktubre',
+    'November' => 'Nobyembre',
+    'December' => 'Disyembre'
+);
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -421,13 +436,9 @@ h5 {
     <div>
 
    <div style="font-size: 18px; text-align: justify; text-indent: 0em; margin-left: 38.5px;"> 1. Noong  <input type="text" name="made_day" placeholder="day" size="5" style="width: 30px; border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingMadeDay ?? ''; ?>" required> araw ng 
-  <select name="made_month" style="height: 30px; border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-    <?php foreach ($months as $m): ?>
-        <?php if ($id > 0): ?>
-            <option style="border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
-        <?php else: ?>
-            <option style="border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
-        <?php endif; ?>
+   <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
+        <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
 <input type="number" name="made_year" placeholder="year" style="width: 44px; border:none; border-bottom: 1px solid black; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
@@ -477,11 +488,15 @@ h5 {
   
 
 
-    <select id="ComplainantRespondentSelector" name="Complainant/s/Respondent/s" onchange="ComplainantRespondents()" style="border:none;  font-size: 18px; text-align: right; margin-left: 470px; margin-right: auto;" required>
-        <option  style="border:none;  font-size: 18px;" value="" disabled selected>Complainant/s/Respondent/s</option>
-        <option  style="border:none;  font-size: 18px;" value="Complainant">Complainant/s</option>
-        <option  style="border:none; font-size: 18px;" value="Respondent">Respondent/s</option>  
-    </select>
+  
+<div style="position: relative;">
+    <br><p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 435px; margin-right: auto;">
+    <input type="text" name="settlement" style="min-width: 182px; font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>"></p> 
+    <label id="pChairman" name="pChairman" size="25" style="text-align: center; margin-left:  470px;   font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 250px;">
+
+    Maysumbong/Ipinagsusumbong</label>
+</div>
 </div>
 
 <script>

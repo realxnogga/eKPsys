@@ -1,9 +1,7 @@
 <?php
 session_start();
 $apptNames = $_SESSION['apptNames'] ?? [];
-?>
 
-<?php
 include 'connection.php';
 $forTitle = $_SESSION['forTitle'] ?? '';
 $cNames = $_SESSION['cNames'] ?? '';
@@ -13,18 +11,6 @@ $petition = $_SESSION['petition'] ?? '';
 $cNum = $_SESSION['cNum'] ?? '';
 
 $punong_barangay = $_SESSION['punong_barangay'] ?? '';
-
-$complaintId = $_SESSION['current_complaint_id'] ?? '';
-$currentHearing = $_SESSION['current_hearing'] ?? '';
-$formUsed = 10;
-
-// Fetch existing row values if the form has been previously submitted
-$query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':complaintId', $complaintId);
-$stmt->bindParam(':formUsed', $formUsed);
-$stmt->execute();
-$rowCount = $stmt->rowCount();
 
 $currentYear = date('Y'); // Get the current year
 
@@ -37,120 +23,8 @@ $months = array(
 $currentMonth = date('F'); 
 $currentDay = date('j');
 
-$id = $_GET['formID'] ?? '';
+$formUsed = 1;
 
-// Check if formID exists in the URL
-if (!empty($id)) {
-    // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-
-    $rowCount = $stmt->rowCount();
-
-    if ($rowCount > 0) {
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      // Extract and format the timestamp values
-        $appearDate = new DateTime($row['appear_date']);
-        $appear_day = $appearDate->format('j');
-
-        $appear_month = $appearDate->format('F');
-        $appear_year = $appearDate->format('Y');
-        $appear_time = $appearDate->format('H:i'); // Format for the time input
-
-        $madeDate = new DateTime($row['made_date']);
-        $receivedDate = new DateTime($row['received_date']);
-
-        // Populate form inputs with the extracted values
-        $currentDay = $appearDate->format('j');
-        $currentMonth = $appearDate->format('F');
-        $currentYear = $appearDate->format('Y');
-
-        $existingMadeDay = $madeDate->format('j');
-        $existingMadeMonth = $madeDate->format('F');
-        $existingMadeYear = $madeDate->format('Y');
-
-        $existingReceivedDay = $receivedDate->format('j');
-        $existingReceivedMonth = $receivedDate->format('F');
-        $existingReceivedYear = $receivedDate->format('Y');
-    }
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form inputs
-    $madeDay = $_POST['made_day'] ?? '';
-    $madeMonth = $_POST['made_month'] ?? '';
-    $madeYear = $_POST['made_year'] ?? '';
-    $receivedDay = $_POST['received_day'] ?? '';
-    $receivedMonth = $_POST['received_month'] ?? '';
-    $receivedYear = $_POST['received_year'] ?? '';
-
-    $day = $_POST['day'] ?? '';
-    $month = $_POST['month'] ?? '';
-    $year = $_POST['year'] ?? '';
-    $time = $_POST['time'] ?? '';
-
-$dateTimeString = "$year-$month-$day $time";
-$appearTimestamp = DateTime::createFromFormat('Y-F-j H:i', $dateTimeString);
-
-
-if ($appearTimestamp !== false) {
-    $appearTimestamp = $appearTimestamp->format('Y-m-d H:i:s');
-
-    // Logic to handle date and time inputs
-    $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
-    $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
-
-    // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate)
-              ON DUPLICATE KEY UPDATE
-              hearing_number = VALUES(hearing_number),
-              form_used = VALUES(form_used),
-              appear_date = VALUES(appear_date),
-              made_date = VALUES(made_date),
-              received_date = VALUES(received_date)";
-
-
-     $stmt = $conn->prepare($query);
-    $stmt->bindParam(':complaintId', $complaintId);
-    $stmt->bindParam(':currentHearing', $currentHearing);
-    $stmt->bindParam(':formUsed', $formUsed);
-    $stmt->bindParam(':appearDate', $appearTimestamp);
-    $stmt->bindParam(':madeDate', $madeDate);
-    $stmt->bindParam(':receivedDate', $receivedDate);
-    
-    if ($stmt->execute()) {
-        $message = "Form submit successful.";
-    } else {
-        $message = "Form submit failed.";
-    }
-}
-else {
-        // Handle case where DateTime object creation failed
-        $message ="Invalid date/time format! Input: ". $dateTimeString;
-    }
-}
-
-// Function to create a date from day, month, and year inputs
-function createDateFromInputs($day, $month, $year) {
-    if (!empty($day) && !empty($month) && !empty($year)) {
-        $monthNum = date('m', strtotime("$month 1"));
-        return date('Y-m-d', mktime(0, 0, 0, $monthNum, $day, $year));
-    } else {
-        return date('Y-m-d');
-    }
-}
-
-function createTimestampFromInputs($day, $month, $year, $time) {
-    if (!empty($day) && !empty($month) && !empty($year) && !empty($time)) {
-        return date('Y-m-d H:i:s', strtotime("$year-$month-$day $time"));
-    } else {
-        return null; 
-    }
-}
 // Retrieve the profile picture name of the current user
 $query = "SELECT profile_picture FROM users WHERE id = :userID";
 $stmt = $conn->prepare($query);
@@ -345,7 +219,7 @@ if ($user && !empty($user['city_logo'])) {
     <button class="btn btn-success download-button common-button" id="downloadButton" style="position:fixed; right: 20px; top: 75px; ">
         <i class="fas fa-file button-icon"></i> Download
     </button>
-    <a href="../user_lupon.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+    <a href="../user_lupon.php">
         <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>

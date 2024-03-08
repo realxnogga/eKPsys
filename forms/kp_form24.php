@@ -87,8 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $officer = $_POST['officer'] ?? '';
     $settlement = $_POST['settlement'] ?? '';
 
-$dateTimeString = "$year-$month-$day $time";
-$appearTimestamp = DateTime::createFromFormat('Y-F-j H:i', $dateTimeString);
+    $dateTimeString = "$year-$month-$day $time";
+    $appearTimestamp = DateTime::createFromFormat('Y-F-j H:i', $dateTimeString);
 
 
 if ($appearTimestamp !== false) {
@@ -107,7 +107,7 @@ $existingForm10Count = $stmt->rowCount();
 
 // If form_used = 10 already exists in the current hearing, prevent submission
 if ($existingForm10Count > 0) {
-    $message = "There is already an existing KP Form 26 in this current hearing.";
+    $message = "There is already an existing KP Form 24 in this current hearing.";
 }  else{
     
     // Insert or update the appear_date in the hearings table
@@ -509,13 +509,13 @@ Notified this  <input type="number" name="received_day" placeholder="day" min="1
             <select name="received_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option style="font-size: 18px;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+            <option style="font-size: 18px;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth ?? ''; ?></option>
         <?php else: ?>
             <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-           <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+           <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingReceivedYear ?? date('Y'); ?>">.
     </div><br>
     <div class="d">
     <div style="font-size: 18px; text-align: center; ">

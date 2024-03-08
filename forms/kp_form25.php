@@ -1,4 +1,4 @@
-<?php
+x<?php
 session_start();
 include 'connection.php';
 $forTitle = $_SESSION['forTitle'] ?? '';
@@ -38,7 +38,7 @@ $id = $_GET['formID'] ?? '';
 // Check if formID exists in the URL
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT made_date, received_date, scenario_info, officer, settlement, subpoena FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -50,11 +50,22 @@ if (!empty($id)) {
 
       // Extract and format the timestamp values
        
-      $madeDate = new DateTime($row['made_date']);
-       
-      $existingMadeDay = $madeDate->format('j');
-      $existingMadeMonth = $madeDate->format('F');
-      $existingMadeYear = $madeDate->format('Y');
+        $madeDate = new DateTime($row['made_date']);
+        $receivedDate = new DateTime($row['received_date']);
+
+   
+        $existingMadeDay = $madeDate->format('j');
+        $existingMadeMonth = $madeDate->format('F');
+        $existingMadeYear = $madeDate->format('Y');
+
+        $existingReceivedDay = $receivedDate->format('j');
+        $existingReceivedMonth = $receivedDate->format('F');
+        $existingReceivedYear = $receivedDate->format('Y');
+        
+        $existingScenarioInfo = $row['scenario_info'];
+        $existingOfficer = $row['officer'];
+        $existingSettlement = $row['settlement'];
+        $existingSubpoena = $row['subpoena'];
 
   }
 }
@@ -65,8 +76,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $madeMonth = $_POST['made_month'] ?? '';
   $madeYear = $_POST['made_year'] ?? '';
 
+  $receivedDay = $_POST['received_day'] ?? '';
+  $receivedMonth = $_POST['received_month'] ?? '';
+  $receivedYear = $_POST['received_year'] ?? '';
+
+
   // Logic to handle date and time inputs
   $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
+  $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
+
+    $scenario_info = $_POST['scenario_info'] ?? '';
+    $officer = $_POST['officer'] ?? '';
+    $settlement = $_POST['settlement'] ?? '';
+    $subpoena = $_POST['subpoena'] ?? '';
 
   // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
   $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
@@ -83,12 +105,18 @@ if ($existingForm14Count > 0) {
 
 else{
     // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
-    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date, scenario_info, officer, settlement, subpoena)
+    VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate, :scenario_info, :officer, :settlement, :subpoena)
     ON DUPLICATE KEY UPDATE
     hearing_number = VALUES(hearing_number),
     form_used = VALUES(form_used),
-    made_date = VALUES(made_date)
+    made_date = VALUES(made_date),
+    received_date = VALUES(received_date),
+    scenario_info = VALUES(scenario_info),
+    officer = VALUES(officer),
+    settlement = VALUES(settlement),
+    subpoena = VALUES(subpoena)
+
     ";
 
 
@@ -97,6 +125,11 @@ $stmt->bindParam(':complaintId', $complaintId);
 $stmt->bindParam(':currentHearing', $currentHearing);
 $stmt->bindParam(':formUsed', $formUsed);
 $stmt->bindParam(':madeDate', $madeDate);
+$stmt->bindParam(':receivedDate', $receivedDate);
+$stmt->bindParam(':scenario_info', $scenario_info);
+$stmt->bindParam(':officer', $officer);
+$stmt->bindParam(':settlement', $settlement);
+$stmt->bindParam(':subpoena', $subpoena);
 
 if ($stmt->execute()) {
 $message = "Form submit successful.";
@@ -393,31 +426,31 @@ h5 {
 
 <div>
     <p style="text-indent: 2.0em; text-align: justify; font-size: 18px;">
-    WHEREAS, on <input type="number" name="resp_day" placeholder="day" min="1" max="31" style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingRespDay ?? ''; ?>" required>  of
-                <select name="resp_month" style="height: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" required>
+    WHEREAS, on <input type="number" name="made_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay; ?>"> day of
+ <select name="made_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option style="text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
+            <option style="font-size: 18px;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
         <?php else: ?>
-            <option style="text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                
-                <input type="text" name="resp_year" placeholder="year" size="1" style="height: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo isset($existingRespYear) ? $existingRespYear : date('Y'); ?>" required>
+<input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? date('Y'); ?>">
         (date), an amicable settlement was signed by the parties in the above-entitled case [or an
 arbitration award was rendered by the Punong Barangay/Pangkat ng Tagapagkasundo];
 
                 <br> <p style="text-indent: 2.0em; text-align: justify; font-size: 18px;"> WHEREAS, the terms and conditions of the settlement, the dispositive portion of the award. read:
 <br>   <div class="a">
-        <div id="nameR" name="nameR" style="text-indent: 2.0em; text-decoration: underline; width: 700px; height: auto; border:none;border-bottom: 1px solid black; overflow-y: hidden; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"> State details here..................................................................................................................</div>
+       <textarea id="scenario_info" name="scenario_info" style="text-decoration: underline; width: 95%; margin-left: 20.5px; border: none; overflow-y: auto; resize: vertical; font-size: 18px; white-space: pre-line;" contenteditable="true"><?php echo $existingScenarioInfo ?? 'Enter text here.'; ?></textarea>
     </div>
 
 
  <p style="text-indent: 2.0em; text-align: justify;font-size: 18px;">
  The said settlement/award is now final and executory; <br>
  <p style="text-indent: 2.0em; text-align: justify;font-size: 18px;">
- WHEREAS, the party obliged  <input style="display: inline-block; border: none; border-bottom: 1px solid black; font-size: 18px; width: 300px;" type="text" placeholder="Enter Complainant/s or Respondent/s Name" value="<?php echo (isset($cNames) ? htmlspecialchars($cNames, ENT_QUOTES) : '') . '/' . (isset($rspndtNames) ? htmlspecialchars($rspndtNames, ENT_QUOTES) : ''); ?>" />
+ WHEREAS, the party obliged  <input type="text" name="officer" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingOfficer) ? $existingOfficer : ''; ?>">
 
     (name) has not complied voluntarily with the aforestated amicable
 settlement/arbitration award, within the period of five (5) days from the date of hearing on the motion for execution;
@@ -425,38 +458,31 @@ settlement/arbitration award, within the period of five (5) days from the date o
 
  <p style="text-indent: 2.0em; text-align: justify; font-size: 18px;">
  NOW, THEREFORE, in behalf of the Lupong Tagapamayapa and by virtue of the powers vested in me and the Lupon by the
-Katarungang Pambarangay Law and Rules, I shall cause to be realized from the goods and personal property of <input style="display: inline-block; border: none; border-bottom: 1px solid black; font-size: 18px; width: 300px;" type="text" placeholder="Enter Complainant/s or Respondent/s Name" value="<?php echo (isset($cNames) ? htmlspecialchars($cNames, ENT_QUOTES) : '') . '/' . (isset($rspndtNames) ? htmlspecialchars($rspndtNames, ENT_QUOTES) : ''); ?>" />
- (name of party obliged) the sum of <input style="font-size: 18px; border: none; border-bottom: 1px solid black; display: inline-block;" type="text" />
+Katarungang Pambarangay Law and Rules, I shall cause to be realized from the goods and personal property of <input type="text" name="settlement" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSettlement) ? $existingSettlement : ''; ?>">
+ (name of party obliged) the sum of <input type="text" name="subpoena" style="min-width: 182px; font-size: 18px; border:none; border-bottom: 1px solid black; display: inline-block;" 
+        value="<?php echo isset($existingSubpoena) ? $existingSubpoena : ''; ?>">
 (state amount of settlement or award) upon in the said amicable settlement [or
 adjudged in the said arbitration award], unless voluntarily compliance of said settlement or award shall have been made upon receipt hereof.
 
 
 
-            <div style="text-align: justify; text-indent: 0em; margin-left: 30px;font-size: 18px;"> Signed this <input type="text" name="made_day" placeholder="day" size="5" style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay ?? ''; ?>" required> day of
-  <select name="made_month" style="height: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;">
+            <div style="text-align: justify; text-indent: 0em; margin-left: 30px;font-size: 18px;"> Signed this <input type="number" name="received_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedDay ?? ''; ?>">
+            of
+            <select name="received_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+            <option style="font-size: 18px;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth ?? ''; ?></option>
         <?php else: ?>
-            <option style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="made_year" placeholder="year" style="text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">.
+           <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingReceivedYear ?? date('Y') ?>">.
         
 
-        <?php if (!empty($message)) : ?>
-            <p><?php echo $message; ?></p>
-        <?php endif; ?>
 </div>
 
-        <?php if (!empty($errors)): ?>
-            <ul>
-                <?php foreach ($errors as $error): ?>
-                    <li><?php echo $error; ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
         <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 480px; margin-right: auto;">
     <span style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
         <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
@@ -489,6 +515,7 @@ adjudged in the said arbitration award], unless voluntarily compliance of said s
 
             
     <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+
 </form>
 <script>
 var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable

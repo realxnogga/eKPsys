@@ -464,7 +464,7 @@ echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required>.
+<input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo $existingReceivedYear ?? date('Y'); ?>" required>.
         </div><br><br>
         
 <input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList" style="margin-left: 430px; border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;">

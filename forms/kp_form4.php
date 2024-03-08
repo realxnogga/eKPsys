@@ -347,7 +347,7 @@ if ($user && !empty($user['city_logo'])) {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../user_lupon.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
+    <a href="../user_lupon.php">
         <button class="btn common-button" style="position:fixed; right: 20px; top: 130px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>

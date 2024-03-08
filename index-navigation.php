@@ -32,17 +32,9 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
   }
 </style>
 
-
-
-
-
-
-
-
-
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
-
+<meta name="viewport">
 <!--  Body Wrapper -->
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">

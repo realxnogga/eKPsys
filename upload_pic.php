@@ -18,13 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['profile_pic'])) {
     $fileName = $file['name'];
     $fileTmpName = $file['tmp_name'];
 
-    // Get image dimensions
-    $imageSize = getimagesize($fileTmpName);
-    $imageWidth = $imageSize[0];
-    $imageHeight = $imageSize[1];
-
-    // Check file type and aspect ratio
-    if (($file['type'] == 'image/jpeg' || $file['type'] == 'image/png') && $imageWidth === $imageHeight) {
+    // Check file type
+    if ($file['type'] == 'image/jpeg' || $file['type'] == 'image/png') {
         // Remove the old profile picture if it exists
         if (!empty($oldProfilePic)) {
             $oldFilePath = $uploadDir . $oldProfilePic;
@@ -48,14 +43,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['profile_pic'])) {
                     'success' => true,
                     'message' => 'Profile picture uploaded and updated successfully.'
                 ];
-                
             } else {
                 // Consider returning a JSON response indicating failure
                 $response = [
                     'success' => false,
                     'message' => 'Failed to update profile picture in the database.'
                 ];
-                
             }
         } else {
             // Consider returning a JSON response indicating failure
@@ -63,15 +56,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['profile_pic'])) {
                 'success' => false,
                 'message' => 'Failed to move uploaded file to the designated folder.'
             ];
-            
         }
     } else {
-        // Consider returning a JSON response indicating file type or aspect ratio error
+        // Consider returning a JSON response indicating file type error
         $response = [
             'success' => false,
-            'message' => 'File type should be JPG or PNG, and the image should be square (1:1 aspect ratio).'
+            'message' => 'File type should be JPG or PNG.'
         ];
-        
     }
 } else {
     // Consider returning a JSON response indicating no file uploaded or invalid request
@@ -79,6 +70,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['profile_pic'])) {
         'success' => false,
         'message' => 'No file uploaded or invalid request.'
     ];
-    
 }
 ?>

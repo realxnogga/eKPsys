@@ -193,7 +193,7 @@ function uploadFile($file, $directory) {
                                                 <option value="4" <?php echo ($question1 == 4) ? 'selected' : ''; ?>>What is your favorite book?</option>
                                             </select>
                                             <label for="answer1">Answer:</label>
-                                            <input type="password" class="form-control" id="answer1" name="answer1">
+                                            <input type="password" class="form-control" id="answer1" name="answer1" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="question2">Security Question 2:</label>
@@ -205,7 +205,7 @@ function uploadFile($file, $directory) {
                                                 <option value="4" <?php echo ($question2 == 4) ? 'selected' : ''; ?>>What is your favorite book?</option>
                                             </select>
                                             <label for="answer2">Answer:</label>
-                                            <input type="password" class="form-control" id="answer2" name="answer2">
+                                            <input type="password" class="form-control" id="answer2" name="answer2" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="question3">Security Question 3:</label>
@@ -217,7 +217,7 @@ function uploadFile($file, $directory) {
                                                 <option value="4" <?php echo ($question3 == 4) ? 'selected' : ''; ?>>What is your favorite book?</option>
                                             </select>
                                             <label for="answer3">Answer:</label>
-                                            <input type="password" class="form-control" id="answer3" name="answer3">
+                                            <input type="password" class="form-control" id="answer3" name="answer3" required>
                                         </div>
                                         <br>
                                         <button type="submit" class="btn btn-success m-1" name="security_settings">Save Security Settings</button>

@@ -6,6 +6,7 @@ $userId = $_SESSION['user_id'];
 // Initialize variables
 $message = '';
 $error = '';
+$usertype = $_SESSION['user_type'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) {
     // Get security question values
@@ -54,8 +55,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) 
         }
     }
     
-    // Redirect back to the user settings page after processing the form data
-    header("Location: user-settings.php#account-security");
+  if ($usertype === "user") {
+         header('Location: user-settings.php');
+         exit();
+}
+        elseif ($usertype === "superadmin") {
+    header('Location: sa-settings.php');
+    exit();
+        }
+        elseif($usertype === "admin"){
+      header('Location: admin-settings.php');
+    exit();
+
+        }
+        
+       
     exit();
 }
 

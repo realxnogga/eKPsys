@@ -56,7 +56,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
           <li class="sidebar-img">
     <span></span>
       <span class="hide-menu text-center">
-          <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;">
+          <img src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
       </span>
 </li>
 

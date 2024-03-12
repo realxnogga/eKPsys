@@ -12,7 +12,6 @@ $rspndtNames = $_SESSION['rspndtNames'] ?? '';
 $cDesc = $_SESSION['cDesc'] ?? '';
 $petition = $_SESSION['petition'] ?? '';
 $cNum = $_SESSION['cNum'] ?? '';
-
 $punong_barangay = $_SESSION['punong_barangay'] ?? '';
 
 $complaintId = $_SESSION['current_complaint_id'] ?? '';
@@ -438,44 +437,43 @@ button {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../user_lupon.php">
+    <a href="../user_lupon.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
         <button class="btn common-button" style="position:fixed; right: 20px; top: 130px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
     </a>
                
-                </div>      <h5> <b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 6</b></h5>
-
- <div style="display:inline-block;text-align: center;">
+</div><h5><b style="font-family: 'Times New Roman', Times, serif;">KP Form No. 6</b></h5>
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+<div style="display:inline-block;text-align: center;">
 <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
 <img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
 <img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
 <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
 <br>
-                <h5 style="text-align: center;font-size: 18px;">Republic of the Philippines</h5>
-                <h5 style="text-align: center;font-size: 18px;">Province of Laguna</h5>
-                <h5 class="header" style="text-align: center; font-size: 18px;">
-    <?php
-    $municipality = $_SESSION['municipality_name'];
+<h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
+<h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
+<h5 class="header" style="text-align: center; font-size: 18px;">
+<?php
+$municipality = $_SESSION['municipality_name'];
 
-    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-        echo 'Bayan ng ' . $municipality;
-    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-        echo 'Lungsod ng ' . $municipality;
-    } else {
-        echo 'ungsod/Bayan ng ' . $municipality;
-    }
-    ?>
-    
+if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
+echo 'Municipality of ' . $municipality;
+} elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
+echo 'City of ' . $municipality;
+} else {
+echo 'City/Municipality of ' . $municipality;
+}
+?>
 </h5>
-                <h5 style="text-align: center;font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-                <h5 style="text-align: center;font-size: 18px;">
-                <h5 style="text-align: center; font-size: 18px; margin-top: 5px;">OFFICE OF THE PUNONG BARANGAY</h5>
+<h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
+<h5 class="header" style="font-size: 18px; margin-top: 5px;">OFFICE OF THE PUNONG BARANGAY</h5>
+</div>
             
 </div>
 
           
-<div class="e" style="font-size: 18px; text-align: right; margin-right: 40px; font-family: 'Times New Roman', Times, serif;"> <br>
+<div class="e" style="font-size: 18px; text-align: right; font-family: 'Times New Roman', Times, serif;"> <br>
         
         <?php
 // Get the current date
@@ -603,12 +601,11 @@ omission/s constituting the ground/s for withdrawal.)
     </form>
     
     <br><br>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 380px; margin-right: auto;font-size: 18px;font-family: 'Times New Roman', Times, serif;">
+    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 380px; font-size: 18px;font-family: 'Times New Roman', Times, serif;">
     <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; font-size: 18px;font-family: 'Times New Roman', Times, serif;" size="25">
     <p style=" margin-left: 530px; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px;">Signature
     </p><br>
-    <b style="text-align: justify; font-size: 12px; margin-top: 0;font-size: 18px;font-family: 'Times New Roman', Times, serif;">NOTE:
-</b>
+    <p style="text-align: justify; font-size: 18px; margin-right: 700px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">NOTE:
     <p style="text-align: justify; font-size: 12px; text-indent: 2em;font-size: 18px;font-family: 'Times New Roman', Times, serif;">
     The members of the <i>Lupon</i> conforming to the withdrawal must personally affix their signatures or thumb marks on the pertinent
 spaces above. The withdrawal must be conformed to by more than one-half of the total number of members of the <i>Lupon</i> including

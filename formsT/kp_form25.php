@@ -445,7 +445,7 @@ h5 {
 
 <div>
     <p style="text-indent: 2.0em; text-align: justify; font-size: 18px;">
-    SAPAGKAT,   noong <input type="text" name="made_day" placeholder="day" size="5" style="width: 30px; text-align: center; font-size: 18px; border:none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay ?? ''; ?>" required> araw ng
+    SAPAGKAT,   noong <input type="number" name="made_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay; ?>"> araw ng
     <select name="month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
     <?php foreach ($tagalogMonths as $englishMonth => $tagalogMonth): ?>
         <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>

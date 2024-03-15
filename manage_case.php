@@ -19,6 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['language'])) {
     }
 }
 
+$uploadMessage = 'Click Choose File and select the file to Upload.';
+
+$userID = $_SESSION['user_id'];
+$barangayID = $_SESSION['barangay_id'];
 // Sanitize input to prevent SQL injection
 $rowID = isset($_GET['id']) ? filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT) : null;
 
@@ -47,6 +51,115 @@ $_SESSION['rspndtNames'] = $row['RspndtNames'];
 $_SESSION['cDesc'] = $row['CDesc'];
 $_SESSION['petition'] = $row['Petition'];
 $_SESSION['cNum'] = $row['CNum'];
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if case_id is present in URL
+    if (isset($_GET['id'])) {
+        $caseID = $_GET['id'];
+
+        // Check if file input field is set and not empty
+        if (isset($_FILES["file"]) && !empty($_FILES["file"]["name"])) {
+            // Create User-Specific Folder
+            $userFolder = "uploads/{$userID}/";
+            if (!file_exists($userFolder)) {
+                mkdir($userFolder, 0777, true);
+            }
+
+            // Create Case-Specific Folder
+            $caseFolder = $userFolder . "{$caseID}/";
+            if (!file_exists($caseFolder)) {
+                mkdir($caseFolder, 0777, true);
+            }
+
+            // Specify target directory within case-specific folder
+            $targetDir = $caseFolder;
+
+            // Get the file name and target path
+            $fileName = basename($_FILES["file"]["name"]);
+            $targetFilePath = $targetDir . $fileName;
+  // Check if file already exists
+  if (file_exists($targetFilePath)) {
+    $uploadMessage = "Sorry, the file already exists.";
+} else {
+    // Move the uploaded file to the target directory
+    if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)) {
+        // Insert file information into the database
+        $sql = "INSERT INTO upload_files (user_id, barangay_id, case_id, signed_form, file_path) VALUES (:user_id, :barangay_id, :case_id, :signed_form, :file_path)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':user_id', $userID);
+        $stmt->bindParam(':barangay_id', $barangayID);
+        $stmt->bindParam(':case_id', $caseID);
+        $stmt->bindParam(':signed_form', $fileName);
+        $stmt->bindParam(':file_path', $targetFilePath);
+        if ($stmt->execute()) {
+            $uploadMessage = "The file " . htmlspecialchars($fileName) . " has been uploaded and stored successfully.";
+        } else {
+            $uploadMessage = "Sorry, there was an error uploading your file.";
+        }
+    } else {
+        $uploadMessage = "Sorry, there was an error uploading your file.";
+    }
+}
+} else {
+$uploadMessage = "Please select a file to upload.";
+}
+} else {
+$uploadMessage = "Cannot upload files without selecting a case.";
+}
+
+// Check if the delete button is clicked
+if (isset($_POST["delete_file"])) {
+$deleteFileID = $_POST["delete_file_id"];
+
+// Retrieve file information from the database
+$sql = "SELECT * FROM upload_files WHERE id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':id', $deleteFileID);
+$stmt->execute();
+$fileToDelete = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($fileToDelete) {
+// Delete the file from the server
+if (unlink($fileToDelete['file_path'])) {
+// Delete the file record from the database
+$sqlDelete = "DELETE FROM upload_files WHERE id = :id";
+$stmtDelete = $conn->prepare($sqlDelete);
+$stmtDelete->bindParam(':id', $deleteFileID);
+
+if ($stmtDelete->execute()) {
+    $uploadMessage = "The file " . htmlspecialchars($fileToDelete['file_name']) . " has been deleted.";
+
+    // Check if there are no more files in the case folder
+    $caseFolder = "uploads/{$userID}/{$caseID}/";
+    if (count(glob($caseFolder . "*")) === 0) {
+        // Remove the case folder if it's empty
+        rmdir($caseFolder);
+        $uploadMessage .= "<br> The folder is now empty.";
+    }
+} else {
+    $uploadMessage = "Failed to delete the file from the database.";
+}
+} else {
+$uploadMessage = "Failed to delete the file from the server.";
+}
+} else {
+$uploadMessage = "File not found in the database.";
+}
+}
+}
+
+
+$fileList = [];
+if ($userID && $barangayID && isset($_GET['id'])) {
+    $caseID = $_GET['id'];
+    $sql = "SELECT * FROM upload_files WHERE user_id = :user_id AND barangay_id = :barangay_id AND case_id = :case_id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':user_id', $userID);
+    $stmt->bindParam(':barangay_id', $barangayID);
+    $stmt->bindParam(':case_id', $caseID);
+    $stmt->execute();
+    $fileList = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 // Query the 'lupons' table to get 'punong_barangay' and 'lupon_chairman'
 $luponsQuery = "SELECT punong_barangay, lupon_chairman FROM lupons WHERE user_id = :userID";
@@ -400,7 +513,7 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'formsT' : 'forms';
                     <div class="columns-container">
                         <div class="form-buttons">
                             <div class="form-buttons">
-    <h5>Forms Used</h5>
+    <h5>Used Forms</h5>
 
     <?php
     $formButtons = [
@@ -454,7 +567,38 @@ foreach ($formButtons as $buttonText) {
         });
     });
 </script>
-                      
+<br>
+<br>
+<hr>
+<h5>Signed Forms</h5>
 
-</body>
-</html>
+
+    <br>
+
+
+<br>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . ($_GET['id'] ?? ''); ?>" method="post" enctype="multipart/form-data" class="mb-4">
+    <div class="input-group">
+        <input type="file" class="form-control" name="file" id="file">
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </div>
+</form>
+
+<?php echo $uploadMessage; ?>
+
+<ul class="list-group">
+    <?php foreach ($fileList as $file): ?>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <a href="<?php echo $file['file_path']; ?>" target="_blank"><?php echo $file['signed_form']; ?></a>
+            </div>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . ($_GET['id'] ?? ''); ?>" method="post" class="ml-2">
+                <input type="hidden" name="delete_file_id" value="<?php echo $file['id']; ?>">
+                <button type="submit" class="btn btn-danger" name="delete_file">Delete</button>
+            </form>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+    </body>
+    </html>

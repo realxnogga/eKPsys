@@ -55,9 +55,7 @@ $madeDay = $_POST['made_day'];
 $madeMonth = $_POST['made_month'];
 $madeYear = $_POST['made_year'];
 
-$receivedDay = $_POST['received_day'];
-$receivedMonth = $_POST['received_month'];
-$receivedYear = $_POST['received_year'];
+
 
 // Check if day, month, and year are non-empty before constructing the date
     if (!empty($madeDay) && !empty($madeMonth) && !empty($madeYear)) {
@@ -422,8 +420,7 @@ h5 {
     </div>
     <br><div style="text-align: justify; text-indent: 2em; font-size: 18px;">
         Received and filed this
-        <input style="font-size: 18px; width: 22px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="number" name="received_day" placeholder="day" min="01" max="31" value="<?php echo isset($existingReceivedDay) ? $existingReceivedDay : ''; ?>">
-                                    of 
+        <input style="font-size: 18px; width: 22px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="number" name="made_day" placeholder="day" min="01" max="31" value="<?php echo isset($existingMadeDay) ? $existingMadeDay : ''; ?>">of 
                                     <select select style="border: none; border-bottom: 1px solid black;width: auto; font-size: 18px; margin-right: 5px;"  name="received_month">
                                         <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="">Select Month</option>
                                         <?php foreach ($months as $m): ?>

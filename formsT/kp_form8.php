@@ -536,7 +536,7 @@ echo $tagalogDate;
         <option value="<?php echo $englishMonth; ?>" <?php echo (strcasecmp($englishMonth, date('F')) === 0) ? 'selected' : ''; ?>><?php echo $tagalogMonth; ?></option>
     <?php endforeach; ?>
 </select>,
-        <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo date('Y'); ?>" required>  ganap ng ika
+        <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo $appear_year ?? date('Y'); ?>" required>  ganap ng ika
         <input type="time" id="time" name="time" size="5" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $appear_time; ?>" required> ng umaga/ hapon para sa pagdinig ng iyong sumbong.
     </div>
 
@@ -556,7 +556,7 @@ echo $tagalogDate;
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-        <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+        <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? date('Y'); ?>">.
         <div style="position: relative;">
             <br>
             <br>
@@ -587,7 +587,7 @@ echo $tagalogDate;
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-           <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+           <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingReceivedYear ?? date('Y'); ?>">.
         </div>
 
         <?php if (!empty($message)) : ?>

@@ -17,9 +17,36 @@ include 'functions.php';
   <title>Register</title>
   <link rel="stylesheet" href="assets/css/styles.min.css" />
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+  </head>
+<style>
+  /* Hide the reveal password button in Internet Explorer */
+input[type='password']::-ms-reveal {
+    display: none;
+}
+  /* Adjust the button height to match the input field */
+  .input-group-append .btn {
+    height: calc(2.0em + .55rem + 2px); /* Adjust the calc() as needed to match your input height */
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 
-</head>
+  /* Vertically center the eye icon within the button */
+  .input-group-append i {
+    vertical-align: middle;
+  }
+    /* Additional styles to hide up and down arrows in number inputs */
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 
+  /* Firefox */
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+</style>
 <body>
   <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
@@ -95,19 +122,30 @@ include 'functions.php';
             </div>
       </div>
 
-      <div class="row">   
-        <div class="col-md-6 mb-6">
-                <label for="mediation">Password:</label>
-                <input type="password" class="form-control" required name="password" placeholder="Enter Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}" title="Password must contain at least 8 characters, including uppercase(A-Z), lowercase (a-z), number(0-9), and special character (!@#$%^&*). Example: Cluster-A2024">
-            </div>
-            <div class="col-md-6 mb-6">
-                <label for="conciliation">Confirm Password:</label>
-                <input type="password" class="form-control" required name="cpass" placeholder="Enter Password">
-                <?php if (isset($errors['password'])): ?>
-            <p style="color: red; font-style: italic;"><?php echo $errors['password']; ?></p>
-          <?php endif; ?>
-            </div>
+      <div class="row">
+  <div class="col-md-6 mb-3">
+    <label for="mediation">Password:</label>
+    <div class="input-group">
+      <input type="password" class="form-control" required name="password" id="password" placeholder="Enter Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}" title="Password must contain at least 8 characters, including uppercase(A-Z), lowercase (a-z), number(0-9), and special character (!@#$%^&*). Example: Cluster-A2024">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="toggle-password"><i class="fas fa-eye"></i></button>
       </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label for="conciliation">Confirm Password:</label>
+    <div class="input-group">
+      <input type="password" class="form-control" required name="cpass" id="cpass" placeholder="Enter Password">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="toggle-confirm-password"><i class="fas fa-eye"></i></button>
+      </div>
+    </div>
+    <?php if (isset($errors['password'])): ?>
+      <p style="color: red; font-style: italic;"><?php echo $errors['password']; ?></p>
+    <?php endif; ?>
+  </div>
+</div>
 
       <label for="mediation">I am a:</label>
       <select class="form-select" id="exampleFormControlSelect1" name="utype" onchange="toggleSecretaryField()" required>
@@ -145,12 +183,51 @@ include 'functions.php';
   </div>
   <script src="assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI/tZGggzOJ3bMEfIfmDZJQMy2F5J1PIPa4c/o9A=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha384-ZJwD0qMzETBwUp3g1b7IqEXmGw1pTUGlFHp5FLF3xvqzI2uUxgTOMoA/JV+hI2D" crossorigin="anonymous"></script>
 </body>
 
 </html>
 
 
 <script>
+$(document).ready(function () {
+    // Initially disable the toggle button
+    $('#toggle-password').prop('disabled', true);
+    $('#toggle-confirm-password').prop('disabled', true);
+
+    // Enable the toggle button only if there is text in the respective password field
+    $('#password').keyup(function () {
+        $('#toggle-password').prop('disabled', this.value === "" ? true : false);
+    });
+
+    $('#cpass').keyup(function () {
+        $('#toggle-confirm-password').prop('disabled', this.value === "" ? true : false);
+    });
+
+    // Password toggle for the password field
+    $('#toggle-password').click(function () {
+        togglePassword('password', 'toggle-password');
+    });
+
+    // Password toggle for the confirm password field
+    $('#toggle-confirm-password').click(function () {
+        togglePassword('cpass', 'toggle-confirm-password');
+    });
+});
+
+function togglePassword(inputId, toggleId) {
+    var passwordInput = document.getElementById(inputId);
+    var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+
+    // Selecting the icon within the button that was clicked
+    var eyeIcon = $('#' + toggleId).find('i');
+    
+    // Toggle the class to change the icon
+    eyeIcon.toggleClass('fa-eye fa-eye-slash');
+}
+
   function toggleSecretaryField() {
     const userTypeSelect = document.getElementById("exampleFormControlSelect1");
     const barangaySecretaryField = document.getElementById("barangay-secretary-field");

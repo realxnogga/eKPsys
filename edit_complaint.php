@@ -396,16 +396,53 @@ $(document).ready(function () {
                 "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
                 "Others..."
             ];
-
-            $('#ForTitle').select2({
-                placeholder: 'Select or start typing...',
-                data: suggestions.map(function (item) {
-                    return { id: item, text: item };
-                }),
-                tags: true,
-                tokenSeparators: [',', ' ']
-            });
+  
+             // Initialize Select2
+        $('#ForTitle').select2({
+            placeholder: 'Select or start typing...',
+            data: suggestions.map(function (item) {
+                return { id: item, text: item };
+            }),
+            tags: true,
+            createTag: function (params) {
+                var term = $.trim(params.term);
+                if (term === '') {
+                    return null;
+                }
+                return {
+                    id: term,
+                    text: term,
+                    newTag: true
+                };
+            },
+            tokenSeparators: [','],
+            closeOnSelect: false
         });
+
+        // Add a click event listener to the "Other" option
+        $('#ForTitle').on('select2:select', function (e) {
+            var selectedValue = e.params.data.id;
+            if (selectedValue === 'Other') {
+                // Clear the selected value
+                $(this).val(null).trigger('change');
+                // Enable typing for the "Other" case
+                $(this).select2('open');
+            }
+        });
+
+        // Handle keyup event to update the input value with the typed text
+        $('#ForTitle').on('keyup', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                var value = $(this).val();
+                // Add the typed text as a tag
+                if (value.trim() !== '') {
+                    $(this).append(new Option(value, value, true, true)).trigger('change');
+                }
+                // Clear the input
+                $(this).val(null);
+            }
+        });
+    });
 </script>
 <script src="edit_script.js"></script>
    

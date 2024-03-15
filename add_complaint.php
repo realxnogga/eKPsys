@@ -85,13 +85,14 @@ include 'add_handler.php';
           <!-- Set the Case Number input field value -->
           <input type="text" class="form-control" id="CNum" name="CNum" placeholder="MMYY - Case No." value="<?php echo $caseNum; ?>" onblur="validate(1)" >
       </div>
-      <div class="form-group col-sm-6 flex-column d-flex">
+   <div class="form-group col-sm-6 flex-column d-flex">
     <label class="form-control-label px-3">For:<span class="text-danger">*</span></label>
     <select class="form-control" id="ForTitle" name="ForTitle" onblur="validate(2)" required>
         <option value="">Select Title</option>
         <option value="">Others</option>
     </select>
 </div>
+
 </div>
 
 <div class="row justify-content-between text-left">
@@ -229,18 +230,56 @@ include 'add_handler.php';
                 "Nuisance (Art. 694 of the Civil Code in the relation to Art. 695, for local ordinance with penal sanctions)",
                 "Violation of P.D. No. 1612 or the Anti-Fencing Law",
                 "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
+                "Others",
  
             ];
-
-            $('#ForTitle').select2({
-                placeholder: 'Select or start typing...',
-                data: suggestions.map(function (item) {
-                    return { id: item, text: item };
-                }),
-                tags: true,
-                tokenSeparators: [',', ' ']
-            });
+           
+             // Initialize Select2
+        $('#ForTitle').select2({
+            placeholder: 'Select or start typing...',
+            data: suggestions.map(function (item) {
+                return { id: item, text: item };
+            }),
+            tags: true,
+            createTag: function (params) {
+                var term = $.trim(params.term);
+                if (term === '') {
+                    return null;
+                }
+                return {
+                    id: term,
+                    text: term,
+                    newTag: true
+                };
+            },
+            tokenSeparators: [','],
+            closeOnSelect: false
         });
+
+        // Add a click event listener to the "Other" option
+        $('#ForTitle').on('select2:select', function (e) {
+            var selectedValue = e.params.data.id;
+            if (selectedValue === 'Other') {
+                // Clear the selected value
+                $(this).val(null).trigger('change');
+                // Enable typing for the "Other" case
+                $(this).select2('open');
+            }
+        });
+
+        // Handle keyup event to update the input value with the typed text
+        $('#ForTitle').on('keyup', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                var value = $(this).val();
+                // Add the typed text as a tag
+                if (value.trim() !== '') {
+                    $(this).append(new Option(value, value, true, true)).trigger('change');
+                }
+                // Clear the input
+                $(this).val(null);
+            }
+        });
+    });
 </script>
 </body>
 

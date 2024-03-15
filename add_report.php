@@ -114,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 <body style="background-color: #E8E8E7">
 
     <div class="container-fluid">
-        <a href="user_dashboard.php" class="btn btn-dark m-1">Back to Dashboard</a>
+        <a href="reports.php" class="btn btn-primary">Back to Reports tab</a>
         <br><br>
 
         <!--  Row 1 -->
@@ -132,11 +132,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                                     </div>
                                 </div>
                                 <br>
-
-                                <h5 class="card-title mb-9 fw-semibold">Report Overview</h5>
-                                <a href="reports.php" class="btn btn-primary">Back to Reports tab</a>
-
-                                <h5>Add Existing Report</h5>   
+                      
+                                <h5 class="card-title mb-9 fw-semibold">Add Existing Report </h5>
                                 <h6 class="text-success"> <?php if(isset($message)) { echo $message; } ?></h6> 
 
                                 <div style="display: flex; align-items: center;">
@@ -144,105 +141,147 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                                     <form method="POST">
                                         <div>
                                             <label for="report_date">Report Date:</label>
-                                            <input type="date" class="form-control" id="report_date" name="report_date" value="" required>
+                                            <input style=" width:100%;" type="date" class="form-control" id="report_date" name="report_date" value="" required>
                                         </div>
-                                        <div>
-                                            <label for="mayor">Mayor:</label>
-                                            <input type="text" class="form-control" id="mayor" name="mayor" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="region">Region:</label>
-                                            <input type="text" class="form-control" id="region" name="region" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="budget">Budget:</label>
-                                            <input type="text" class="form-control" id="budget" name="budget" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="population">Population:</label>
-                                            <input type="text" class="form-control" id="population" name="population" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="totalcase">Total Case:</label>
-                                            <input type="number" class="form-control" id="totalcase" name="totalcase" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="numlupon">Number of Lupons:</label>
-                                            <input type="number" class="form-control" id="numlupon" name="numlupon" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="male">Male:</label>
-                                            <input type="number" class="form-control" id="male" name="male" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="female">Female:</label>
-                                            <input type="number" class="form-control" id="female" name="female" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="landarea">Land Area:</label>
-                                            <input type="text" class="form-control" id="landarea" name="landarea" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="criminal">Criminal:</label>
-                                            <input type="number" class="form-control" id="criminal" name="criminal" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="civil">Civil:</label>
-                                            <input type="number" class="form-control" id="civil" name="civil" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="others">Others:</label>
-                                            <input type="number" class="form-control" id="others" name="others" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="totalNature">Total Nature:</label>
-                                            <input type="number" class="form-control" id="totalNature" name="totalNature" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="media">Mediation:</label>
-                                            <input type="number" class="form-control" id="media" name="media" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="concil">Conciliation:</label>
-                                            <input type="number" class="form-control" id="concil" name="concil" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="arbit">Arbitration:</label>
-                                            <input type="number" class="form-control" id="arbit" name="arbit" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="totalSet">Total Settled:</label>
-                                            <input type="number" class="form-control" id="totalSet" name="totalSet" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="pending">Pending:</label>
-                                            <input type="number" class="form-control" id="pending" name="pending" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="dismissed">Dismissed:</label>
-                                            <input type="number" class="form-control" id="dismissed" name="dismissed" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="repudiated">Repudiated:</label>
-                                            <input type="number" class="form-control" id="repudiated" name="repudiated" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="certcourt">Certified Court:</label>
-                                            <input type="number" class="form-control" id="certcourt" name="certcourt" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="dropped">Dropped:</label>
-                                            <input type="number" class="form-control" id="dropped" name="dropped" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="totalUnset">Total Unset:</label>
-                                            <input type="number" class="form-control" id="totalUnset" name="totalUnset" value="" required>
-                                        </div>
-                                        <div>
-                                            <label for="outsideBrgy">Outside Barangay:</label>
-                                            <input type="number" class="form-control" id="outsideBrgy" name="outsideBrgy" value="" required>
-                                        </div>
+                                   
+                                        <div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="mayor">Mayor:</label>
+            <input type="text" class="form-control" id="mayor" name="mayor" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="budget">Budget:</label>
+            <input type="text" class="form-control" id="budget" name="budget" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="totalcase">Total Case:</label>
+            <input type="number" class="form-control" id="totalcase" name="totalcase" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="numlupon">Number of Lupons:</label>
+            <input type="number" class="form-control" id="numlupon" name="numlupon" value="" required>
+        </div>
+        <div class="form-group">
+            <label  for="landarea">Land Area:</label>
+            <input style=" width:210%;"  type="text" class="form-control" id="landarea" name="landarea" value="" required>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="region">Region:</label>
+            <input  type="text" class="form-control" id="region" name="region" value="" required>
+        </div>
+        <div class="form-group">
+            <label  for="population">Population:</label>
+            <input  type="text" class="form-control" id="population" name="population" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="male">Male:</label>
+            <input  type="number" class="form-control" id="male" name="male" value="" required>
+        </div>
+        <div class="form-group">
+            <label  for="female">Female:</label>
+            <input  type="number" class="form-control" id="female" name="female" value="" required>
+        </div>
+        
+    </div>
+</div>
+<br>
 
+<div class="row">
+<b>NATURE OF CASES</b>
+    <div class="col-md-6">
+  
+        <div class="form-group">
+            <label for="criminal">Criminal:</label>
+            <input type="number" class="form-control" id="criminal" name="criminal" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="others">Others:</label>
+            <input type="number" class="form-control" id="others" name="others" value="" required>
+        </div>
+    </div>
+    <div class="col-md-6">
+    <div class="form-group">
+            <label for="civil">Civil:</label>
+            <input type="number" class="form-control" id="civil" name="civil" value="" required>
+        </div>
+      
+        <div class="form-group">
+            <label for="totalNature">Total Nature:</label>
+            <input type="number" class="form-control" id="totalNature" name="totalNature" value="" required>
+        </div>
+    </div>
+</div>
+
+                                        <br>
+                                        <div class="row">
+                                        <b>ACTION TAKEN - SETTLED</b>
+    <div class="col-md-6">
+ 
+        <div class="form-group">
+            <label for="media">Mediation:</label>
+            <input type="number" class="form-control" id="media" name="media" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="arbit">Arbitration:</label>
+            <input type="number" class="form-control" id="arbit" name="arbit" value="" required>
+        </div>
+    </div>
+    <div class="col-md-6">
+    <div class="form-group">
+            <label for="concil">Conciliation:</label>
+            <input type="number" class="form-control" id="concil" name="concil" value="" required>
+        </div>
+       
+        <div class="form-group">
+            <label for="totalSet">Total Settled:</label>
+            <input type="number" class="form-control" id="totalSet" name="totalSet" value="" required>
+        </div>
+    </div>
+</div>
+
+                                        <br>
+                                        <div class="row">
+                                        <b>ACTION TAKEN - UNSETTLED</b>
+    <div class="col-md-6">
+
+        <div class="form-group">
+            <label for="pending">Pending:</label>
+            <input type="number" class="form-control" id="pending" name="pending" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="repudiated">Repudiated:</label>
+            <input type="number" class="form-control" id="repudiated" name="repudiated" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="dropped">Dropped:</label>
+            <input type="number" class="form-control" id="dropped" name="dropped" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="outsideBrgy">Outside Barangay:</label>
+            <input style=" width:210%;"  type="number" class="form-control" id="outsideBrgy" name="outsideBrgy" value="" required>
+        </div>
+    </div>
+    <div class="col-md-6">
+    <div class="form-group">
+            <label for="dismissed">Dismissed:</label>
+            <input type="number" class="form-control" id="dismissed" name="dismissed" value="" required>
+        </div>
+        <div class="form-group">
+            <label for="certcourt">Certified Court:</label>
+            <input type="number" class="form-control" id="certcourt" name="certcourt" value="" required>
+        </div>
+      
+        <div class="form-group">
+            <label for="totalUnset">Total Unset:</label>
+            <input type="number" class="form-control" id="totalUnset" name="totalUnset" value="" required>
+        </div>
+      
+    </div>
+</div>
+<br>
                                         <input type="submit" class="btn btn-dark m-1" name="submit" value="Submit">
                                     </form>
 

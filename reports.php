@@ -58,7 +58,7 @@ include 'report_handler.php';
     </div></div>    
     <br>   
 
-<h5 class="card-title mb-9 fw-semibold">Report Overview</h5>
+<h5 class="card-title mb-9 fw-semibold">Report Overview</h5> <a href="add_report.php" class="btn btn-primary">(+) Add existing Report</a>
 
 
 
@@ -210,32 +210,15 @@ include 'report_handler.php';
                 </div>
 
                 <a href="report-print.php" class="btn btn-primary m-1">View Report</a>
-
-
-
-
-
-
-                
-
 </div>
-
     </div>
-
-
-
-     
     </div></div>
     
-
-
-              
-            </div>
+</div>
           </div></b>
       
         </div>
-       
-        <div class="col-lg-4">
+       <div class="col-lg-4">
             <div class="row">
               <div class="col-lg-12">
                 <!-- Yearly Breakup -->
@@ -330,14 +313,9 @@ include 'report_handler.php';
         echo $female;            
         } ?>">
                     </div><br>
-
                     <input type="submit" class="btn btn-dark m-1" name="submit" value="Update">
-
     </form>
 
-
-
-    
 </div>
     </div>
     </div>

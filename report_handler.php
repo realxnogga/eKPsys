@@ -13,7 +13,7 @@ if (isset($_POST['submit'])) {
     $male = $_POST['male'];
     $male = intval($male); 
     $female = $_POST['female'];
-$female = intval($female); 
+    $female = intval($female); 
     $totalc = $_POST['totalc'] ?? '';
     $numlup = $_POST['numlup'] ?? '';
     $criminal = $_POST['criminal'] ?? '';

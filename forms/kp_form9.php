@@ -616,7 +616,7 @@ SUMMONS </b>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input style ="width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">, and upon respondent <?php echo $rspndtNames; ?> on the day
+                <input style ="width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingReceivedYear ?? date('Y'); ?>">, and upon respondent <?php echo $rspndtNames; ?> on the day
                 <input  style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"type="number" name="resp_day" placeholder="day" min="1" max="31" value="<?php echo $existingRespDay ?? ''; ?>"> of
     <select style ="height: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" name="resp_month" required>
     <?php foreach ($months as $m): ?>
@@ -627,7 +627,7 @@ SUMMONS </b>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input style ="width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">  by: <br>
+                <input style ="width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingRespYear ?? date('Y'); ?>">  by: <br>
                 <p style="font-size: 18px;text-indent: 0em;"> (Write name/s of respondent/s before mode by which he/they was/were served.)</p>
 </div>
 

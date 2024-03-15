@@ -60,7 +60,7 @@ if ($securityQuestions) {
                   <div class="mb-3 mb-sm-0">        
                     
                   <div class="d-flex align-items-center" class="prof-container">
-                  <img id="profilePic" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+<img src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
                   <input type="file" id="fileInput" name="profile_pic" style="display: none;">
                       <!--<h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>-->
                   <button type="button" id="uploadButton" class="btn btn-light m-1">Upload a picture</button>
@@ -148,7 +148,7 @@ if ($securityQuestions) {
     </select>
 
             <label for="answer1">Answer:</label>
-            <input type="password" class="form-control" id="answer1" name="answer1">
+            <input type="password" class="form-control" id="answer1" name="answer1" required>
         </div>
         <div class="form-group">
         <label for="question1">Security Question 2:</label>
@@ -162,7 +162,7 @@ if ($securityQuestions) {
     </select>
 
             <label for="answer2">Answer:</label>
-            <input type="password" class="form-control" id="answer2" name="answer2">
+            <input type="password" class="form-control" id="answer2" name="answer2" required>
         </div>
         <div class="form-group">
             <label for="question3">Security Question 3:</label>
@@ -176,7 +176,7 @@ if ($securityQuestions) {
     </select>
 
             <label for="answer3">Answer:</label>
-            <input type="password" class="form-control" id="answer3" name="answer3">
+            <input type="password" class="form-control" id="answer3" name="answer3" required>
         </div><br>
                                 <button type="submit" class="btn btn-success m-1" name="security_settings">Save Security Settings</button>
                                 <input type="hidden" name="active_tab" value="security">

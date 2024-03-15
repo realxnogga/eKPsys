@@ -60,6 +60,8 @@ if (isset($_POST['submit'])) {
     $petition = $_POST['Petition'];
     $madeDate = $_POST['Mdate'];
     $receivedDate = $_POST['RDate'];
+    $complainantAddress = $_POST['CAddress'];
+    $respondentAddress = $_POST['RAddress'];
     if (!empty($receivedDate)) {
     $formattedReceivedDate = date('Y-m-d', strtotime($receivedDate));
 } else {
@@ -78,18 +80,18 @@ if (isset($_POST['submit'])) {
     }
     
     // Update the complaint in the 'complaints' table using an UPDATE query
-    $stmt = $conn->prepare("UPDATE complaints SET CNum = :caseNum, ForTitle = :forTitle, CNames = :complainants, RspndtNames = :respondents, CDesc = :complaintDesc, Petition = :petition, Mdate = :madeDate, RDate = :receivedDate, Pangkat = :pangkat, CType = :caseType, CStatus = :cStatus, CMethod = :cMethod WHERE id = :complaintId");
+   $stmt = $conn->prepare("UPDATE complaints SET CNum = :caseNum, ForTitle = :forTitle, CNames = :complainants, RspndtNames = :respondents, CDesc = :complaintDesc, Petition = :petition, Mdate = :madeDate, RDate = :receivedDate, Pangkat = :pangkat, CType = :caseType, CStatus = :cStatus, CMethod = :cMethod, CAddress = :complainantAddress, RAddress = :respondentAddress WHERE id = :complaintId");
 
-
-
-$stmt->bindParam(':caseNum', $caseNum, PDO::PARAM_STR);
+    $stmt->bindParam(':complainantAddress', $complainantAddress, PDO::PARAM_STR);
+    $stmt->bindParam(':respondentAddress', $respondentAddress, PDO::PARAM_STR);
+    $stmt->bindParam(':caseNum', $caseNum, PDO::PARAM_STR);
     $stmt->bindParam(':forTitle', $forTitle, PDO::PARAM_STR);
     $stmt->bindParam(':complainants', $complainants, PDO::PARAM_STR);
     $stmt->bindParam(':respondents', $respondents, PDO::PARAM_STR);
     $stmt->bindParam(':complaintDesc', $complaintDesc, PDO::PARAM_STR);
     $stmt->bindParam(':petition', $petition, PDO::PARAM_STR);
     $stmt->bindParam(':madeDate', $madeDate, PDO::PARAM_STR);
-$stmt->bindParam(':receivedDate', $formattedReceivedDate, PDO::PARAM_STR);
+    $stmt->bindParam(':receivedDate', $formattedReceivedDate, PDO::PARAM_STR);
     $stmt->bindParam(':pangkat', $pangkat, PDO::PARAM_STR);
     $stmt->bindParam(':caseType', $caseType, PDO::PARAM_STR);
     $stmt->bindParam(':complaintId', $complaintId, PDO::PARAM_INT);
@@ -192,6 +194,16 @@ $stmt->bindParam(':receivedDate', $formattedReceivedDate, PDO::PARAM_STR);
                                 <label class="form-control-label px-3">Petition:<span class="text-danger"> *</span></label>
                                 <input type="text" class="form-control" id="Petition" name="Petition" placeholder="" onblur="validate(6)" required value="<?php echo $complaint['Petition']; ?>">
                             </div>
+                            <div>
+                                <label class="form-control-label px-3">Complainant Address:<span class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" id="CAddress" name="CAddress" placeholder="Enter complainant address" required value="<?php echo $complaint['CAddress']; ?>">
+                            </div>
+
+                            <div>
+                                <label class="form-control-label px-3">Respondent Address:<span class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" id="RAddress" name="RAddress" placeholder="Enter respondent address" required value="<?php echo $complaint['RAddress']; ?>">
+                            </div>
+
 
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-sm-6 flex-column d-flex">

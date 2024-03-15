@@ -14,6 +14,15 @@ $complaintId = $_SESSION['current_complaint_id'] ?? '';
 $currentHearing = $_SESSION['current_hearing'] ?? '';
 $formUsed = 16;
 
+$query = "SELECT CAddress, RAddress FROM complaints WHERE id = :complaintId"; // Assuming 'id' is the primary key of the complaints table
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':complaintId', $complaintId);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Assign the addresses to variables
+$complainantAddress = $row['CAddress'];
+$respondentAddress = $row['RAddress'];
 // Fetch existing row values if the form has been previously submitted
 $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
 $stmt = $conn->prepare($query);
@@ -343,7 +352,10 @@ h5 {
 <div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
     <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
+    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?> </div>
+     <div class="label"></div>
+    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($complainantAddress) ? $complainantAddress : '&nbsp;'; ?>
                 </div>
               
 <p style="font-size: 18px;"> Complainant/s </p>
@@ -353,7 +365,10 @@ h5 {
 <div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
     <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
+    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?></div><br>
+     <div class="label"></div>
+    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
+    <?php echo !empty($complainantAddress) ? $complainantAddress : '&nbsp;'; ?>
                 </div>
                 <div>
 <p style="font-size: 18px;"> Respondent/s </p> </div>

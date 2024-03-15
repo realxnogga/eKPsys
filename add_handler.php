@@ -31,16 +31,14 @@ if (!$lastCaseNumber) {
         }
 
         // Format the case number
-        $caseNum = sprintf('%02d', $blotterNumber) . '-' . $parts[1] . '-' . $currentMonthYear;
+$caseNum = sprintf('%02d', $blotterNumber) . '-' . $parts[1] . '-' . $currentMonthYear;
     } else {
         // Handle unexpected format of $lastCaseNumber
         $caseNum = '01-000-' . date('my');
     }
 }
 
-
 if (isset($_POST['submit'])) {
- 
     // Sanitize and validate user input
     $forTitle = $_POST['ForTitle'];
     $complainants = $_POST['CNames'];
@@ -51,9 +49,11 @@ if (isset($_POST['submit'])) {
     $receivedDate = $_POST['RDate'];
     $caseType = $_POST['CType'];
     $caseNum = $_POST['CNum'];
+    $complainantAddress = $_POST['CAddress'];
+    $respondentAddress = $_POST['RAddress'];    
 
     // Insert the complaint into the 'complaints' table with default values
-    $stmt = $conn->prepare("INSERT INTO complaints (UserID, BarangayID, CNum, ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CType, CStatus, CMethod) VALUES (:userID, :barangayID, :caseNum, :forTitle, :complainants, :respondents, :complaintDesc, :petition, :madeDate, :receivedDate, :caseType, 'Unsettled', 'Pending')");
+    $stmt = $conn->prepare("INSERT INTO complaints (UserID, BarangayID, CNum, ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CType, CStatus, CMethod, CAddress, RAddress) VALUES (:userID, :barangayID, :caseNum, :forTitle, :complainants, :respondents, :complaintDesc, :petition, :madeDate, :receivedDate, :caseType, 'Unsettled', 'Pending', :complainantAddress, :respondentAddress)"); // Updated query to include address fields
     $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
     $stmt->bindParam(':barangayID', $barangayID, PDO::PARAM_INT);
     $stmt->bindParam(':caseNum', $caseNum, PDO::PARAM_STR);
@@ -65,6 +65,8 @@ if (isset($_POST['submit'])) {
     $stmt->bindParam(':madeDate', $madeDate, PDO::PARAM_STR);
     $stmt->bindParam(':receivedDate', $receivedDate, PDO::PARAM_STR);
     $stmt->bindParam(':caseType', $caseType, PDO::PARAM_STR);
+    $stmt->bindParam(':complainantAddress', $complainantAddress, PDO::PARAM_STR); // New line to bind complainant address
+    $stmt->bindParam(':respondentAddress', $respondentAddress, PDO::PARAM_STR); // New line to bind respondent address
 
     if ($stmt->execute()) {
         // Get the ID of the last inserted complaint
@@ -85,7 +87,6 @@ if (isset($_POST['submit'])) {
                 Failed to Update Case Progress. Contact Devs.
             </div>';
         }
-
     } else {
         // Failed to submit complaint
         $successMessage = '<div class="alert alert-danger" role="alert">
@@ -93,5 +94,6 @@ if (isset($_POST['submit'])) {
               </div>';
     }
 }
+
 
 ?>

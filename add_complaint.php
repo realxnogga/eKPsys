@@ -105,6 +105,17 @@ include 'add_handler.php';
     </div>
 </div>
 <div class="row justify-content-between text-left">
+    <div class="form-group col-sm-6 flex-column d-flex">
+        <label class="form-control-label px-3">Address of Complainants:<span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="CAddress" name="CAddress" placeholder="Enter address of complainants" onblur="validate(9)" required>
+    </div>
+    <div class="form-group col-sm-6 flex-column d-flex">
+        <label class="form-control-label px-3">Address of Respondents:<span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="RAddress" name="RAddress" placeholder="Enter address of respondents" onblur="validate(10)" required>
+    </div>
+</div>
+
+<div class="row justify-content-between text-left">
     <div class="form-group col-12 flex-column d-flex">
         <label class="form-control-label px-3">Complaint:<span class="text-danger">*</span></label>
         <input type="text" class="form-control" id="CDesc" name="CDesc" placeholder="" onblur="validate(5)" required>

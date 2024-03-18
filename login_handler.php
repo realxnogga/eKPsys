@@ -38,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['barangay_id'] = $user['barangay_id']; // Store barangay ID
                     $_SESSION['status'] = 'loggedin'; // Set status to logged in
 
+                    // Invalidate previous sessions for this user
+                    invalidatePreviousSessions($user['id']);
+
                     // Log user activity
                     logUserActivity($user['id'], "User logged in");
 
@@ -99,6 +102,17 @@ function logUserActivity($user_id, $activity) {
     $stmt = $conn->prepare($query);
     $stmt->bindParam(1, $user_id, PDO::PARAM_INT);
     $stmt->bindParam(2, $activity, PDO::PARAM_STR);
+    $stmt->execute();
+    $stmt = null; // Close the cursor
+}
+
+// Function to invalidate previous sessions for a user
+function invalidatePreviousSessions($user_id) {
+    global $conn;
+
+    $query = "DELETE FROM active_sessions WHERE user_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(1, $user_id, PDO::PARAM_INT);
     $stmt->execute();
     $stmt = null; // Close the cursor
 }

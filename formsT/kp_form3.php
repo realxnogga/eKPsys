@@ -336,8 +336,8 @@ p {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../user_lupon.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-        <button class="btn common-button" style="position:fixed; right: 20px; top: 130px;">
+    <a href="../user_lupon.php">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
     </a>
@@ -355,23 +355,25 @@ p {
        <h5 style="text-align: center;font-size: 18px;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center;font-size: 18px;">Lalawigan ng Laguna</h5>
         <h5 class="header" style="text-align: center; font-size: 18px;">
-    <?php
-    $municipality = $_SESSION['municipality_name'];
+        <?php
+$municipality = $_SESSION['municipality_name'];
+$isCity = in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Santa Rosa']);
+$isMunicipality = !$isCity;
 
-    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-        echo 'Municipality of ' . $municipality;
-    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-        echo 'City of ' . $municipality;
-    } else {
-        echo 'City/Municipality of ' . $municipality;
-    }
-    ?>
+if ($isCity) {
+    echo 'Lungsod ng ' . $municipality;
+} elseif ($isMunicipality) {
+    echo 'Bayan ng ' . $municipality;
+} else {
+    echo 'Lungsod/Bayan ng ' . $municipality;
+}
+?>
 </h5>
 
                 <h5 style="text-align: center;font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5><br>
                 <h5 style="text-align: center;font-size: 18px;"><b style="font-size: 18px;font-family: 'Times New Roman', Times, serif;">TANGGAPAN NG  LUPONG TAGAPAMAYAPA </b></h5>
     </div>
-</div>            <?php
+            <?php
             $months = [
                 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
             ];
@@ -411,7 +413,7 @@ p {
 
 <h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> <b style= "font-size: 18px;">
 PAABISO NG PAGHIHIRANG</b>
-
+<form method="POST">
                 <div style="text-align: left;">
 <br><br><br>                
 <input type="text" id="recipient" placeholder="" name="recipient" list="nameList" required style="width:250px; height: 20px; border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none; size= 1;"></p>
@@ -465,8 +467,13 @@ PAABISO NG PAGHIHIRANG</b>
     </p>
     </div>
     </div>
-</form>
-
+   
+    <?php if (!empty($message)) : ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+   
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+                </form>
                 <?php if (!empty($errors)): ?>
                     <ul>
                         <?php foreach ($errors as $error): ?>

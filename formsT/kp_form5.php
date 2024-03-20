@@ -336,8 +336,8 @@ h5 {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../user_lupon.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-        <button class="btn common-button" style="position:fixed; right: 20px; top: 130px;">
+    <a href="../user_lupon.php">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
     </a>
@@ -355,13 +355,15 @@ h5 {
 <h5 class="header" style="text-align: center; font-size: 18px;">
 <?php
 $municipality = $_SESSION['municipality_name'];
+$isCity = in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Santa Rosa']);
+$isMunicipality = !$isCity;
 
-if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-echo 'Municipality of ' . $municipality;
-} elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-echo 'City of ' . $municipality;
+if ($isCity) {
+    echo 'Lungsod ng ' . $municipality;
+} elseif ($isMunicipality) {
+    echo 'Bayan ng ' . $municipality;
 } else {
-echo 'City/Municipality of ' . $municipality;
+    echo 'Lungsod/Bayan ng ' . $municipality;
 }
 ?>
 </h5>
@@ -370,7 +372,8 @@ echo 'City/Municipality of ' . $municipality;
 </div>
 <br>
 <br>
-            <?php
+                 
+<?php
             $months = [
                 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
             ];
@@ -378,36 +381,25 @@ echo 'City/Municipality of ' . $municipality;
             $currentYear = date('Y');
             ?>
 
+
 <div style="text-align: right;">
-<?php
-$currentDate = date('F d, Y');
-$fontSize = '18px'; 
-$fontFamily = 'Times New Roman'; 
-echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p>";
-?>
-                <script>
-                    var yearInput = document.getElementById('year');
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 38) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year + 1;
-                        }
-                    });
-
-                    yearInput.addEventListener('keyup', function(event) {
-                        if (event.keyCode === 40) {
-                            event.preventDefault();
-                            var year = parseInt(yearInput.value);
-                            yearInput.value = year - 1;
-                        }
-                    });
-                </script>
+                <select id="monthInput" name="month" required style="text-align: center; width: 110px; height: 31px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+                    <?php
+                    $currentMonth = date('F');
+                    foreach ($months as $index => $month) {
+                        $monthNumber = $index + 1;
+                        $selected = ($month == $currentMonth) ? 'selected' : '';
+                        echo '<option value="' . $monthNumber . '" ' . $selected . '>' . $month . '</option>';
+                    }
+                    ?>
+                </select>
+                <input type="text" id="day" placeholder= "day" name="day" required style=" height: 30px; text-align: center; width: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+                <label for="day">,</label>
+                <input type="text" id="year" name="year" required style=" height: 30px; text-align: center; width: 45px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $currentYear; ?>">
 
 <h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; font-weight: bold;">
 <br>PANUNUMPA SA KATUNGKULAN</h3><br>
-
+<form method="POST">
                 <div style="text-align: left;">
                 <p style="text-indent: 2em; text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;"> Bilang pag-alinsunod sa Kabanata 7, Pamagat Isa, Aklat II, ng kodigo ng Pamahalaang Lokal ng 1991 (Batas ng Republika Blg. 7160), Ako si 
 
@@ -452,10 +444,15 @@ echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p
 </select>,
         <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
         <div style="position: relative;">
+         
+    <?php if (!empty($message)) : ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+   
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
                 </form>
     
-    <canvas id="canvas1" width="190" height="80" style="float: right";></canvas>
-    <script src="signature.js"></script>
+   <br>
     <p class="important-warning-text" style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 440px; margin-right: auto;">
     <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black;outline: none; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
     <p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px; margin-right: 90px;">Punong Barangay

@@ -423,8 +423,8 @@ button {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../user_lupon.php?id=<?php echo $_SESSION['current_complaint_id']; ?>">
-        <button class="btn common-button" style="position:fixed; right: 20px; top: 130px;">
+    <a href="../user_lupon.php">
+        <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
     </a>
@@ -443,17 +443,19 @@ button {
         <h5 style="text-align: center; font-size: 18px;">Republika ng Pilipinas</h5>
         <h5 style="text-align: center; font-size: 18px;">Lalawigan ng Laguna</h5>
         <h5 class="header" style="text-align: center; font-size: 18px;">
-    <?php
-    $municipality = $_SESSION['municipality_name'];
+        <?php
+$municipality = $_SESSION['municipality_name'];
+$isCity = in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Santa Rosa']);
+$isMunicipality = !$isCity;
 
-    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-        echo 'Municipality of ' . $municipality;
-    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-        echo 'City of ' . $municipality;
-    } else {
-        echo 'City/Municipality of ' . $municipality;
-    }
-    ?>
+if ($isCity) {
+    echo 'Lungsod ng ' . $municipality;
+} elseif ($isMunicipality) {
+    echo 'Bayan ng ' . $municipality;
+} else {
+    echo 'Lungsod/Bayan ng ' . $municipality;
+}
+?>
 </h5>
         <h5 style="text-align: center; font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
         <h5 style="text-align: center; font-size: 18px; margin-top: 5px; ">TANGGAPAN NG  LUPONG TAGAPAMAYAPA</h5>
@@ -486,7 +488,7 @@ button {
                 <br>
 <br><h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> <b style= "font-size: 18px;">
 PAGHIRANG</b>
-
+<form method="POST">
 <br><br><br><p style="text-align: justify; font-size: 18px; margin-top: 0; font-family: 'Times New Roman', Times, serif;">PARA KAY:
     <input type="text" id="recipient" name="recipient" list="nameList" required style="border: none; border-bottom: 1px solid black;">
     <datalist id="nameList">
@@ -521,7 +523,13 @@ PAGHIRANG</b>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-
+   
+                <?php if (!empty($message)) : ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+   
+    <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+                </form>
     <p class="important-warning-text" style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 18px; margin-left: 450px; margin-right: auto;">
     <input type="text" id="positionInput" name="pngbrgy" style="font-family: 'Times New Roman', Times, serif; border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 18px;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
     <br>    <p style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-top: 15px; margin-left: 450px;">Punong Barangay</p>

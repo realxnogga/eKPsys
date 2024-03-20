@@ -362,17 +362,19 @@ h5 {
         <h5 class="header" style="font-size: 18px;">Republika ng Pilipinas</h5>
         <h5 class="header" style="font-size: 18px;">Lalawigan ng Laguna</h5>
         <h5 class="header" style="text-align: center; font-size: 18px;">
-    <?php
-    $municipality = $_SESSION['municipality_name'];
+        <?php
+$municipality = $_SESSION['municipality_name'];
+$isCity = in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Santa Rosa']);
+$isMunicipality = !$isCity;
 
-    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-        echo 'Municipality of ' . $municipality;
-    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-        echo 'City of ' . $municipality;
-    } else {
-        echo 'City/Municipality of ' . $municipality;
-    }
-    ?>
+if ($isCity) {
+    echo 'Lungsod ng ' . $municipality;
+} elseif ($isMunicipality) {
+    echo 'Bayan ng ' . $municipality;
+} else {
+    echo 'Lungsod/Bayan ng ' . $municipality;
+}
+?>
 </h5>
         <h5 class="header" style="font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
         <h5 class="header" style="font-size: 18px; margin-top: 5px;">TANGGAPAN NG  LUPONG TAGAPAMAYAPA</h5>

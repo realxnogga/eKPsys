@@ -426,17 +426,19 @@ h5 {
                 <h5 style="text-align: center;font-size: 18px;">Republika ng Pilipinas</h5>
                 <h5 style="text-align: center;font-size: 18px;">Lalawigan ng Laguna</h5>
                 <h5 class="header" style="text-align: center; font-size: 18px;">
-    <?php
-    $municipality = $_SESSION['municipality_name'];
+                <?php
+$municipality = $_SESSION['municipality_name'];
+$isCity = in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Santa Rosa']);
+$isMunicipality = !$isCity;
 
-    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-        echo 'Bayan ng ' . $municipality;
-    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-        echo 'Lungsod ng ' . $municipality;
-    } else {
-        echo 'ungsod/Bayan ng ' . $municipality;
-    }
-    ?>
+if ($isCity) {
+    echo 'Lungsod ng ' . $municipality;
+} elseif ($isMunicipality) {
+    echo 'Bayan ng ' . $municipality;
+} else {
+    echo 'Lungsod/Bayan ng ' . $municipality;
+}
+?>
     
 </h5>
                 <h5 style="text-align: center;font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5><br>

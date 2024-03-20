@@ -367,16 +367,18 @@ h5 {
 <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
                 <h5 style="text-align: center; font-size: 18px;">
                 <?php
-    $municipality = $_SESSION['municipality_name'];
+$municipality = $_SESSION['municipality_name'];
+$isCity = in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Santa Rosa']);
+$isMunicipality = !$isCity;
 
-    if (in_array($municipality, ['Alaminos', 'Bay', 'Los Banos', 'Calauan'])) {
-        echo 'Municipality of ' . $municipality;
-    } elseif (in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Sta. Rosa'])) {
-        echo 'City of ' . $municipality;
-    } else {
-        echo 'City/Municipality of ' . $municipality;
-    }
-    ?>
+if ($isCity) {
+    echo 'City of ' . $municipality;
+} elseif ($isMunicipality) {
+    echo 'Municipality of ' . $municipality;
+} else {
+    echo 'City/Municipality of ' . $municipality;
+}
+?>
 </h5>
                 <h5 style="text-align: center; font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
                 <h5 style="text-align: center; font-size: 18px; margin-top: 5px;">OFFICE OF THE PUNONG BARANGAY</h5>

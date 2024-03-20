@@ -234,25 +234,31 @@ function liveSearch() {
                     <tbody>
     <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
                             <?php
-                            // Calculate the elapsed days since the complaint was added
-                            $dateAdded = strtotime($row['Mdate']);
-                            $currentDate = strtotime(date('Y-m-d'));
-                            $elapsedDays = ($currentDate - $dateAdded) / (60 * 60 * 24);
+                     // Determine if the case is settled based on its method
+$isSettled = in_array($row['CMethod'], ['Mediation', 'Conciliation', 'Arbitration']);
 
-                            // Check if the complaint is settled
-                            $isSettled = $row['CMethod'] === 'Settled';
+// Determine if the case is unsettled based on its status
+$isUnsettled = in_array($row['CMethod'], ['Pending', 'Repudiated', 'Dismissed', 'Certified to file action in court', 'Dropped/Withdrawn']);
 
-                            // Determine the background color based on elapsed days and settlement status
-                            if ($elapsedDays <= 5 && !$isSettled) {
-                                $backgroundColor = '#dcfadf'; // Light green
-                            } elseif ($elapsedDays > 5 && $elapsedDays <= 7 && !$isSettled) {
-                                $backgroundColor = '#FFE181'; // Light yellow
-                            } elseif ($elapsedDays > 7 && $elapsedDays <= 15 && !$isSettled) {
-                                $backgroundColor = '#F88D96'; // Light red
-                            } else {
-                                $backgroundColor = ''; // No background color
-                            }
-                            ?>
+// Calculate the elapsed days since the complaint was added
+$dateAdded = strtotime($row['Mdate']);
+$currentDate = strtotime(date('Y-m-d'));
+$elapsedDays = ($currentDate - $dateAdded) / (60 * 60 * 24);
+
+// Check if the complaint is settled, pending, or unsettled
+if ($isSettled) {
+    $backgroundColor = '#dcfadf'; // Light green for settled cases
+} elseif ($elapsedDays >= 10 && $elapsedDays <= 13) {
+    $backgroundColor = '#FFE181'; // Light yellow for cases between 10 and 13 days
+} elseif ($elapsedDays >= 14 && $elapsedDays <= 30 && !$isSettled) {
+    $backgroundColor = '#F88D96'; // Light red for cases between 14 and 30 days that are not settled
+} else {
+    // Default case for 1-9 days or cases over 30 days, no color
+    $backgroundColor = '';
+}
+
+
+          ?>
                             <tr style="background-color: <?= $backgroundColor ?>">
                             <td class="case-number"><?= str_pad($row['CNum'], 11, '0', STR_PAD_LEFT) ?></td>
                             <td class="title-column" style="white-space: pre-line;"><?= $row['ForTitle'] ?></td>

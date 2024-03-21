@@ -105,6 +105,13 @@ if (isset($_POST['submit'])) {
         $successMessage = '<div class="alert alert-success" role="alert">
                 Complaint Updated Successfully!
               </div>';
+
+        // Fetch the updated complaint data from the database
+        $query = "SELECT * FROM complaints WHERE id = :complaintId";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':complaintId', $complaintId);
+        $stmt->execute();
+        $complaint = $stmt->fetch(PDO::FETCH_ASSOC);
     } else {
         // Update failed
         $successMessage = '<div class="alert alert-danger" role="alert">

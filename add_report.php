@@ -9,8 +9,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 }
 
 
+
 $user_id = $_SESSION['user_id'] ?? '';
 $barangay_id = $_SESSION['barangay_id'] ?? '';
+
+// Check if there's a delete message to display
+$delete_message = isset($_SESSION['delete_message']) ? $_SESSION['delete_message'] : "";
+unset($_SESSION['delete_message']); // Clear the delete message after displaying it
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
@@ -93,6 +98,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         }
     }
 }
+
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -135,155 +142,77 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                       
                                 <h5 class="card-title mb-9 fw-semibold">Add Existing Report </h5>
                                 <h6 class="text-success"> <?php if(isset($message)) { echo $message; } ?></h6> 
+                                <h6 class="text-success"> <?php if(isset($message)) { echo $message; }
+                                elseif (!empty($delete_message)) {
+    echo '<div class="alert alert-danger" role="alert">' . $delete_message . '</div>';
+} ?></h6> 
 
                                 <div style="display: flex; align-items: center;">
 
                                     <form method="POST">
-                                        <div>
-                                            <label for="report_date">Report Date:</label>
-                                            <input style=" width:100%;" type="date" class="form-control" id="report_date" name="report_date" value="" required>
-                                        </div>
-                                   
-                                        <div class="row">
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="mayor">Mayor:</label>
-            <input type="text" class="form-control" id="mayor" name="mayor" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="budget">Budget:</label>
-            <input type="text" class="form-control" id="budget" name="budget" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="totalcase">Total Case:</label>
-            <input type="number" class="form-control" id="totalcase" name="totalcase" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="numlupon">Number of Lupons:</label>
-            <input type="number" class="form-control" id="numlupon" name="numlupon" value="" required>
-        </div>
-        <div class="form-group">
-            <label  for="landarea">Land Area:</label>
-            <input style=" width:210%;"  type="text" class="form-control" id="landarea" name="landarea" value="" required>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="region">Region:</label>
-            <input  type="text" class="form-control" id="region" name="region" value="" required>
-        </div>
-        <div class="form-group">
-            <label  for="population">Population:</label>
-            <input  type="text" class="form-control" id="population" name="population" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="male">Male:</label>
-            <input  type="number" class="form-control" id="male" name="male" value="" required>
-        </div>
-        <div class="form-group">
-            <label  for="female">Female:</label>
-            <input  type="number" class="form-control" id="female" name="female" value="" required>
-        </div>
-        
-    </div>
+<div>
+    <label for="report_date">Report Date:</label>
+    <input style="width:100%;" type="date" class="form-control" id="report_date" name="report_date" value="" required onchange="fetchReportData()">
 </div>
-<br>
+<script>
+function fetchReportData() {
+    // Get the selected report date
+    var selectedDate = document.getElementById('report_date').value;
 
-<div class="row">
-<b>NATURE OF CASES</b>
-    <div class="col-md-6">
-  
-        <div class="form-group">
-            <label for="criminal">Criminal:</label>
-            <input type="number" class="form-control" id="criminal" name="criminal" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="others">Others:</label>
-            <input type="number" class="form-control" id="others" name="others" value="" required>
-        </div>
-    </div>
-    <div class="col-md-6">
-    <div class="form-group">
-            <label for="civil">Civil:</label>
-            <input type="number" class="form-control" id="civil" name="civil" value="" required>
-        </div>
-      
-        <div class="form-group">
-            <label for="totalNature">Total Nature:</label>
-            <input type="number" class="form-control" id="totalNature" name="totalNature" value="" required>
-        </div>
-    </div>
-</div>
+    // Extract the year from the selected date
+    var selectedYear = (new Date(selectedDate)).getFullYear();
 
-                                        <br>
-                                        <div class="row">
-                                        <b>ACTION TAKEN - SETTLED</b>
-    <div class="col-md-6">
- 
-        <div class="form-group">
-            <label for="media">Mediation:</label>
-            <input type="number" class="form-control" id="media" name="media" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="arbit">Arbitration:</label>
-            <input type="number" class="form-control" id="arbit" name="arbit" value="" required>
-        </div>
-    </div>
-    <div class="col-md-6">
-    <div class="form-group">
-            <label for="concil">Conciliation:</label>
-            <input type="number" class="form-control" id="concil" name="concil" value="" required>
-        </div>
-       
-        <div class="form-group">
-            <label for="totalSet">Total Settled:</label>
-            <input type="number" class="form-control" id="totalSet" name="totalSet" value="" required>
-        </div>
-    </div>
-</div>
+    // Make an AJAX request to fetch data based on the selected year
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var data = JSON.parse(this.responseText);
+            // Update input values for 'Basic Information' fields
+            document.getElementById('mayor').value = data.mayor;
+            document.getElementById('budget').value = data.budget;
+            document.getElementById('landarea').value = data.landarea;
+            document.getElementById('region').value = data.region;
+            document.getElementById('population').value = data.population;
+            document.getElementById('numlupon').value = data.numlupon;
 
-                                        <br>
-                                        <div class="row">
-                                        <b>ACTION TAKEN - UNSETTLED</b>
-    <div class="col-md-6">
+            // Repeat similar steps for other sections if needed
+        }
+    };
+    xhr.open('GET', 'fetch_data.php?year=' + selectedYear, true);
+    xhr.send();
+}
+</script>
+    <!-- Define field sections -->
+    <?php
+    $sections = [
+        'Basic Information' => ['mayor', 'budget', 'totalcase', 'numlupon', 'landarea', 'region', 'population', 'male', 'female'],
+        'Nature of Cases' => ['criminal', 'others', 'civil', 'totalNature'],
+        'Action Taken - Settled' => ['media', 'arbit', 'concil', 'totalSet'],
+        'Action Taken - Unsettled' => ['pending', 'repudiated', 'dropped', 'outsideBrgy', 'dismissed', 'certcourt', 'totalUnset']
+    ];
 
-        <div class="form-group">
-            <label for="pending">Pending:</label>
-            <input type="number" class="form-control" id="pending" name="pending" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="repudiated">Repudiated:</label>
-            <input type="number" class="form-control" id="repudiated" name="repudiated" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="dropped">Dropped:</label>
-            <input type="number" class="form-control" id="dropped" name="dropped" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="outsideBrgy">Outside Barangay:</label>
-            <input style=" width:210%;"  type="number" class="form-control" id="outsideBrgy" name="outsideBrgy" value="" required>
-        </div>
-    </div>
-    <div class="col-md-6">
-    <div class="form-group">
-            <label for="dismissed">Dismissed:</label>
-            <input type="number" class="form-control" id="dismissed" name="dismissed" value="" required>
-        </div>
-        <div class="form-group">
-            <label for="certcourt">Certified Court:</label>
-            <input type="number" class="form-control" id="certcourt" name="certcourt" value="" required>
-        </div>
-      
-        <div class="form-group">
-            <label for="totalUnset">Total Unset:</label>
-            <input type="number" class="form-control" id="totalUnset" name="totalUnset" value="" required>
-        </div>
-      
-    </div>
-</div>
-<br>
-                                        <input type="submit" class="btn btn-dark m-1" name="submit" value="Submit">
-                                    </form>
+    foreach ($sections as $sectionTitle => $fields) {
+    echo '<div class="row">';
+    echo '<b>' . $sectionTitle . '</b>';
+    foreach ($fields as $field) {
+        echo '<div class="col-md-6">';
+        echo '<div class="form-group">';
+        echo '<label for="' . $field . '">' . ucwords(str_replace('_', ' ', $field)) . ':</label>';
+        // Check if the field should be of type "text" or "number"
+        $inputType = in_array($field, ['mayor', 'budget', 'landarea', 'region', 'population', 'numlupon']) ? 'text' : 'number';
+        echo '<input type="' . $inputType . '" class="form-control" id="' . $field . '" name="' . $field . '" value="" required>';
+        echo '</div>';
+        echo '</div>';
+    }
+    echo '</div>';
+    echo '<br>';
+}
+
+    ?>
+    
+    <input type="submit" class="btn btn-dark m-1" name="submit" value="Submit">
+</form>
+
 
                                 </div>
                             </div>
@@ -291,10 +220,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                     </div>
                 </div>
             </div>
+<div class="col-lg-4">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card overflow-hidden">
+                  <div class="card-body p-4">
+
+Existing Reports:
+<table class="table">
+    <thead>
+        <tr>
+            <th>Report Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        // Fetch existing reports from the database
+        $existing_reports_query = "SELECT * FROM reports WHERE user_id = :user_id AND barangay_id = :barangay_id";
+        $stmt = $conn->prepare($existing_reports_query);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':barangay_id', $barangay_id);
+        $stmt->execute();
+        $existing_reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($existing_reports as $report) {
+            echo '<tr>';
+ // Format report_date as "Month Year"
+    $formatted_date = date('F Y', strtotime($report['report_date']));
+    echo '<td>' . $formatted_date . '</td>';
+            echo '<td>';
+            // Edit button
+            echo '<a href="edit_report.php?report_id=' . $report['report_id'] . '" class="btn btn-primary btn-sm">Edit</a>';
+            // Delete button
+        echo '<a href="#" class="btn btn-danger btn-sm" onclick="confirmDelete(' . $report['report_id'] . ');">Delete</a>';
+            echo '</td>';
+            echo '</tr>';
+        }
+        ?>
+    </tbody>
+</table>
         </div>
     </div>
+</div>
+</div>
+</div>
+
+</div>
 
 </body>
-
+<!-- Add a JavaScript function to display a confirmation dialog -->
+<script>
+    function confirmDelete(reportId) {
+        if (confirm('Are you sure you want to delete this report?')) {
+            window.location.href = 'delete_report.php?report_id=' + reportId;
+        }
+    }
+</script>
 </html>
 

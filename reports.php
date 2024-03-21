@@ -221,7 +221,6 @@ include 'report_handler.php';
        <div class="col-lg-4">
             <div class="row">
               <div class="col-lg-12">
-                <!-- Yearly Breakup -->
                 <div class="card overflow-hidden">
                   <div class="card-body p-4">
                     <h5 class="card-title mb-9 fw-semibold">Information</h5><hr><b>

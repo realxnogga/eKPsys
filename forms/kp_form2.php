@@ -547,7 +547,7 @@ APPOINTMENT</b>
 <br><br><p style="text-align: justify; margin-left: 0;font-size: 18px;font-family: 'Times New Roman', Times, serif;">ATTESTED:</p>
     <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-right: 500px; margin-top: 30px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
     <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none;font-size: 18px;font-family: 'Times New Roman', Times, serif;" size="25">
-    <p style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-top: 15px; margin-right: 490px;">Baranggay Secretary
+    <p style="font-family: 'Times New Roman', Times, serif; text-align: center; font-size: 18px; margin-top: 15px; margin-right: 490px;">Barangay Secretary
 	</p></p>
     </div>
     </div>

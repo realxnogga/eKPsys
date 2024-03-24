@@ -141,7 +141,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                                 <br>
                       
                                 <h5 class="card-title mb-9 fw-semibold">Add Existing Report </h5>
-                                <h6 class="text-success"> <?php if(isset($message)) { echo $message; } ?></h6> 
                                 <h6 class="text-success"> <?php if(isset($message)) { echo $message; }
                                 elseif (!empty($delete_message)) {
     echo '<div class="alert alert-danger" role="alert">' . $delete_message . '</div>';

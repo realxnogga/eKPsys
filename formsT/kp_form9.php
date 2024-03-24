@@ -565,7 +565,7 @@ PATAWAG </b>
             <?php endif; ?>
         <?php endforeach; ?>
     </select>,
-    <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="year" placeholder="year" min="<?php echo date('Y'); ?>" max="<?php echo date('Y') + 100; ?>" value="<?php echo date('Y'); ?>" required>
+    <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="year" placeholder="year" value="<?php $appear_year ?? date('Y'); ?>" required>
     at <input style="font-size: 18px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required>ng umaga /hapon, upang sagutin ang sumbong ng ginawa sa harap ko, na ang sipi ay kalakip nito, para pamagitnan/papagkasunduin ang inyong (mga) alitan ng (mga) nagsusumbong.
 </div>
 
@@ -586,7 +586,7 @@ PATAWAG </b>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.              
+                <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? date('Y'); ?>">.              
 </div> 
 
 

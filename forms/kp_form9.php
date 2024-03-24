@@ -565,7 +565,7 @@ SUMMONS </b>
             <?php endif; ?>
         <?php endforeach; ?>
     </select>,
-    <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="year" placeholder="year" min="<?php echo date('Y'); ?>" max="<?php echo date('Y') + 100; ?>" value="<?php echo date('Y'); ?>" required>
+    <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="year" placeholder="year" value="<?php echo $appear_year ?? date('Y'); ?>" required>
     at <input style="font-size: 18px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required> o'clock in the morning/afternoon then and there to answer to a complaint made before me, copy of which is attached hereto, for mediation/conciliation of your dispute with complainant/s.
 </div>
 
@@ -586,7 +586,7 @@ SUMMONS </b>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.              
+                <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? date('Y'); ?>">.              
 </div> 
 
 
@@ -599,7 +599,7 @@ SUMMONS </b>
     Punong Barangay/Kalihim ng Lupon
 </label><br>
 
-<<div class="page-break"></div>
+<div class="page-break"></div>
 
 <h3 style="text-align: center; font-size: 18px;">
     <b style="font-size: 18px;">OFFICER'S RETURN</b>

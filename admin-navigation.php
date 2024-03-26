@@ -92,7 +92,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
                 <span>
                 <i class="ti ti-dashboard"></i>
                 </span>
-                <span class="hide-menu">Dashboard</span>
+                <span class="hide-menu">Secretaries Corner</span>
               </a>
             </li>
             <li class="sidebar-item">

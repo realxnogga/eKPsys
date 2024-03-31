@@ -1,3 +1,11 @@
+<?php
+session_start();
+include 'connection.php';
+
+
+ ?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -56,6 +64,10 @@ input[type='password']::-ms-reveal {
            elseif (isset($_GET['error']) && $_GET['error'] === 'not_verified') {
                // Display the error message below the input fields
                echo '<div class="alert alert-danger" role="alert">This account is not verified yet. Please contact your Admin.</div>';
+           }
+           elseif (isset($_GET['error']) && $_GET['error'] === 'account_already_open') {
+               // Display the error message below the input fields
+               echo '<div class="alert alert-danger" role="alert">Your Account is already open on another device.</div>';
            }
 
 

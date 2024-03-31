@@ -16,6 +16,9 @@ include 'lupon_handler.php';
 if (!isset($_SESSION['language'])) {
     $_SESSION['language'] = 'english'; // Set default language to English
 }
+
+$folderName =  ($_SESSION['language'] === 'english') ? 'forms' : 'formsT';
+
 ?>
 
 
@@ -96,6 +99,7 @@ if (!isset($_SESSION['language'])) {
 <button type="button" onclick="setLanguage('english')" class="btn <?php echo ($_SESSION['language'] === 'english') ? 'btn-dark' : 'btn-light'; ?> m-1">English</button>
 <button type="button" onclick="setLanguage('tagalog')" class="btn <?php echo ($_SESSION['language'] === 'tagalog') ? 'btn-dark' : 'btn-light'; ?> m-1">Tagalog</button>
 
+
 <script>
 // Function to set language via AJAX
 function setLanguage(language) {
@@ -140,11 +144,62 @@ function setLanguage(language) {
         $formPath = $languageFolder . $formFileName;
 
         // Display form buttons with data-form attribute
-        echo '<a href="' . $formPath . '?formID=' . $formID . '" class="open-form"><button class="open-form btn btn-light m-1" data-form="' . $formFileName . '"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button></a>';
+        echo '<a href="' . $formPath .  '" class="open-form"><button class="open-form btn btn-light m-1" data-form="' . $formFileName . '"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button></a>';
     }
     ?>
+
+
 </div>
-</div> </div>
+
+</div>
+ </div>
+<h6>Forms Used</h6>
+<div>
+<?php
+// Get the current user's session formUsed and user_id
+$userID = $_SESSION['user_id'];
+
+// Query to fetch distinct formUsed values and form IDs for the current user from the luponforms table
+$query = "SELECT id, formUsed, made_date FROM luponforms WHERE user_id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $userID);
+$stmt->execute();
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($results as $row) {
+    $formID = $row['id'];
+    $formUsed = $row['formUsed'];
+    $madeDate = $row['made_date'];
+
+    // Format the made_date as desired (e.g., 'Y-m-d' or any other format)
+    $formattedDate = date('M-d-Y', strtotime($madeDate));
+
+    // Button text with formUsed and made_date
+    $buttonText = 'KP Form ' . $formUsed . ' (' . $formattedDate . ')';
+    $buttonID = 'formButton_' . $formUsed;
+    
+    // Display button
+    echo '<button class="open-form btn btn-success m-1" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $formUsed . '"><i class="fas fa-file-alt"></i> ' . $buttonText . ' </button>';
+    
+}
+?>
+</div>
+<script>
+    // JavaScript to handle button clicks and redirection with formUsed and formID
+    var buttons = document.querySelectorAll('.open-form');
+    buttons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var formID = this.getAttribute('data-form-id'); // Get the formID
+            var formUsed = this.getAttribute('data-form-used');
+            var folderName = '<?php echo $folderName; ?>'; // PHP variable for folder name
+
+            // Redirect to the appropriate form page with formID added to the URL
+            window.location.href = folderName + '/kp_form' + formUsed + '.php?formID=' + formID;
+        });
+    });
+</script>
+
+
         <!--  Row 1 -->
         <div class="row">
         <div class="col-md-13 mb-3">

@@ -20,11 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (isset($_SESSION['barangay_id']) && $_SESSION['status'] === 'loggedin') {
                     if ($_SESSION['barangay_id'] === $user['barangay_id']) {
                         // Another user from the same barangay is already logged in, prevent login
-                        $message = "Your account is already open in another device.";
-                        header("Location: login.php?error=already_logged_in&message=" . urlencode($message));
+                        header("Location: login.php?error=account_already_open");
                         exit;
                     }
                 }
+                
 
                 // Check if the provided password matches the hashed password
                 if (password_verify($password, $user['password'])) {

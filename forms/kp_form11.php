@@ -74,16 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
-    // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
-    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':complaintId', $complaintId);
-    $stmt->bindParam(':formUsed', $formUsed);
-    $stmt->bindParam(':currentHearing', $currentHearing);
-    $stmt->execute();
-    $existingForm14Count = $stmt->rowCount();
-
-
 
     $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer, scenario_info)
               VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer, :scenario)
@@ -148,49 +138,8 @@ if ($luponData) {
     // If no data found, you can handle it accordingly (e.g., provide default values or display an error message)
     $names = [];
 }
-// Retrieve the profile picture name of the current user
-$query = "SELECT profile_picture FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+include '../form_logo.php';
 
-// Check if the user has a profile picture
-if ($user && !empty($user['profile_picture'])) {
-    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $profilePicture = '../profile_pictures/defaultpic.jpg';
-}
-
-$query = "SELECT lgu_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['lgu_logo'])) {
-    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $lgulogo = '../lgu_logo/defaultpic.jpg';
-}
-
-
-$query = "SELECT city_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['city_logo'])) {
-    $citylogo = '../city_logo/' . $user['city_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $citylogo = '../city_logo/defaultpic.jpg';
-}
 
 ?>
 

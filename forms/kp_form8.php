@@ -100,18 +100,7 @@ if ($appearTimestamp !== false) {
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
-    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':complaintId', $complaintId);
-$stmt->bindParam(':formUsed', $formUsed);
-$stmt->bindParam(':currentHearing', $currentHearing);
-$stmt->execute();
-$existingForm10Count = $stmt->rowCount();
 
-// If form_used = 10 already exists in the current hearing, prevent submission
-if ($existingForm10Count > 0) {
-    $message = "There is already an existing KP Form 8 in this current hearing.";
-}  else{
     
     // Insert or update the appear_date in the hearings table
     $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
@@ -139,11 +128,6 @@ if ($existingForm10Count > 0) {
     }
 }
 }
-else {
-        // Handle case where DateTime object creation failed
-        $message ="Invalid date/time format! Input: ". $dateTimeString;
-    }
-}
 
 // Function to create a date from day, month, and year inputs
 function createDateFromInputs($day, $month, $year) {
@@ -162,49 +146,8 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         return null; 
     }
 }
-// Retrieve the profile picture name of the current user
-$query = "SELECT profile_picture FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Check if the user has a profile picture
-if ($user && !empty($user['profile_picture'])) {
-    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $profilePicture = '../profile_pictures/defaultpic.jpg';
-}
-
-$query = "SELECT lgu_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['lgu_logo'])) {
-    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $lgulogo = '../lgu_logo/defaultpic.jpg';
-}
-
-
-$query = "SELECT city_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['city_logo'])) {
-    $citylogo = '../city_logo/' . $user['city_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $citylogo = '../city_logo/defaultpic.jpg';
-}
+include '../form_logo.php';
 ?>
 
 <!DOCTYPE html>
@@ -422,7 +365,7 @@ if ($isCity) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-        <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo date('Y'); ?>" required> at
+        <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo $appear_year ?? date('Y'); ?>" required> at
         <input type="time" id="time" name="time" size="5" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $appear_time; ?>" required> o'clock in the morning/afternoon for the hearing of your complaint.
     </div>
 
@@ -440,7 +383,7 @@ if ($isCity) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-        <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+        <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? date('Y') ?>">.
         <div style="position: relative;">
             <br>
             <br>
@@ -469,7 +412,7 @@ if ($isCity) {
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-           <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+           <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingReceivedYear ?? date('Y'); ?>">.
         </div>
 
         <?php if (!empty($message)) : ?>

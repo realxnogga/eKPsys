@@ -99,19 +99,6 @@ if ($appearTimestamp !== false) {
     $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
-    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':complaintId', $complaintId);
-$stmt->bindParam(':formUsed', $formUsed);
-$stmt->bindParam(':currentHearing', $currentHearing);
-$stmt->execute();
-$existingForm10Count = $stmt->rowCount();
-
-// If form_used = 10 already exists in the current hearing, prevent submission
-if ($existingForm10Count > 0) {
-    $message = "There is already an existing KP Form 10 in this current hearing.";
-}  else{
-    
     // Insert or update the appear_date in the hearings table
     $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
               VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate)
@@ -138,11 +125,7 @@ if ($existingForm10Count > 0) {
     }
 }
 }
-else {
-        // Handle case where DateTime object creation failed
-        $message ="Invalid date/time format! Input: ". $dateTimeString;
-    }
-}
+
 
 // Function to create a date from day, month, and year inputs
 function createDateFromInputs($day, $month, $year) {
@@ -161,49 +144,8 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         return null; 
     }
 }
-// Retrieve the profile picture name of the current user
-$query = "SELECT profile_picture FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+include '../form_logo.php';
 
-// Check if the user has a profile picture
-if ($user && !empty($user['profile_picture'])) {
-    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $profilePicture = '../profile_pictures/defaultpic.jpg';
-}
-
-$query = "SELECT lgu_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['lgu_logo'])) {
-    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $lgulogo = '../lgu_logo/defaultpic.jpg';
-}
-
-
-$query = "SELECT city_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['city_logo'])) {
-    $citylogo = '../city_logo/' . $user['city_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $citylogo = '../city_logo/defaultpic.jpg';
-}
 ?>
 
 <!DOCTYPE html>
@@ -435,7 +377,7 @@ You are hereby required to appear before me on the
         <?php endif; ?>
     <?php endforeach; ?>
                 </select>,
-                <input type="text" name="year" placeholder="year" size="1" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo date('Y'); ?>" required>
+                <input type="text" name="year" placeholder="year" size="1" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo $appear_year ?? date('Y'); ?>" required>
                 at <input type="time" id="time" name="time" size="5" style="font-size: 18px; border: none; border-bottom: 1px solid black;"  value="<?php echo $appear_time; ?>"required> o'clock in the morning/afternoon
 for the constitution of the Pangkat ng Tagapagkasundo which shall conciliate your dispute. Should you fail to agree on the Pangkat membership or to appear on the aforesaid date for the constitution of the Pangkat, I shall determine the membership thereof by
 drawing lots.

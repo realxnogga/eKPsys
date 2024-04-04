@@ -158,50 +158,8 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         return null; 
     }
 }
+include '../form_logo.php';
 
-// Retrieve the profile picture name of the current user
-$query = "SELECT profile_picture FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['profile_picture'])) {
-    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $profilePicture = '../profile_pictures/defaultpic.jpg';
-}
-
-$query = "SELECT lgu_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['lgu_logo'])) {
-    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $lgulogo = '../lgu_logo/defaultpic.jpg';
-}
-
-
-$query = "SELECT city_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['city_logo'])) {
-    $citylogo = '../city_logo/' . $user['city_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $citylogo = '../city_logo/defaultpic.jpg';
-}
 ?>
 
 <!DOCTYPE html>
@@ -486,7 +444,7 @@ SUBPOENA </b>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-        <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required> at
+        <input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo $appear_year ?? date('Y'); ?>" required> at
         <input type="time" id="time" name="time" size="5" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $appear_time; ?>" required> o'clock, then and there to testify in the hearing of the above-captioned case.  
                   
     </div>
@@ -504,7 +462,7 @@ SUBPOENA </b>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-        <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px; width: 60px;" min="2000" max="2099" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
+        <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px; width: 60px;" min="2000" max="2099" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? date('Y'); ?>">.
               
 </div>
     <br><br><br>

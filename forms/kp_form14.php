@@ -68,20 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Logic to handle date and time inputs
   $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
 
-  // Check if there's an existing form_used = 14 within the current_hearing of the complaint_id
-  $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
-  $stmt = $conn->prepare($query);
-  $stmt->bindParam(':complaintId', $complaintId);
-  $stmt->bindParam(':formUsed', $formUsed);
-  $stmt->bindParam(':currentHearing', $currentHearing);
-  $stmt->execute();
-  $existingForm14Count = $stmt->rowCount();
 
-if ($existingForm14Count > 0) {
-  $message = "There is already an existing KP Form 14 in this current hearing.";
-}
-
-else{
     // Insert or update the appear_date in the hearings table
     $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date)
     VALUES (:complaintId, :currentHearing, :formUsed, :madeDate)
@@ -105,7 +92,6 @@ $message = "Form submit failed.";
 }
 }
 
-}
 
 // Function to create a date from day, month, and year inputs
 function createDateFromInputs($day, $month, $year) {
@@ -124,49 +110,8 @@ function createTimestampFromInputs($day, $month, $year, $time) {
         return null; 
     }
 }
-// Retrieve the profile picture name of the current user
-$query = "SELECT profile_picture FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+include '../form_logo.php';
 
-// Check if the user has a profile picture
-if ($user && !empty($user['profile_picture'])) {
-    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $profilePicture = '../profile_pictures/defaultpic.jpg';
-}
-
-$query = "SELECT lgu_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['lgu_logo'])) {
-    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $lgulogo = '../lgu_logo/defaultpic.jpg';
-}
-
-
-$query = "SELECT city_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['city_logo'])) {
-    $citylogo = '../city_logo/' . $user['city_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $citylogo = '../city_logo/defaultpic.jpg';
-}
 ?>
 <!DOCTYPE html>
 <html>

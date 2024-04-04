@@ -9,93 +9,85 @@ $petition = $_SESSION['petition'] ?? '';
 $cNum = $_SESSION['cNum'] ?? '';
 
 $punong_barangay = $_SESSION['punong_barangay'] ?? '';
-$message = '';
 
-    $complaintId = $_SESSION['current_complaint_id'];
-    $currentHearing = $_SESSION['current_hearing'];
-    $formUsed = 7;
+$complaintId = $_SESSION['current_complaint_id'] ?? '';
+$currentHearing = $_SESSION['current_hearing'] ?? '';
+$formUsed = 7;
 
-    // Check if the form has been previously submitted for this complaint ID and form type
-    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
+
+// Fetch existing row values if the form has been previously submitted
+$query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':complaintId', $complaintId);
+$stmt->bindParam(':formUsed', $formUsed);
+$stmt->execute();
+$rowCount = $stmt->rowCount();
+
+$currentYear = date('Y'); // Get the current year
+
+// Array of months
+$months = array(
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+);
+
+$currentMonth = date('F'); 
+$currentDay = date('j');
+
+$id = $_GET['formID'] ?? '';
+
+// Check if formID exists in the URL
+if (!empty($id)) {
+    // Fetch data based on the provided formID
+    $query = "SELECT made_date, received_date FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
-    $stmt->bindParam(':complaintId', $complaintId);
-    $stmt->bindParam(':formUsed', $formUsed);
+    $stmt->bindParam(':id', $id);
     $stmt->execute();
+
     $rowCount = $stmt->rowCount();
 
     if ($rowCount > 0) {
-        // Fetch existing row values if found
-        // Assuming 'hearings' table columns are 'made_date' and 'received_date'
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        $existingMadeDate = $row['made_date'];
-        $existingReceivedDate = $row['received_date'];
 
-        // Use existing values as placeholders
-        // Parse dates to extract day, month, and year
-        $existingMadeDay = date('d', strtotime($existingMadeDate));
-        $existingMadeMonth = date('F', strtotime($existingMadeDate));
-        $existingMadeYear = date('Y', strtotime($existingMadeDate));
+      
+        $madeDate = new DateTime($row['made_date']);
+        $receivedDate = new DateTime($row['received_date']);
 
-        $existingReceivedDay = date('d', strtotime($existingReceivedDate));
-        $existingReceivedMonth = date('F', strtotime($existingReceivedDate));
-        $existingReceivedYear = date('Y', strtotime($existingReceivedDate));
-    } else {
-        // If no row found, populate with present date as placeholders
-        $existingMadeDay = date('d');
-        $existingMadeMonth = date('F');
-        $existingMadeYear = date('Y');
+        $existingMadeDay = $madeDate->format('j');
+        $existingMadeMonth = $madeDate->format('F');
+        $existingMadeYear = $madeDate->format('Y');
 
-        $existingReceivedMonth = date('F');
-        $existingReceivedYear = date('Y');
+        $existingReceivedDay = $receivedDate->format('j');
+        $existingReceivedMonth = $receivedDate->format('F');
+        $existingReceivedYear = $receivedDate->format('Y');
     }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-// After getting form inputs
-$madeDay = $_POST['made_day'];
-$madeMonth = $_POST['made_month'];
-$madeYear = $_POST['made_year'];
+    // Get form inputs
+    $madeDay = $_POST['made_day'] ?? '';
+    $madeMonth = $_POST['made_month'] ?? '';
+    $madeYear = $_POST['made_year'] ?? '';
+    $receivedDay = $_POST['received_day'] ?? '';
+    $receivedMonth = $_POST['received_month'] ?? '';
+    $receivedYear = $_POST['received_year'] ?? '';
 
 
 
-// Check if day, month, and year are non-empty before constructing the date
-    if (!empty($madeDay) && !empty($madeMonth) && !empty($madeYear)) {
-        $monthNum = date('m', strtotime("$madeMonth 1"));
-        $madeDate = date('Y-m-d', mktime(0, 0, 0, $monthNum, $madeDay, $madeYear));
-    } else {
-        // If any of the date components are empty, set $madeDate to a default value or handle as needed
-        // For example, setting it to the current date:
-        $madeDate = date('Y-m-d');
-    }
+    // Logic to handle date and time inputs
+    $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
+    $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
 
-    // Check if day, month, and year are non-empty before constructing the date
-    if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
-        $monthNum = date('m', strtotime("$receivedMonth 1"));
-        $receivedDate = date('Y-m-d', mktime(0, 0, 0, $monthNum, $receivedDay, $receivedYear));
-    } else {
-        // If any of the date components are empty, set $receivedDate to a default value or handle as needed
-        // For example, setting it to the current date:
-        $receivedDate = date('Y-m-d');
-    }
+    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed AND hearing_number = :currentHearing";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':complaintId', $complaintId);
+$stmt->bindParam(':formUsed', $formUsed);
+$stmt->bindParam(':currentHearing', $currentHearing);
+$stmt->execute();
+$existingForm7Count = $stmt->rowCount();
 
-
-
-// Check if day, month, and year are non-empty before constructing the date
-if (!empty($madeDay) && !empty($madeMonth) && !empty($madeYear)) {
-    $monthNum = date('m', strtotime("$madeMonth 1"));
-    $madeDate = date('Y-m-d', mktime(0, 0, 0, $monthNum, $madeDay, $madeYear));
-}
-if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
-    $monthNumReceived = date('m', strtotime("$receivedMonth 1"));
-    $receivedDate = date('Y-m-d', mktime(0, 0, 0, $monthNumReceived, $receivedDay, $receivedYear));
-}
-    // Validation before submission
-    if ($rowCount > 0) {
-        $message = "Form already submitted for this complaint ID and form type.";
-    } elseif ($currentHearing !== '1th' ) {
-        $message = "Invalid hearing number. Form submission not allowed.";
-    }
-    else {
-        $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date)
+    // Insert or update the appear_date in the hearings table
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date)
               VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
@@ -103,66 +95,34 @@ if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
               made_date = VALUES(made_date),
               received_date = VALUES(received_date)";
 
-    $stmt = $conn->prepare($query);
+
+     $stmt = $conn->prepare($query);
     $stmt->bindParam(':complaintId', $complaintId);
     $stmt->bindParam(':currentHearing', $currentHearing);
     $stmt->bindParam(':formUsed', $formUsed);
     $stmt->bindParam(':madeDate', $madeDate);
     $stmt->bindParam(':receivedDate', $receivedDate);
-
+    
     if ($stmt->execute()) {
         $message = "Form submit successful.";
     } else {
         $message = "Form submit failed.";
     }
+}
 
+// Function to create a date from day, month, and year inputs
+function createDateFromInputs($day, $month, $year) {
+    if (!empty($day) && !empty($month) && !empty($year)) {
+        $monthNum = date('m', strtotime("$month 1"));
+        return date('Y-m-d', mktime(0, 0, 0, $monthNum, $day, $year));
+    } else {
+        return date('Y-m-d');
     }
-
-    
-}
-// Retrieve the profile picture name of the current user
-$query = "SELECT profile_picture FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['profile_picture'])) {
-    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $profilePicture = '../profile_pictures/defaultpic.jpg';
-}
-
-$query = "SELECT lgu_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['lgu_logo'])) {
-    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $lgulogo = '../lgu_logo/defaultpic.jpg';
 }
 
 
-$query = "SELECT city_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+include '../form_logo.php';
 
-// Check if the user has a profile picture
-if ($user && !empty($user['city_logo'])) {
-    $citylogo = '../city_logo/' . $user['city_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $citylogo = '../city_logo/defaultpic.jpg';
-}
 ?>
 
 <!DOCTYPE html>
@@ -400,16 +360,18 @@ if ($isCity) {
 <form id="formId" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
     <div style="text-align: justify; text-indent: 2em; font-size: 18px;">
         Made this
-        <input style="font-size: 18px; width: 22px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="number" name="made_day" placeholder="day" min="01" max="31" value="<?php echo isset($existingMadeDay) ? $existingMadeDay : ''; ?>">of
-        <select style="border: none; border-bottom: 1px solid black;width: auto; font-size: 18px; margin-right: 5px;" name="made_month">
-    <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="">Select Month</option>
+        <input type="number" name="made_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay; ?>">
+        day of
+        <select name="made_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
     <?php foreach ($months as $m): ?>
-        <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="<?php echo $m; ?>" <?php echo isset($existingMadeMonth) && $existingMadeMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php if ($id > 0): ?>
+            <option style="font-size: 18px;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+        <?php else: ?>
+            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-
-
-        <input style="font-size: 18px;" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : ''; ?>">
+        <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? date('Y') ?>">
     </div>
     <div style="position: relative;">
        
@@ -422,14 +384,18 @@ if ($isCity) {
     </div>
     <br><div style="text-align: justify; text-indent: 2em; font-size: 18px;">
         Received and filed this
-        <input style="font-size: 18px; width: 22px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="number" name="made_day" placeholder="day" min="01" max="31" value="<?php echo isset($existingMadeDay) ? $existingMadeDay : ''; ?>">of 
-                                    <select select style="border: none; border-bottom: 1px solid black;width: auto; font-size: 18px; margin-right: 5px;"  name="received_month">
-                                        <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="">Select Month</option>
-                                        <?php foreach ($months as $m): ?>
-                                            <option style="border: none; border-bottom: 1px solid black;font-size: 18px;" value="<?php echo $m; ?>" <?php echo isset($existingReceivedMonth) && $existingReceivedMonth === $m ? 'selected' : ''; ?>><?php echo $m; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>,
-        <input style="font-size: 18px; " type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : ''; ?>">
+        <input type="number" name="received_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedDay ?? ''; ?>">
+            of
+            <select name="received_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option style="font-size: 18px;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+        <?php else: ?>
+            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>,
+           <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingReceivedYear ?? date('Y'); ?>">
     </div>
     <?php if (!empty($message)) : ?>
         <p><?php echo $message; ?></p>

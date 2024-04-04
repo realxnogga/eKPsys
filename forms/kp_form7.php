@@ -1,10 +1,170 @@
 <?php
 session_start();
 include 'connection.php';
-$linkedNames = $_SESSION['linkedNames'] ?? [];
-include '../form_logo.php';
+$forTitle = $_SESSION['forTitle'] ?? '';
+$cNames = $_SESSION['cNames'] ?? '';
+$rspndtNames = $_SESSION['rspndtNames'] ?? '';
+$cDesc = $_SESSION['cDesc'] ?? '';
+$petition = $_SESSION['petition'] ?? '';
+$cNum = $_SESSION['cNum'] ?? '';
 
+$punong_barangay = $_SESSION['punong_barangay'] ?? '';
+$message = '';
+
+    $complaintId = $_SESSION['current_complaint_id'];
+    $currentHearing = $_SESSION['current_hearing'];
+    $formUsed = 7;
+
+    // Check if the form has been previously submitted for this complaint ID and form type
+    $query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':complaintId', $complaintId);
+    $stmt->bindParam(':formUsed', $formUsed);
+    $stmt->execute();
+    $rowCount = $stmt->rowCount();
+
+    if ($rowCount > 0) {
+        // Fetch existing row values if found
+        // Assuming 'hearings' table columns are 'made_date' and 'received_date'
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $existingMadeDate = $row['made_date'];
+        $existingReceivedDate = $row['received_date'];
+
+        // Use existing values as placeholders
+        // Parse dates to extract day, month, and year
+        $existingMadeDay = date('d', strtotime($existingMadeDate));
+        $existingMadeMonth = date('F', strtotime($existingMadeDate));
+        $existingMadeYear = date('Y', strtotime($existingMadeDate));
+
+        $existingReceivedDay = date('d', strtotime($existingReceivedDate));
+        $existingReceivedMonth = date('F', strtotime($existingReceivedDate));
+        $existingReceivedYear = date('Y', strtotime($existingReceivedDate));
+    } else {
+        // If no row found, populate with present date as placeholders
+        $existingMadeDay = date('d');
+        $existingMadeMonth = date('F');
+        $existingMadeYear = date('Y');
+
+        $existingReceivedMonth = date('F');
+        $existingReceivedYear = date('Y');
+    }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// After getting form inputs
+$madeDay = $_POST['made_day'];
+$madeMonth = $_POST['made_month'];
+$madeYear = $_POST['made_year'];
+
+
+
+// Check if day, month, and year are non-empty before constructing the date
+    if (!empty($madeDay) && !empty($madeMonth) && !empty($madeYear)) {
+        $monthNum = date('m', strtotime("$madeMonth 1"));
+        $madeDate = date('Y-m-d', mktime(0, 0, 0, $monthNum, $madeDay, $madeYear));
+    } else {
+        // If any of the date components are empty, set $madeDate to a default value or handle as needed
+        // For example, setting it to the current date:
+        $madeDate = date('Y-m-d');
+    }
+
+    // Check if day, month, and year are non-empty before constructing the date
+    if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
+        $monthNum = date('m', strtotime("$receivedMonth 1"));
+        $receivedDate = date('Y-m-d', mktime(0, 0, 0, $monthNum, $receivedDay, $receivedYear));
+    } else {
+        // If any of the date components are empty, set $receivedDate to a default value or handle as needed
+        // For example, setting it to the current date:
+        $receivedDate = date('Y-m-d');
+    }
+
+
+
+// Check if day, month, and year are non-empty before constructing the date
+if (!empty($madeDay) && !empty($madeMonth) && !empty($madeYear)) {
+    $monthNum = date('m', strtotime("$madeMonth 1"));
+    $madeDate = date('Y-m-d', mktime(0, 0, 0, $monthNum, $madeDay, $madeYear));
+}
+if (!empty($receivedDay) && !empty($receivedMonth) && !empty($receivedYear)) {
+    $monthNumReceived = date('m', strtotime("$receivedMonth 1"));
+    $receivedDate = date('Y-m-d', mktime(0, 0, 0, $monthNumReceived, $receivedDay, $receivedYear));
+}
+    // Validation before submission
+    if ($rowCount > 0) {
+        $message = "Form already submitted for this complaint ID and form type.";
+    } elseif ($currentHearing !== '1th' ) {
+        $message = "Invalid hearing number. Form submission not allowed.";
+    }
+    else {
+        $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, made_date, received_date)
+              VALUES (:complaintId, :currentHearing, :formUsed, :madeDate, :receivedDate)
+              ON DUPLICATE KEY UPDATE
+              hearing_number = VALUES(hearing_number),
+              form_used = VALUES(form_used),
+              made_date = VALUES(made_date),
+              received_date = VALUES(received_date)";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':complaintId', $complaintId);
+    $stmt->bindParam(':currentHearing', $currentHearing);
+    $stmt->bindParam(':formUsed', $formUsed);
+    $stmt->bindParam(':madeDate', $madeDate);
+    $stmt->bindParam(':receivedDate', $receivedDate);
+
+    if ($stmt->execute()) {
+        $message = "Form submit successful.";
+    } else {
+        $message = "Form submit failed.";
+    }
+
+    }
+
+    
+}
+// Retrieve the profile picture name of the current user
+$query = "SELECT profile_picture FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['profile_picture'])) {
+    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $profilePicture = '../profile_pictures/defaultpic.jpg';
+}
+
+$query = "SELECT lgu_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['lgu_logo'])) {
+    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $lgulogo = '../lgu_logo/defaultpic.jpg';
+}
+
+
+$query = "SELECT city_logo FROM users WHERE id = :userID";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':userID', $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if the user has a profile picture
+if ($user && !empty($user['city_logo'])) {
+    $citylogo = '../city_logo/' . $user['city_logo'];
+} else {
+    // Default profile picture if the user doesn't have one set
+    $citylogo = '../city_logo/defaultpic.jpg';
+}
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>

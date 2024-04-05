@@ -85,9 +85,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute(array_merge([$userID, $formUsed, $madeDate, $receivedDate], $lupons, [$_POST['pngbrgy']]));
 
     if ($stmt->rowCount() > 0) {
-        echo "Row added successfully!";
+        echo "Form submitted successfully!";
     } else {
-        echo "Error adding row!";
+        echo "Error adding form!";
     }
 }
 

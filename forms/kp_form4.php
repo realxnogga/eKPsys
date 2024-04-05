@@ -1,10 +1,100 @@
 <?php
 session_start();
-include 'connection.php';
 $linkedNames = $_SESSION['linkedNames'] ?? [];
+
+include 'connection.php'; // my database connection
+
+$currentYear = date('Y'); // Get the current year
+
+// Array of months
+$months = array(
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+);
+
+$currentMonth = date('F'); 
+$currentDay = date('j');
+
 include '../form_logo.php';
 $cNum = $_SESSION['cNum'] ?? '';
+$userID = $_SESSION['user_id'];
+$formUsed = 4; // Assuming $formUsed value is set elsewhere in your code
 
+
+$id = $_GET['formID'] ?? '';
+
+// Fetch existing data based on the provided formID
+if (!empty($id)) {
+    $query = "SELECT made_date, lupon1, lupon2, lupon3, lupon4, lupon5, lupon6, lupon7, lupon8, lupon9, lupon10, lupon11, lupon12, lupon13, lupon14, lupon15, lupon16, lupon17, lupon18, lupon19, lupon20, pngbrgy, brgysec FROM luponforms WHERE id = :id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Extract and format the timestamp value for made_date
+        $madeDate = new DateTime($row['made_date']);
+        $existingMadeDay = $madeDate->format('j');
+        $existingMadeMonth = $madeDate->format('F');
+        $existingMadeYear = $madeDate->format('Y');
+
+        // Extract lupon values
+        $luponValues = [];
+        for ($i = 1; $i <= 20; $i++) {
+            $luponKey = "lupon$i";
+            $luponValues[$i] = $row[$luponKey];
+        }
+
+        // Extract pngbrgy and brgysec values
+        $existingPngbrgy = $row['pngbrgy'];
+        $existingBrgySec = $row['brgysec'];
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $madeDate = createDateFromInputs($_POST['made_day'], $_POST['made_month'], $_POST['made_year']);
+    $brgysec = $_POST['brgysec'] ?? '';
+
+    $lupons = array();
+    for ($i = 1; $i <= 20; $i++) {
+        $luponKey = "appointed_lupon_$i";
+        $lupons[] = $_POST[$luponKey] ?? '';
+    }
+
+    $sql = "INSERT INTO luponforms (user_id, formUsed, made_date, ";
+    for ($i = 1; $i <= 20; $i++) {
+        $sql .= "lupon$i, ";
+    }
+    $sql .= "pngbrgy, brgysec) VALUES (?, ?, ?, ";
+    for ($i = 1; $i <= 20; $i++) {
+        $sql .= "?, ";
+    }
+    $sql .= "?, ?) ON DUPLICATE KEY UPDATE ";
+    for ($i = 1; $i <= 20; $i++) {
+        $sql .= "lupon$i = VALUES(lupon$i), ";
+    }
+    $sql .= "user_id = VALUES(user_id), formUsed = VALUES(formUsed), made_date = VALUES(made_date), pngbrgy = VALUES(pngbrgy), brgysec = VALUES(brgysec)";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(array_merge([$userID, $formUsed, $madeDate], $lupons, [$_POST['pngbrgy'], $brgysec]));
+
+    if ($stmt->rowCount() > 0) {
+        echo "Form submitted successfully!";
+    } else {
+        echo "Error adding form!";
+    }
+}
+
+function createDateFromInputs($day, $month, $year) {
+    if (!empty($day) && !empty($month) && !empty($year)) {
+        $monthNum = date('m', strtotime("$month 1"));
+        return date('Y-m-d', mktime(0, 0, 0, $monthNum, $day, $year));
+    } else {
+        return date('Y-m-d');
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -200,42 +290,42 @@ if ($isCity) {
             ?>
 
 
+<form method="POST">
 <div style="text-align: right;">
-                <select id="monthInput" name="month" required style="text-align: center; width: 110px; height: 31px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-                    <?php
-                    $currentMonth = date('F');
-                    foreach ($months as $index => $month) {
-                        $monthNumber = $index + 1;
-                        $selected = ($month == $currentMonth) ? 'selected' : '';
-                        echo '<option value="' . $monthNumber . '" ' . $selected . '>' . $month . '</option>';
-                    }
-                    ?>
-                </select>
-                <input type="text" id="day" placeholder= "day" name="day" required style=" height: 30px; text-align: center; width: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-                <label for="day">,</label>
-                <input type="text" id="year" name="year" required style=" height: 30px; text-align: center; width: 45px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $currentYear; ?>">
-
+                <select name="made_month" style="text-align: center; height: 30px; border: none; border-bottom: 1px solid black;  font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+        <?php else: ?>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>
+                
+                <input type="text" name="made_day" placeholder="day" size="5" style="text-align: center; border: none; border-bottom: 1px solid black; text-align: center; width: 30px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingMadeDay ?? ''; ?>" required>,</label>
+                <input type="number" name="made_year" placeholder="year" style="width: 40px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">
 
 <h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; font-weight: bold;">
 <br>LIST OF APPOINTED LUPON MEMBERS</h3>
-<form method="POST">
                 <div style="text-align: left;">
                 <br><br><p style="text-indent: 2em; text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;">Listed hereunder are the duly appointed members of the <i>Lupong
             Tagapamayapa</i> in this Barangay who shall serve as such upon taking their oath of office and until a new Lupon is
             constituted on the third year following their appointment.
                 </p>
                                     <div style="display: flex; ">
-    <div style="flex: 1; margin-left: 70px; ">
+    <div style="flex: 1; margin-left: 70px;">
         <?php for ($i = 1; $i <= 10; $i++): ?>
             <?php $nameKey = "name$i"; ?>
-            <p style="margin: 0; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><?php echo $i; ?>. <input type="text" name="appointed_lupon_<?php echo $i; ?>" value="<?php echo $linkedNames[$nameKey] ?? ''; ?>" style="width: 250px; margin-bottom: 5px; font-family: 'Times New Roman', Times, serif; font-size: 18px;"></p>
+            <?php $value = (!empty($id) && isset($luponValues[$i])) ? $luponValues[$i] : ($linkedNames[$nameKey] ?? ''); ?>
+            <p style="margin: 0; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><?php echo $i; ?>. <input type="text" name="appointed_lupon_<?php echo $i; ?>" value="<?php echo $value; ?>" style="width: 250px; margin-bottom: 5px;font-family: 'Times New Roman', Times, serif; font-size: 18px;"></p>
         <?php endfor; ?>
     </div>
 
-        <div style="flex: 1;">
+    <div style="flex: 1;">
         <?php for ($i = 11; $i <= 20; $i++): ?>
             <?php $nameKey = "name$i"; ?>
-            <p style="margin: 0; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><?php echo $i; ?>. <input type="text" name="appointed_lupon_<?php echo $i; ?>" value="<?php echo $linkedNames[$nameKey] ?? ''; ?>" style="width: 250px; margin-bottom: 5px;"></p>
+            <?php $value = (!empty($id) && isset($luponValues[$i])) ? $luponValues[$i] : ($linkedNames[$nameKey] ?? ''); ?>
+            <p style="margin: 0; font-family: 'Times New Roman', Times, serif; font-size: 18px;"><?php echo $i; ?>. <input type="text" name="appointed_lupon_<?php echo $i; ?>" value="<?php echo $value; ?>" style="width: 250px; margin-bottom: 5px; font-family: 'Times New Roman', Times, serif; font-size: 18px;"></p>
         <?php endfor; ?>
     </div>
 </div>
@@ -244,18 +334,9 @@ if ($isCity) {
                 </div>
 
 
-                <?php if (!empty($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-
-    
-    <body>
+                <body>
     <p class="important-warning-text" style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 18px; margin-left: 450px; margin-right: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="font-family: 'Times New Roman', Times, serif; border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 18px;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
+    <input type="text" id="positionInput" name="pngbrgy" style="font-family: 'Times New Roman', Times, serif; border: none; border-bottom: 1px solid black; outline: none; text-align: center; font-size: 18px;" size="25" value="<?= $existingPngbrgy ?? strtoupper($linkedNames['punong_barangay']) ?>">
     <p style="margin-top: 10px; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 420px;">Punong Barangay
 </p>
 
@@ -269,7 +350,7 @@ if ($isCity) {
 
     <p style="text-align: justify; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-right: 610px;">ATTESTED:</p>
     <p class="important-warning-text" style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 18px; margin-right: 470px; margin-left: auto;">
-    <input type="text" id="pngbrgy" name="pngbrgy" style="font-family: 'Times New Roman', Times, serif; border: none; border-bottom: 1px solid black; outline: none;" size="25">
+    <input type="text" id="brgysec" name="brgysec" value="<?php echo $existingBrgySec ?? ''; ?>" style="border: none; text-align: center; border-bottom: 1px solid black; outline: none;font-size: 18px;font-family: 'Times New Roman', Times, serif;" size="25">
     <p style="margin-top: 10px; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-right: 450px;">Barangay/Lupon Secretary
     </p><br>
     <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">

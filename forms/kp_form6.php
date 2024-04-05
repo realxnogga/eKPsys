@@ -1,10 +1,74 @@
 <?php
 session_start();
 include 'connection.php';
+
 $linkedNames = $_SESSION['linkedNames'] ?? [];
+
+$currentYear = date('Y'); // Get the current year
+$currentMonth = date('F'); 
+$currentDay = date('j');
+
 include '../form_logo.php';
 $cNum = $_SESSION['cNum'] ?? '';
 
+$userID = $_SESSION['user_id'];
+$formUsed = 6; // Assuming $formUsed value is set elsewhere in your code
+
+
+$id = $_GET['formID'] ?? '';
+if (!empty($id)) {
+    $query = "SELECT made_date, lupon1, lupon2, lupon3, 4, 5 ,6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 FROM luponforms WHERE id = :id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Extract and format the timestamp values for made_date
+        $madeDate = new DateTime($row['made_date']);
+        $existingMadeDay = $madeDate->format('j');
+        $existingMadeMonth = $madeDate->format('F');
+        $existingMadeYear = $madeDate->format('Y');
+
+        // Extract lupon1 and pngbrgy values
+        $existingLupon = $row['lupon1'];
+        $existingLupon2 = $row['lupon2'];
+        $existingLupon3 = $row['lupon3'];
+
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Process form data
+    $madeDate = createDateFromInputs($_POST['made_day'], $_POST['made_month'], $_POST['made_year']);
+    $lupon1 = $_POST['lupon1'] ?? '';
+    $lupon2 = $_POST['lupon2'] ?? '';
+    $lupon3 = $_POST['lupon3'] ?? '';
+
+
+
+    // Insert or update data in the database
+    $sql = "INSERT INTO luponforms (user_id, formUsed, made_date, lupon1, lupon2, lupon3) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE lupon1 = VALUES(lupon1), lupon2 = VALUES(lupon2), lupon3 = VALUES(lupon3)";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$userID, $formUsed, $madeDate, $lupon1, $lupon2, $lupon3]);
+
+    if ($stmt->rowCount() > 0) {
+        echo "Row added successfully!";
+    } else {
+        echo "Error adding row!";
+    }
+}
+
+
+function createDateFromInputs($day, $month, $year) {
+    if (!empty($day) && !empty($month) && !empty($year)) {
+        $monthNum = date('m', strtotime("$month 1"));
+        return date('Y-m-d', mktime(0, 0, 0, $monthNum, $day, $year));
+    } else {
+        return date('Y-m-d');
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -280,6 +344,7 @@ if ($isCity) {
             ?>
 
 
+                <form method="POST">
 <div style="text-align: right;">
                 <select id="monthInput" name="month" required style="text-align: center; width: 110px; height: 31px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
                     <?php
@@ -298,7 +363,6 @@ if ($isCity) {
 
                 <h3 style="text-align: center;"><b style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">WITHDRAWAL OF APPOINTMENT</b></h3>
     
-                <form method="POST">
                 <div style="text-align: left;">
                 <br><p style="text-align: justify; font-size: 12px; margin-top:0; font-size: 18px;font-family: 'Times New Roman', Times, serif;">TO:
     <input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; font-size: 18px;font-family: 'Times New Roman', Times, serif;">
@@ -374,7 +438,6 @@ omission/s constituting the ground/s for withdrawal.)
                 </div>
 
         
-                <form method="POST">
             <div style="text-align: justify; text-indent: 2em; font-size: 18px; font-family: 'Times New Roman', Times, serif">
             Received this
             <input type="number" name="received_day" placeholder="day" min="1" max="31" style="text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedDay ?? ''; ?>">
@@ -393,13 +456,11 @@ omission/s constituting the ground/s for withdrawal.)
                     <?php if (!empty($message)) : ?>
             <p><?php echo $message; ?></p>
         <?php endif; ?>
-    </form>
     
     <br><br>
-    <p class="important-warning-text" style="text-align: center; font-size: 12px; margin-left: 380px; font-size: 18px;font-family: 'Times New Roman', Times, serif;">
-    <input type="text" id="pngbrgy" name="pngbrgy" style="border: none; border-bottom: 1px solid black; outline: none; font-size: 18px;font-family: 'Times New Roman', Times, serif;" size="25">
-    <p style=" margin-left: 530px; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px;">Signature
-    </p><br>
+    <p class="important-warning-text" style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 440px; margin-right: auto;">
+    <input type="text" id=" name=" style="border: none; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none;" size="25" value="" required>    <p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px; margin-right: 120px;">Signature
+</p><br>
     <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
                 </form>
 

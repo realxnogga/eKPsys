@@ -16,6 +16,12 @@ $formUsed = 3; // Assuming $formUsed value is set elsewhere in your code
 
 
 $id = $_GET['formID'] ?? '';
+if (!empty($id)){
+    $backButton = '../used_forms.php';
+}
+else{
+    $backButton = '../user_lupon.php';
+}
 if (!empty($id)) {
     $query = "SELECT made_date, lupon1, lupon2, lupon3, brgysec FROM luponforms WHERE id = :id";
     $stmt = $conn->prepare($query);
@@ -217,7 +223,7 @@ p {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../user_lupon.php">
+    <a href="<?php echo $backButton; ?>">
         <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>

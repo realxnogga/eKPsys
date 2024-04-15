@@ -88,7 +88,7 @@ function setLanguage(language) {
 <h6>Forms Used</h6>
 
 <!-- Single input for selecting the year -->
-<input type="text" class="form-control mb-2" id="yearInput" placeholder="Search Year">
+<input type="number" class="form-control mb-2" id="yearInput" min="2000" placeholder="Search Year">
 
 <!-- Display KP Columns -->
 <div class="row">
@@ -105,15 +105,26 @@ function setLanguage(language) {
 
     // Initialize array to store forms for each KP column
     $kpForms = array_fill(1, 6, array());
+    // Initialize array to store counters for each year and KP column
+    $counters = array();
 
     // Organize forms into respective KP columns
     foreach ($results as $row) {
         $formID = $row['id'];
         $formUsed = $row['formUsed'];
         $madeDate = $row['made_date'];
-
+        $year = date('Y', strtotime($madeDate));
+        
+        // Initialize counter for the current year and KP column if not set
+        if (!isset($counters[$year][$formUsed])) {
+            $counters[$year][$formUsed] = 1;
+        } else {
+            // Increment counter for the current year and KP column
+            $counters[$year][$formUsed]++;
+        }
+        
         // Store form in respective KP column
-        $kpForms[$formUsed][] = array('formID' => $formID, 'madeDate' => $madeDate);
+        $kpForms[$formUsed][] = array('formID' => $formID, 'madeDate' => $madeDate, 'counter' => $counters[$year][$formUsed]);
     }
 
     // Display forms in KP columns
@@ -125,7 +136,14 @@ function setLanguage(language) {
         foreach ($kpForms[$i] as $form) {
             $formID = $form['formID'];
             $formattedDate = date('Y', strtotime($form['madeDate']));
+            $counter = $form['counter'];
             $buttonText = 'KP Form ' . $i . ' (' . $formattedDate . ')';
+            
+            // Append counter if it's greater than 1
+            if ($counter > 1) {
+                $buttonText .= ' (' . $counter . ')';
+            }
+            
             $buttonID = 'formButton_' . $formID;
 
             echo '<button class="open-form btn btn-success w-100 mb-1" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $i . '"><i class="fas fa-file-alt"></i> ' . $buttonText . ' </button>';

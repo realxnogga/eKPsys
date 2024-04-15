@@ -93,19 +93,12 @@ $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
                      <h5 class="card-title mb-9 fw-semibold">Report Overview</h5><hr>
                    <b>  
 <br>
-                   
-
-     
-
-
-
 <form method="POST">
                     <div class="search-wrapper">
                         <input type="text" name="municipality" placeholder="Search Municipality" value="<?php echo $searchedMunicipality; ?>">
                       <button type="submit" name="search" class="btn-light search-btn">
                             <i class="fas fa-search"></i></button>
                     </div><br><br>
-
     <!-- Month and year dropdown -->
     <div class="select-and-clear-container">
     <select name="selected_month">

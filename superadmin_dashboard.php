@@ -110,21 +110,97 @@ $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   
   <style>
-   .scrollable-card-body {
-            max-height: 400px; /* Set the maximum height for the card body */
-            overflow-y: auto; /* Enable vertical scrolling */
-            scrollbar-width: thin; /* Specify a thin scrollbar */
-            scrollbar-color: transparent transparent; /* Set scrollbar color to transparent */
-        }
-
-        /* For Webkit browsers like Chrome and Safari */
-        .scrollable-card-body::-webkit-scrollbar {
-            width: 8px; /* Set the width of the scrollbar */
-        }
-
-        .scrollable-card-body::-webkit-scrollbar-thumb {
-            background-color: transparent; /* Set scrollbar thumb color to transparent */
-        }
+   .card {
+  box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+}
+.custom-card {
+      margin-bottom: 20px;
+    }
+.card-text-center {
+      text-align: center;
+    }
+    .alaminos-card {
+      text-align: center;
+      /* background-image: url('img/settled.png'); */
+      background-color: red;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      .bay-card {
+      text-align: center;
+      /* background-image: url('img/unsettled.png'); */
+      background-color: blue;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      .biñan-card {
+      text-align: center;
+      /* background-image: url('img/pending.png'); */
+      background-color: yellow;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      .cabuyao-card {
+      text-align: center;
+      /* background-image: url('img/settled.png'); */
+      background-color: pink;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      .calamba-card {
+      text-align: center;
+      /* background-image: url('img/unsettled.png'); */
+      background-color: purple;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      .calauan-card {
+      text-align: center;
+      /* background-image: url('img/pending.png'); */
+      background-color: orange;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      .baños-card {
+      text-align: center;
+      /* background-image: url('img/settled.png'); */
+      background-color: green;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      .pablo-card {
+      text-align: center;
+      /* background-image: url('img/unsettled.png'); */
+      background-color: maroon;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      .pedro-card {
+      text-align: center;
+      /* background-image: url('img/pending.png'); */
+      background-color: lightblue;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      .rosa-card {
+      text-align: center;
+      /* background-image: url('img/pending.png'); */
+      background-color: grey;
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      }
+      
 </style>
 
 </head>
@@ -134,7 +210,190 @@ $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
  
       <div class="container-fluid">
        
+      <div class="row">
+    <div class="col-md-4">
+      <div class="card alaminos-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                      Alaminos
+                    </h5>          <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                      <?php
+                      if ($selected_month && $selected_month !== date('F Y')) {
+                        echo $s_totalSet; // Display the selected month's value
+                      } else {
+                        echo $totalSettledCount;
+                      }
+                      ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bay-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5">
+                    Bay</h5>
+                    <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5">
+      <?php
+      if ($selected_month && $selected_month !== date('F Y')) {
+          echo $s_totalUnset; // Display the selected month's value
+      } else {
+          echo $totalUnsetCount;
+      }
+      ?>
+  </p>
+                          </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card biñan-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+          Biñan
+                    </h5>
+                    <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                    <?php  if ($selected_month && $selected_month !== date('F Y')) {
+            echo $s_pending; // Display the selected month's value
+        } else {echo $pendingCount;} ?>
+  </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card cabuyao-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                      Cabuyao
+                    </h5>          <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                      <?php
+                      if ($selected_month && $selected_month !== date('F Y')) {
+                        echo $s_totalSet; // Display the selected month's value
+                      } else {
+                        echo $totalSettledCount;
+                      }
+                      ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card calamba-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5">
+                    Calamba</h5>
+                    <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5">
+      <?php
+      if ($selected_month && $selected_month !== date('F Y')) {
+          echo $s_totalUnset; // Display the selected month's value
+      } else {
+          echo $totalUnsetCount;
+      }
+      ?>
+  </p>
+                          </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card calauan-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+          Calauan
+                    </h5>
+                    <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                    <?php  if ($selected_month && $selected_month !== date('F Y')) {
+            echo $s_pending; // Display the selected month's value
+        } else {echo $pendingCount;} ?>
+  </p>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="row">
+    <div class="col-md-4">
+      <div class="card baños-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                      Los Baños
+                    </h5>          <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                      <?php
+                      if ($selected_month && $selected_month !== date('F Y')) {
+                        echo $s_totalSet; // Display the selected month's value
+                      } else {
+                        echo $totalSettledCount;
+                      }
+                      ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card pablo-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5">
+                    San Pablo</h5>
+                    <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5">
+      <?php
+      if ($selected_month && $selected_month !== date('F Y')) {
+          echo $s_totalUnset; // Display the selected month's value
+      } else {
+          echo $totalUnsetCount;
+      }
+      ?>
+  </p>
+                          </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card pedro-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+          San Pedro
+                    </h5>
+                    <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
+                    <?php  if ($selected_month && $selected_month !== date('F Y')) {
+            echo $s_pending; // Display the selected month's value
+        } else {echo $pendingCount;} ?>
+  </p>
+        </div>
+      </div>
+    </div>
+  </div>
 
+
+
+
+
+  <div class="row">
+    
+    <div class="col-md-4">
+      <div class="card rosa-card">
+        <div class="card-body">
+          <!-- Card content goes here -->
+          <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5">
+                    Santa Rosa</h5>
+                    <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5">
+      <?php
+      if ($selected_month && $selected_month !== date('F Y')) {
+          echo $s_totalUnset; // Display the selected month's value
+      } else {
+          echo $totalUnsetCount;
+      }
+      ?>
+  </p>
+                          </div>
+      </div>
+    </div>
+    
+  </div>
+  
 
 
 

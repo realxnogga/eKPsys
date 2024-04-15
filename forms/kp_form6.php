@@ -3,6 +3,7 @@ session_start();
 include 'connection.php';
 
 $linkedNames = $_SESSION['linkedNames'] ?? [];
+$apptNames = $_SESSION['apptNames'] ?? [];
 
 $currentYear = date('Y'); // Get the current year
 $currentMonth = date('F'); 
@@ -16,8 +17,14 @@ $formUsed = 6; // Assuming $formUsed value is set elsewhere in your code
 
 
 $id = $_GET['formID'] ?? '';
+if (!empty($id)){
+    $backButton = '../used_forms.php';
+}
+else{
+    $backButton = '../user_lupon.php';
+}
 if (!empty($id)) {
-    $query = "SELECT made_date, lupon1, lupon2, lupon3, 4, 5 ,6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 FROM luponforms WHERE id = :id";
+    $query = "SELECT made_date, received_date, lupon1, lupon2, lupon3, lupon4, lupon5, lupon6, lupon7, lupon8, lupon9, lupon10, lupon11, lupon12, lupon13, lupon14, lupon15, lupon16, lupon17, pngbrgy FROM luponforms WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -31,10 +38,18 @@ if (!empty($id)) {
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
 
-        // Extract lupon1 and pngbrgy values
-        $existingLupon = $row['lupon1'];
-        $existingLupon2 = $row['lupon2'];
-        $existingLupon3 = $row['lupon3'];
+        $receivedDate = new DateTime($row['received_date']);
+        $existingReceivedDay = $receivedDate->format('j');
+        $existingReceivedMonth = $receivedDate->format('F');
+        $existingReceivedYear = $receivedDate->format('Y');
+
+        // Extract lupon values
+        $luponValues = [];
+        for ($i = 1; $i <= 17; $i++) {
+            $luponKey = "lupon$i";
+            $luponValues[$i] = $row[$luponKey];
+        }
+        $existingPngbrgy = $row['pngbrgy'];
 
     }
 }
@@ -42,16 +57,30 @@ if (!empty($id)) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Process form data
     $madeDate = createDateFromInputs($_POST['made_day'], $_POST['made_month'], $_POST['made_year']);
-    $lupon1 = $_POST['lupon1'] ?? '';
-    $lupon2 = $_POST['lupon2'] ?? '';
-    $lupon3 = $_POST['lupon3'] ?? '';
+    $receivedDate = createDateFromInputs($_POST['received_day'], $_POST['received_month'], $_POST['received_year']);
+    $pngbrgy = $_POST['pngbrgy'] ?? '';
 
-
+    $luponValues = [];
+    for ($i = 1; $i <= 17; $i++) {
+        $luponKey = "lupon$i";
+        $luponValues[$i] = $_POST[$luponKey] ?? '';
+    }
 
     // Insert or update data in the database
-    $sql = "INSERT INTO luponforms (user_id, formUsed, made_date, lupon1, lupon2, lupon3) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE lupon1 = VALUES(lupon1), lupon2 = VALUES(lupon2), lupon3 = VALUES(lupon3)";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([$userID, $formUsed, $madeDate, $lupon1, $lupon2, $lupon3]);
+$sql = "INSERT INTO luponforms (user_id, formUsed, made_date, received_date, lupon1, lupon2, lupon3, lupon4, lupon5, lupon6, lupon7, lupon8, lupon9, lupon10, lupon11, lupon12, lupon13, lupon14, lupon15, lupon16, lupon17, pngbrgy) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+        ON DUPLICATE KEY UPDATE 
+        lupon1 = VALUES(lupon1), lupon2 = VALUES(lupon2), lupon3 = VALUES(lupon3), lupon4 = VALUES(lupon4), 
+        lupon5 = VALUES(lupon5), lupon6 = VALUES(lupon6), lupon7 = VALUES(lupon7), lupon8 = VALUES(lupon8), 
+        lupon9 = VALUES(lupon9), lupon10 = VALUES(lupon10), lupon11 = VALUES(lupon11), lupon12 = VALUES(lupon12), 
+        lupon13 = VALUES(lupon13), lupon14 = VALUES(lupon14), lupon15 = VALUES(lupon15), lupon16 = VALUES(lupon16), 
+        lupon17 = VALUES(lupon17), pngbrgy = VALUES(pngbrgy)";
+
+        $stmt = $conn->prepare($sql);
+
+$bindValues = array_merge([$userID, $formUsed, $madeDate, $receivedDate], $luponValues, [$pngbrgy]);
+    $stmt->execute($bindValues);
+
 
     if ($stmt->rowCount() > 0) {
         echo "Row added successfully!";
@@ -59,7 +88,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error adding row!";
     }
 }
-
 
 function createDateFromInputs($day, $month, $year) {
     if (!empty($day) && !empty($month) && !empty($year)) {
@@ -70,6 +98,7 @@ function createDateFromInputs($day, $month, $year) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -295,7 +324,7 @@ button {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../user_lupon.php">
+    <a href="<?php echo $backButton; ?>">
         <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
@@ -346,28 +375,26 @@ if ($isCity) {
 
                 <form method="POST">
 <div style="text-align: right;">
-                <select id="monthInput" name="month" required style="text-align: center; width: 110px; height: 31px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-                    <?php
-                    $currentMonth = date('F');
-                    foreach ($months as $index => $month) {
-                        $monthNumber = $index + 1;
-                        $selected = ($month == $currentMonth) ? 'selected' : '';
-                        echo '<option value="' . $monthNumber . '" ' . $selected . '>' . $month . '</option>';
-                    }
-                    ?>
-                </select>
-                <input type="text" id="day" placeholder= "day" name="day" required style=" height: 30px; text-align: center; width: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-                <label for="day">,</label>
-                <input type="text" id="year" name="year" required style=" height: 30px; text-align: center; width: 45px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $currentYear; ?>">
+                <select name="made_month" style="text-align: center; height: 30px; border: none; border-bottom: 1px solid black;  font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+        <?php else: ?>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>
+                <input type="text" name="made_day" placeholder="day" size="5" style="text-align: center; border: none; border-bottom: 1px solid black; text-align: center; width: 30px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingMadeDay ?? ''; ?>">
+                <input type="number" name="made_year" placeholder="year" style="width: 60px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">
 
 
                 <h3 style="text-align: center;"><b style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">WITHDRAWAL OF APPOINTMENT</b></h3>
     
                 <div style="text-align: left;">
                 <br><p style="text-align: justify; font-size: 12px; margin-top:0; font-size: 18px;font-family: 'Times New Roman', Times, serif;">TO:
-    <input type="text" id="recipient" name="recipient" list="nameList" required style="width:200px; height: 20px; font-size: 18px;font-family: 'Times New Roman', Times, serif;">
+ <input type="text" id="lupon1" placeholder="" name="lupon1" list="nameList" value="<?php echo $luponValues[1] ?? ''; ?>" style="width:250px; height: 20px; border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none; size= 1;"></p>
     <datalist id="nameList">
-        <?php foreach ($linkedNames as $name): ?>
+        <?php foreach ($apptNames as $name): ?>
             <option value="<?php echo $name; ?>">
         <?php endforeach; ?>
     </datalist>
@@ -375,65 +402,48 @@ if ($isCity) {
                 <p style="text-align: justify; font-size: 12px; font-size: 18px; text-indent: 2em; font-family: 'Times New Roman', Times, serif;">
                 After due hearing and with the concurrence of a majority of all the Lupong Tagapamayapa members of this Barangay, your appointment as member thereof is hereby withdrawn effective upon receipt hereof, on the following ground/s:
             </p>        
-                <!-- Use PHP to set the checkbox status based on some condition -->
-                <?php
-    $isChecked = false; // Replace this with your own condition to determine if the checkbox should be checked or not
-?>
-
-<?php
-    $isChecked1 = false; // Replace this with your own condition to determine if the first checkbox should be checked or not
-    $isChecked2 = false; // Replace this with your own condition to determine if the second checkbox should be checked or not
-?>
-
-<!-- Create the first checkbox with PHP inline with the first input -->
-<input type="checkbox" name="my_checkbox1" <?php if ($isChecked1) echo "checked"; ?>>
+<input type="checkbox" name="lupon2" <?php echo isset($luponValues[2]) && $luponValues[2] ? 'checked' : ''; ?>>
 <span style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">-
 incapacity to discharge the duties of your office as shown by
-    <input type="text" id="day1" name="day1" required style="width: 330px; height: 20px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" required>.
+<input type="text" id="day1" name="lupon3" style="width: 330px; height: 20px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $luponValues[3] ?? ''; ?>">.
 </span>
 <br>
-<!-- Create the second checkbox with PHP inline with the second input -->
-<input type="checkbox" name="my_checkbox2" <?php if ($isChecked2) echo "checked"; ?>>
+<input type="checkbox" name="lupon4" <?php echo isset($luponValues[4]) && $luponValues[4] ? 'checked' : ''; ?>>
 <span style="font-size: 18px; font-family: 'Times New Roman', Times, serif;">-
 unsuitability by reason of  
-    <input type="text" id="day2" name="day2" required style="width: 330px; height: 20px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" required><br>
-    (Check whichever is applicable and detail or specify the act/s or
-omission/s constituting the ground/s for withdrawal.)
- 
-    <br>
+<input type="text" id="day2" name="lupon5" style="width: 330px; height: 20px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $luponValues[5] ?? ''; ?>"><br>
+(Check whichever is applicable and detail or specify the act/s or omission/s constituting the ground/s for withdrawal.)
 </span>
 
-
-                <?php if (!empty($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
    
     <p class="important-warning-text" style="text-align: center; margin-left: 380px; margin-right: auto;font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-    <input type="text" id="positionInput" name="pngbrgy" style="font-size: 18px; font-family: 'Times New Roman', Times, serif; border: none; border-bottom: 1px solid black; outline: none; text-align: center;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
+    <input type="text" id="positionInput" name="pngbrgy" style="font-size: 18px; font-family: 'Times New Roman', Times, serif; border: none; border-bottom: 1px solid black; outline: none; text-align: center;" size="25" value="<?= $existingPngbrgy ?? strtoupper($linkedNames['punong_barangay']) ?>">
     <p style=" margin-left: 420px; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px;">Punong Barangay/Lupon Chairman
 </p>
 <br>
 
             <p style="text-align: justify; text-indent: 4em;font-size: 18px; margin-left:25px; font-family: 'Times New Roman', Times, serif;">CONFORME (Signatures):
             </p>
-                    <div style="display: flex;">
-                <div style="flex: 1; margin-left: 95px;">
-                    <?php for ($i = 1; $i <= 6; $i++): ?>
-                        <?php $formattedIndex = sprintf("%02d", $i); ?>
-                        <p style="margin: 0;font-size: 18px; font-family: 'Times New Roman', Times, serif;"><?php echo $formattedIndex; ?>. <input type="text" name="appointed_lupon_<?php echo $formattedIndex; ?>" style="width: 210px; margin-bottom: 5px;"></p>
-                    <?php endfor; ?>
-                </div>
-                <div style="flex: 1; margin-left: 10px;">
-                    <?php for ($i = 7; $i <= 11; $i++): ?>
-                        <?php $formattedIndex = sprintf("%02d", $i); ?>
-                        <p style="margin: 0;font-size: 18px; font-family: 'Times New Roman', Times, serif;"><?php echo $formattedIndex; ?>. <input type="text" name="appointed_lupon_<?php echo $formattedIndex; ?>" style="width: 210px; margin-bottom: 5px;"></p>
-                    <?php endfor; ?>
-                </div>
-            </div>
+<div style="display: flex;">
+<div style="flex: 1; margin-left: 95px;">
+    <?php for ($i = 6; $i <= 11; $i++):?>
+        <?php $formattedIndex = sprintf("%02d", $i); ?>
+        <?php $displayIndex = $i - 5; ?>
+        <p style="margin: 0;font-size: 18px; font-family: 'Times New Roman', Times, serif;"><?php echo $displayIndex; ?>. <input type="text" name="lupon<?php echo $i; ?>" style="width: 210px; margin-bottom: 5px;" value="<?php echo $luponValues[$i] ?? ''; ?>"></p>
+    <?php endfor; ?>
+</div>
+<div style="flex: 1; margin-left: 10px;">
+    <?php for ($i = 12; $i <= 16; $i++): ?>
+        <?php $formattedIndex = sprintf("%02d", $i); ?>
+        <?php $displayIndex = $i - 5; ?>
+        <p style="margin: 0;font-size: 18px; font-family: 'Times New Roman', Times, serif;"><?php echo $displayIndex; ?>. <input type="text" name="lupon<?php echo $i; ?>" style="width: 210px; margin-bottom: 5px;" value="<?php echo $luponValues[$i] ?? ''; ?>"></p>
+    <?php endfor; ?>
+</div>
+
+
+
+</div>
+
         </div><br><br>
                 </div>
 
@@ -442,7 +452,7 @@ omission/s constituting the ground/s for withdrawal.)
             Received this
             <input type="number" name="received_day" placeholder="day" min="1" max="31" style="text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingReceivedDay ?? ''; ?>">
             of
-            <select name="received_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+            <select name="received_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;">
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
             <option style="font-size: 18px;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
@@ -451,15 +461,11 @@ omission/s constituting the ground/s for withdrawal.)
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-<input type="number" name="year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo date('Y'); ?>" required>.</div>
-                    </p>
-                    <?php if (!empty($message)) : ?>
-            <p><?php echo $message; ?></p>
-        <?php endif; ?>
-    
+<input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" value="<?php echo $existingReceivedYear ?? date('Y'); ?>">.</div>
+   
     <br><br>
     <p class="important-warning-text" style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 440px; margin-right: auto;">
-    <input type="text" id=" name=" style="border: none; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none;" size="25" value="" required>    <p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px; margin-right: 120px;">Signature
+    <input type="text" name="lupon17" style="border: none; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none;" size="25" value="<?php echo $luponValues[17] ?? '' ?>">    <p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px; margin-right: 120px;">Signature
 </p><br>
     <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
                 </form>

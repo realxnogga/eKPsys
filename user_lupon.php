@@ -33,44 +33,7 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms' : 'formsT';
     <title>Lupon</title>
     <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="assets/css/styles.min.css" />
-    <style>
-        .active {
-        background-color: #ffcc00;
-        color: #fff;
-    }
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay background */
-}
-
-/* CSS for the iframe container */
-.kp-form-iframe {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1000px; /* Adjust the width as needed */
-    height: 800px; /* Adjust the height as needed */
-    background-color: white;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-}
-.form-control {
-        width: 220px; /* Adjust the width as needed */
-    }
-
-
-
-    .card {
-      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
-      border-radius: 15px;
-
-      }
-</style>
+   
 </head>
 
 <body style="background-color: #E8E8E7">
@@ -152,53 +115,8 @@ function setLanguage(language) {
 </div>
 
 </div>
+<a href="used_forms.php" class="btn btn-dark">Used Forms</a>
  </div>
-<h6>Forms Used</h6>
-<div>
-<?php
-// Get the current user's session formUsed and user_id
-$userID = $_SESSION['user_id'];
-
-// Query to fetch distinct formUsed values and form IDs for the current user from the luponforms table
-$query = "SELECT id, formUsed, made_date FROM luponforms WHERE user_id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $userID);
-$stmt->execute();
-$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-foreach ($results as $row) {
-    $formID = $row['id'];
-    $formUsed = $row['formUsed'];
-    $madeDate = $row['made_date'];
-
-    // Format the made_date as desired (e.g., 'Y-m-d' or any other format)
-    $formattedDate = date('M-d-Y', strtotime($madeDate));
-
-    // Button text with formUsed and made_date
-    $buttonText = 'KP Form ' . $formUsed . ' (' . $formattedDate . ')';
-    $buttonID = 'formButton_' . $formUsed;
-    
-    // Display button
-    echo '<button class="open-form btn btn-success m-1" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $formUsed . '"><i class="fas fa-file-alt"></i> ' . $buttonText . ' </button>';
-    
-}
-?>
-</div>
-<script>
-    // JavaScript to handle button clicks and redirection with formUsed and formID
-    var buttons = document.querySelectorAll('.open-form');
-    buttons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            var formID = this.getAttribute('data-form-id'); // Get the formID
-            var formUsed = this.getAttribute('data-form-used');
-            var folderName = '<?php echo $folderName; ?>'; // PHP variable for folder name
-
-            // Redirect to the appropriate form page with formID added to the URL
-            window.location.href = folderName + '/kp_form' + formUsed + '.php?formID=' + formID;
-        });
-    });
-</script>
-
 
         <!--  Row 1 -->
         <div class="row">

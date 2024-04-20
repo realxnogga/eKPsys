@@ -1,140 +1,81 @@
 <?php
 session_start();
-$linkedNames = $_SESSION['linkedNames'] ?? [];
-?>
-
-<?php
 include 'connection.php';
-$forTitle = $_SESSION['forTitle'] ?? '';
-$cNames = $_SESSION['cNames'] ?? '';
-$rspndtNames = $_SESSION['rspndtNames'] ?? '';
-$cDesc = $_SESSION['cDesc'] ?? '';
-$petition = $_SESSION['petition'] ?? '';
-$cNum = $_SESSION['cNum'] ?? '';
 
-$punong_barangay = $_SESSION['punong_barangay'] ?? '';
-
-$complaintId = $_SESSION['current_complaint_id'] ?? '';
-$currentHearing = $_SESSION['current_hearing'] ?? '';
-$formUsed = 10;
-
-// Fetch existing row values if the form has been previously submitted
-$query = "SELECT * FROM hearings WHERE complaint_id = :complaintId AND form_used = :formUsed";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':complaintId', $complaintId);
-$stmt->bindParam(':formUsed', $formUsed);
-$stmt->execute();
-$rowCount = $stmt->rowCount();
+$linkedNames = $_SESSION['linkedNames'] ?? [];
 
 $currentYear = date('Y'); // Get the current year
-
-// Array of months
-$months = array(
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-);
-
 $currentMonth = date('F'); 
 $currentDay = date('j');
 
+include '../form_logo.php';
+$cNum = $_SESSION['cNum'] ?? '';
+
+$userID = $_SESSION['user_id'];
+$formUsed = 5; // Assuming $formUsed value is set elsewhere in your code
+
+
 $id = $_GET['formID'] ?? '';
 
-// Check if formID exists in the URL
+if (!empty($id)){
+    $backButton = '../used_forms.php';
+}
+else{
+    $backButton = '../user_lupon.php';
+}
 if (!empty($id)) {
-    // Fetch data based on the provided formID
-    $query = "SELECT appear_date, made_date, received_date FROM hearings WHERE id = :id";
+    $query = "SELECT made_date, received_date, lupon1, lupon2, brgysec FROM luponforms WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
 
-    $rowCount = $stmt->rowCount();
-
-    if ($rowCount > 0) {
+    if ($stmt->rowCount() > 0) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-      // Extract and format the timestamp values
-        $appearDate = new DateTime($row['appear_date']);
-        $appear_day = $appearDate->format('j');
-
-        $appear_month = $appearDate->format('F');
-        $appear_year = $appearDate->format('Y');
-        $appear_time = $appearDate->format('H:i'); // Format for the time input
-
+        // Extract and format the timestamp values for made_date
         $madeDate = new DateTime($row['made_date']);
-        $receivedDate = new DateTime($row['received_date']);
-
-        // Populate form inputs with the extracted values
-        $currentDay = $appearDate->format('j');
-        $currentMonth = $appearDate->format('F');
-        $currentYear = $appearDate->format('Y');
-
         $existingMadeDay = $madeDate->format('j');
         $existingMadeMonth = $madeDate->format('F');
         $existingMadeYear = $madeDate->format('Y');
 
+        $receivedDate = new DateTime($row['received_date']);
         $existingReceivedDay = $receivedDate->format('j');
         $existingReceivedMonth = $receivedDate->format('F');
         $existingReceivedYear = $receivedDate->format('Y');
+
+        // Extract lupon1 and pngbrgy values
+        $existingLupon = $row['lupon1'];
+        $existingLupon2 = $row['lupon2'];
+
+        $existingbrgysec = $row['brgysec'];
+
     }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form inputs
-    $madeDay = $_POST['made_day'] ?? '';
-    $madeMonth = $_POST['made_month'] ?? '';
-    $madeYear = $_POST['made_year'] ?? '';
-    $receivedDay = $_POST['received_day'] ?? '';
-    $receivedMonth = $_POST['received_month'] ?? '';
-    $receivedYear = $_POST['received_year'] ?? '';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Process form data
+    $madeDate = createDateFromInputs($_POST['made_day'], $_POST['made_month'], $_POST['made_year']);
+    $receivedDate = createDateFromInputs($_POST['received_day'], $_POST['received_month'], $_POST['received_year']);
 
-    $day = $_POST['day'] ?? '';
-    $month = $_POST['month'] ?? '';
-    $year = $_POST['year'] ?? '';
-    $time = $_POST['time'] ?? '';
+    $lupon1 = $_POST['lupon1'] ?? '';
+    $lupon2 = $_POST['lupon2'] ?? '';
 
-$dateTimeString = "$year-$month-$day $time";
-$appearTimestamp = DateTime::createFromFormat('Y-F-j H:i', $dateTimeString);
+    $brgysec = $_POST['brgysec'] ?? '';
 
 
-if ($appearTimestamp !== false) {
-    $appearTimestamp = $appearTimestamp->format('Y-m-d H:i:s');
+    // Insert or update data in the database
+    $sql = "INSERT INTO luponforms (user_id, formUsed, made_date, received_date, lupon1, lupon2, brgysec) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE lupon1 = VALUES(lupon1), lupon2 = VALUES(lupon2), brgysec = VALUES(brgysec)";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$userID, $formUsed, $madeDate, $receivedDate, $lupon1, $lupon2, $brgysec]);
 
-    // Logic to handle date and time inputs
-    $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
-    $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
-
-    // Insert or update the appear_date in the hearings table
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, appear_date, made_date, received_date)
-              VALUES (:complaintId, :currentHearing, :formUsed, :appearDate, :madeDate, :receivedDate)
-              ON DUPLICATE KEY UPDATE
-              hearing_number = VALUES(hearing_number),
-              form_used = VALUES(form_used),
-              appear_date = VALUES(appear_date),
-              made_date = VALUES(made_date),
-              received_date = VALUES(received_date)";
-
-
-     $stmt = $conn->prepare($query);
-    $stmt->bindParam(':complaintId', $complaintId);
-    $stmt->bindParam(':currentHearing', $currentHearing);
-    $stmt->bindParam(':formUsed', $formUsed);
-    $stmt->bindParam(':appearDate', $appearTimestamp);
-    $stmt->bindParam(':madeDate', $madeDate);
-    $stmt->bindParam(':receivedDate', $receivedDate);
-    
-    if ($stmt->execute()) {
-        $message = "Form submit successful.";
+    if ($stmt->rowCount() > 0) {
+        echo "Row added successfully!";
     } else {
-        $message = "Form submit failed.";
-    }
-}
-else {
-        // Handle case where DateTime object creation failed
-        $message ="Invalid date/time format! Input: ". $dateTimeString;
+        echo "Error adding row!";
     }
 }
 
-// Function to create a date from day, month, and year inputs
+
 function createDateFromInputs($day, $month, $year) {
     if (!empty($day) && !empty($month) && !empty($year)) {
         $monthNum = date('m', strtotime("$month 1"));
@@ -142,57 +83,6 @@ function createDateFromInputs($day, $month, $year) {
     } else {
         return date('Y-m-d');
     }
-}
-
-function createTimestampFromInputs($day, $month, $year, $time) {
-    if (!empty($day) && !empty($month) && !empty($year) && !empty($time)) {
-        return date('Y-m-d H:i:s', strtotime("$year-$month-$day $time"));
-    } else {
-        return null; 
-    }
-}
-// Retrieve the profile picture name of the current user
-$query = "SELECT profile_picture FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['profile_picture'])) {
-    $profilePicture = '../profile_pictures/' . $user['profile_picture'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $profilePicture = '../profile_pictures/defaultpic.jpg';
-}
-
-$query = "SELECT lgu_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['lgu_logo'])) {
-    $lgulogo = '../lgu_logo/' . $user['lgu_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $lgulogo = '../lgu_logo/defaultpic.jpg';
-}
-
-
-$query = "SELECT city_logo FROM users WHERE id = :userID";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':userID', $_SESSION['user_id']);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Check if the user has a profile picture
-if ($user && !empty($user['city_logo'])) {
-    $citylogo = '../city_logo/' . $user['city_logo'];
-} else {
-    // Default profile picture if the user doesn't have one set
-    $citylogo = '../city_logo/defaultpic.jpg';
 }
 ?>
 
@@ -336,7 +226,7 @@ h5 {
         <i class="fas fa-file button-icon"></i> Download
     </button>
 
-    <a href="../user_lupon.php">
+    <a href="<?php echo $backButton; ?>">
         <button class="btn common-button" style="position:fixed; right: 20px; top: 177px;">
             <i class="fas fa-arrow-left"></i> Back
         </button>
@@ -383,27 +273,25 @@ if ($isCity) {
 
 
 <div style="text-align: right;">
-                <select id="monthInput" name="month" required style="text-align: center; width: 110px; height: 31px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-                    <?php
-                    $currentMonth = date('F');
-                    foreach ($months as $index => $month) {
-                        $monthNumber = $index + 1;
-                        $selected = ($month == $currentMonth) ? 'selected' : '';
-                        echo '<option value="' . $monthNumber . '" ' . $selected . '>' . $month . '</option>';
-                    }
-                    ?>
-                </select>
-                <input type="text" id="day" placeholder= "day" name="day" required style=" height: 30px; text-align: center; width: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-                <label for="day">,</label>
-                <input type="text" id="year" name="year" required style=" height: 30px; text-align: center; width: 45px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $currentYear; ?>">
+<form method="POST">
+                <select name="made_month" style="text-align: center; height: 30px; border: none; border-bottom: 1px solid black;  font-size: 18px; font-family: 'Times New Roman', Times, serif;">
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+        <?php else: ?>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>
+                <input type="text" name="made_day" placeholder="day" size="5" style="text-align: center; border: none; border-bottom: 1px solid black; text-align: center; width: 30px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingMadeDay ?? ''; ?>" required>
+                <input type="number" name="made_year" placeholder="year" style="width: 60px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>">
 
 <h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; font-weight: bold;">
 <br>PANUNUMPA SA KATUNGKULAN</h3><br>
-<form method="POST">
                 <div style="text-align: left;">
                 <p style="text-indent: 2em; text-align: justify; font-family: 'Times New Roman', Times, serif; font-size: 18px;"> Bilang pag-alinsunod sa Kabanata 7, Pamagat Isa, Aklat II, ng kodigo ng Pamahalaang Lokal ng 1991 (Batas ng Republika Blg. 7160), Ako si 
 
- <input type="text" id="recipient" name="recipient" list="nameList" required style=" width: 20%; border: none; border-bottom: 1px solid black; margin-right: 0;"></p>
+ <input type="text" id="lupon1" placeholder="" name="lupon1" list="nameList" value="<?php echo $existingLupon ?? ''; ?>" required style="width:250px; height: 20px; border: none;  font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none; size= 1;">,</p>
     <datalist id="nameList">
         <?php foreach ($linkedNames as $name): ?>
             <option value="<?php echo $name; ?>">
@@ -420,44 +308,43 @@ if ($isCity) {
     <br>
 
     <p class="important-warning-text" style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 450px; margin-right: auto;">
-    <input type="text" id="recipient" name="recipient" list="nameList" required style="font-size: 18px; width: 100%; border: none; border-bottom: 1px solid black; margin-right: 0;">
+    <input type="text" id="lupon2" name="lupon2" list="nameList" value="<?php echo $existingLupon2 ?? ''; ?>" required style="font-size: 18px; width: 100%; border: none; border-bottom: 1px solid black; text-align: center; margin-right: 0;">
     <datalist id="nameList">
         <?php foreach ($linkedNames as $name): ?>
             <option value="<?php echo $name; ?>">
         <?php endforeach; ?>
     </datalist>
-    <br><p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px; margin-right: 120px;">Kasapi
+    <br><p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px; margin-right: 140px;">Kasapi
     </p><br><br><br>
     
     <form method="POST">
                     <p style="text-align: justify; font-size: 18px; font-family: 'Times New Roman', Times, serif; text-indent: 2em;">
                         NILAGDAAN at PINANUMPAAN (o PINANININDIGAN) sa harap ko ngayong ika-
-                       <input type="number" name="made_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay; ?>"> araw ng
-        <select name="made_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+                       <input type="text" name="received_day" placeholder="araw" size="5" style="text-align: center; border: none; border-bottom: 1px solid black; text-align: center; width: 40px; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingReceivedDay ?? ''; ?>" required> ng
+    ,<select name="received_month" style="text-align: center; height: 30px; border: none; border-bottom: 1px solid black;  font-size: 18px; font-family: 'Times New Roman', Times, serif;">
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option style="font-size: 18px;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+            <option value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
         <?php else: ?>
-            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
-</select>,
-        <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; left: 10px;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">.
-        <div style="position: relative;">
+</select>
+    <input type="number" name="received_year" placeholder="year" style="width: 40px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>">
          
     <?php if (!empty($message)) : ?>
         <p><?php echo $message; ?></p>
     <?php endif; ?>
    
     <input type="submit" name="saveForm" value="Save" class="btn btn-primary print-button common-button" style="position: fixed; right: 20px; top: 130px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-                </form>
     
    <br>
     <p class="important-warning-text" style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-left: 440px; margin-right: auto;">
-    <input type="text" id="positionInput" name="pngbrgy" style="border: none; border-bottom: 1px solid black;outline: none; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;" size="25" value="<?= strtoupper($linkedNames['punong_barangay'] ?? 'Punong Barangay') ?>">
+    <input type="text" id="brgysec" name="brgysec" style="border: none; text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif; border-bottom: 1px solid black; outline: none;" size="25" value="<?php echo $existingbrgysec ?? strtoupper($linkedNames['punong_barangay']); ?>" required>
     <p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px; margin-right: 90px;">Punong Barangay
 </p>
 </form>
+                
 <script>
     var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable
     document.getElementById('downloadButton').addEventListener('click', function () {

@@ -168,23 +168,25 @@ function setLanguage(language) {
         });
     });
 
-    // JavaScript to handle search functionality
-    document.getElementById("yearInput").addEventListener("input", function() {
-        var searchYear = this.value.trim();
-        var buttons = document.querySelectorAll(".open-form");
+  // JavaScript to handle search functionality
+document.getElementById("yearInput").addEventListener("input", function() {
+    var searchYear = this.value.trim();
+    var buttons = document.querySelectorAll(".open-form");
 
-        buttons.forEach(function(button) {
-            var buttonText = button.textContent;
-            var buttonYear = buttonText.substring(buttonText.lastIndexOf("(") + 1, buttonText.lastIndexOf(")")).trim(); // Extract the year from the button text
+    buttons.forEach(function(button) {
+        var buttonText = button.textContent;
+        var buttonYear = buttonText.match(/\b\d{4}\b/g); // Extract all 4-digit numbers (years) from the button text
 
-            if (searchYear === '' || buttonYear === searchYear) {
-                button.style.display = "block";
-                document.getElementById("kpColumn_" + button.getAttribute("data-form-used")).style.display = "block";
-            } else {
-                button.style.display = "none";
-            }
-        });
+        // Check if the search year matches any extracted year from the button text
+        if (searchYear === '' || (buttonYear && buttonYear.includes(searchYear))) {
+            button.style.display = "block";
+            document.getElementById("kpColumn_" + button.getAttribute("data-form-used")).style.display = "block";
+        } else {
+            button.style.display = "none";
+        }
     });
+});
+
 
     // Show all buttons when the page is loaded
     window.onload = function() {

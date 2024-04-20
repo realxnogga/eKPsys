@@ -47,51 +47,6 @@ $selectedMonth = ''; // Initialize the variable
 
 $searchedMunicipality = '';
 
-// Handling search functionality
-if (isset($_POST['search'])) {
-    $searchedMunicipality = $_POST['municipality']; // Get the searched municipality
-
-    // Get the selected month from the dropdown
-    $selectedMonth = $_POST['selected_month'];
-        $selectedMonth = date('F Y', strtotime($selectedMonth)); // Convert selected month to Month Year format
-
-    $stmt = $conn->prepare("
-        SELECT u.id, u.municipality_id, u.first_name, u.last_name, m.municipality_name,
-        COALESCE(SUM(r.totalSet), 0) AS Settled,
-        COALESCE(SUM(r.totalUnset), 0) AS Unsettled
-        FROM users u
-        INNER JOIN municipalities m ON u.municipality_id = m.id
-        LEFT JOIN barangays b ON m.id = b.municipality_id
-        LEFT JOIN reports r ON b.id = r.barangay_id AND DATE_FORMAT(r.report_date, '%Y-%m') = :selectedMonth
-        WHERE u.user_type = 'admin' 
-        AND m.municipality_name LIKE :municipality
-        GROUP BY u.id
-    ");
-
-    $stmt->bindValue(':municipality', '%' . $searchedMunicipality . '%', PDO::PARAM_STR);
-    $stmt->bindValue(':selectedMonth', $selectedMonth, PDO::PARAM_STR);
-    $stmt->execute();
-    $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} else {
-   $currentMonth = date('Y-m'); // Get current year and month in YYYY-MM format
-
-$stmt = $conn->prepare("
-    SELECT u.id, u.municipality_id, u.first_name, u.last_name, m.municipality_name,
-    COALESCE(SUM(r.totalSet), 0) AS Settled,
-    COALESCE(SUM(r.totalUnset), 0) AS Unsettled
-    FROM users u
-    INNER JOIN municipalities m ON u.municipality_id = m.id
-    LEFT JOIN barangays b ON m.id = b.municipality_id
-    LEFT JOIN reports r ON b.id = r.barangay_id AND DATE_FORMAT(r.report_date, '%Y-%m') = :currentMonth
-    WHERE u.user_type = 'admin' 
-    AND m.municipality_name LIKE :municipality
-    GROUP BY u.id
-");
-$stmt->bindValue(':municipality', '%' . $searchedMunicipality . '%', PDO::PARAM_STR);
-$stmt->bindValue(':currentMonth', $currentMonth, PDO::PARAM_STR);
-$stmt->execute();
-$user = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
 
 ?>
 
@@ -113,94 +68,57 @@ $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
    .card {
   box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
   border-radius: 15px;
+  margin-bottom: 20px;
 }
-.custom-card {
-      margin-bottom: 20px;
-    }
+
 .card-text-center {
-      text-align: center;
-    }
-    .alaminos-card {
-      text-align: center;
-      /* background-image: url('img/settled.png'); */
-      background-color: red;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      .bay-card {
-      text-align: center;
-      /* background-image: url('img/unsettled.png'); */
-      background-color: blue;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      .biñan-card {
-      text-align: center;
-      /* background-image: url('img/pending.png'); */
-      background-color: yellow;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      .cabuyao-card {
-      text-align: center;
-      /* background-image: url('img/settled.png'); */
-      background-color: pink;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      .calamba-card {
-      text-align: center;
-      /* background-image: url('img/unsettled.png'); */
-      background-color: purple;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      .calauan-card {
-      text-align: center;
-      /* background-image: url('img/pending.png'); */
-      background-color: orange;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      .baños-card {
-      text-align: center;
-      /* background-image: url('img/settled.png'); */
-      background-color: green;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      .pablo-card {
-      text-align: center;
-      /* background-image: url('img/unsettled.png'); */
-      background-color: maroon;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      .pedro-card {
-      text-align: center;
-      /* background-image: url('img/pending.png'); */
-      background-color: lightblue;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      .rosa-card {
-      text-align: center;
-      /* background-image: url('img/pending.png'); */
-      background-color: grey;
-      background-size: cover;
-      background-position: center;
-      width: 100%;
-      }
-      
+  text-align: center;
+}
+
+.custom-card {
+  width: 100%;
+}
+
+.alaminos-card {
+  background-color: red;
+}
+
+.bay-card {
+  background-color: blue;
+}
+
+.biñan-card {
+  background-color: yellow;
+}
+
+.cabuyao-card {
+  background-color: pink;
+}
+
+.calamba-card {
+  background-color: purple;
+}
+
+.calauan-card {
+  background-color: orange;
+}
+
+.baños-card {
+  background-color: green;
+}
+
+.pablo-card {
+  background-color: maroon;
+}
+
+.pedro-card {
+  background-color: lightblue;
+}
+
+.rosa-card {
+  background-color: grey;
+}
+
 </style>
 
 </head>
@@ -320,7 +238,7 @@ $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="card-body">
           <!-- Card content goes here -->
           <h5 class="card-title mb-9 fw-semibold" style="color: white; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
-                      Los Baños
+                      Los Baños 
                     </h5>          <p class="mb-9 fw-semibold" style="color: white; font-size: 40px; text-shadow: 0 0 0.2cm rgba(0, 0, 0, 0.5);">
                       <?php
                       if ($selected_month && $selected_month !== date('F Y')) {
@@ -366,11 +284,6 @@ $user = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </div>
     </div>
   </div>
-
-
-
-
-
   <div class="row">
     
     <div class="col-md-4">

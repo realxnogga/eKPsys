@@ -40,7 +40,7 @@ $id = $_GET['formID'] ?? '';
 
 if (!empty($id)) {
     // Fetch data based on the provided formID
-    $query = "SELECT received_date, officer, scenario_info FROM hearings WHERE id = :id";
+    $query = "SELECT received_date, officer, scenario_info, made_date FROM hearings WHERE id = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -51,12 +51,18 @@ if (!empty($id)) {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
       // Extract and format the timestamp values
-     
+
         $receivedDate = new DateTime($row['received_date']);
        
         $existingReceivedDay = $receivedDate->format('j');
         $existingReceivedMonth = $receivedDate->format('F');
         $existingReceivedYear = $receivedDate->format('Y');
+
+
+        $madeDate = new DateTime($row['made_date']);
+        $existingMadeDay = $madeDate->format('j');
+        $existingMadeMonth = $madeDate->format('F');
+        $existingMadeYear = $madeDate->format('Y');
 
         $existOfficer = $row['officer'];
         $existScenario = $row['scenario_info'];
@@ -66,23 +72,29 @@ if (!empty($id)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get form inputs
 
+    $madeDay = $_POST['made_day'] ?? '';
+    $madeMonth = $_POST['made_month'] ?? '';
+    $madeYear = $_POST['made_year'] ?? '';
+
     $receivedDay = $_POST['received_day'] ?? '';
     $receivedMonth = $_POST['received_month'] ?? '';
     $receivedYear = $_POST['received_year'] ?? '';
+    
     $officer = $_POST['officer'];
     $scenario = $_POST['scenario'];
 
     $receivedDate = createDateFromInputs($receivedDay, $receivedMonth, $receivedYear);
+    $madeDate = createDateFromInputs($madeDay, $madeMonth, $madeYear);
 
-
-    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer, scenario_info)
-              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer, :scenario)
+    $query = "INSERT INTO hearings (complaint_id, hearing_number, form_used, received_date, officer, scenario_info, made_date)
+              VALUES (:complaintId, :currentHearing, :formUsed, :receivedDate, :officer, :scenario, :madeDate)
               ON DUPLICATE KEY UPDATE
               hearing_number = VALUES(hearing_number),
               form_used = VALUES(form_used),
               received_date = VALUES(received_date),
                         officer = VALUES(officer),
-                        scenario_info = VALUES(scenario_info);
+                        scenario_info = VALUES(scenario_info),
+                        made_date = VALUES(made_date);
                         ";
 
 
@@ -93,7 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':receivedDate', $receivedDate);
     $stmt->bindParam(':officer', $officer);
     $stmt->bindParam(':scenario', $scenario);
-    
+   $stmt->bindParam(':madeDate', $madeDate);
+
     if ($stmt->execute()) {
         $message = "Form submit successful.";
     } else {
@@ -362,19 +375,25 @@ if ($isCity) {
 <h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> <b style= "font-size: 18px;"  >
 NOTICE TO CHOSEN PANGKAT MEMBER </b>
 </h3>
-<div style="text-align: right;">
-<?php
-$currentDate = date('F d, Y');
-$fontSize = '18px'; 
-$fontFamily = 'Times New Roman'; 
-echo "<p style='font-size: $fontSize; font-family: $fontFamily;'>$currentDate</p>";
 
-?>
+            <form method="POST">
+<div style="text-align: right;">
+<br>
+    <select name="made_month" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; padding: 0; margin: 0; height: 30px; line-height: normal; box-sizing: border-box;" required>
+    <?php foreach ($months as $m): ?>
+        <?php if ($id > 0): ?>
+            <option style="font-size: 18px;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+        <?php else: ?>
+            <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</select>
+<input type="number" name="made_day" placeholder="day" min="1" max="31" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existingMadeDay; ?>">,
+                <input type="number" name="made_year" size="1" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingMadeYear ?? date('Y'); ?>">
 
 </div>
 
 
-            <form method="POST">
             <br><div class="form-group" style="text-align: justify;">
                 <div class="label"></div>
                 <div class="input-field">

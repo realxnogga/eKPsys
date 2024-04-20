@@ -342,14 +342,6 @@ NOTICE OF APPOINTMENT</b>
             }
             </script>
 
-                <?php if (!empty($errors)): ?>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-
     <div style="position: relative;"><br>
 
         <p style="text-align: center; margin-left: 400px; margin-right: auto;  font-size: 18px; font-family: 'Times New Roman', Times, serif;">Very truly yours, </p>

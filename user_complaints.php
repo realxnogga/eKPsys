@@ -123,10 +123,15 @@ $totalCount = $totalCountRow['total'];
         font-family: 'Arial', sans-serif;
     }
     .complainants-column,
-    .respondents-column {
-        width: 150px; 
-        font-family: 'Arial', sans-serif; 
-    }
+.respondents-column {
+    max-width: 150px; /* Set a maximum width */
+    font-family: 'Arial', sans-serif;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflowed content */
+    text-overflow: ellipsis; /* Display ellipsis for overflowed content */
+}
+
+
     .title-column {
         width: 200px;
         font-family: 'Arial', sans-serif;
@@ -161,6 +166,33 @@ $totalCount = $totalCountRow['total'];
     .actions-column a.btn {
         box-sizing: border-box;
     }
+
+    .legend {
+    margin-top: 20px;
+}
+
+.legend h6 {
+    margin-bottom: 5px;
+}
+
+.legend ul {
+    list-style: none;
+    padding: 0;
+}
+
+.legend li {
+    margin-bottom: 5px;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border-radius: 50%;
+}
+
+
 </style>
 </head>
 
@@ -177,7 +209,16 @@ $totalCount = $totalCountRow['total'];
                 <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
                 <div>
                     <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+
                 </div>
+                <div style="margin-left:350px;" class="legend">
+        <h6>Color Legend:</h6>
+        <ul>
+        <li><span class="legend-color" style="background-color: #dcfadf;"></span> Settled</li>
+        <li><span class="legend-color" style="background-color: #FFE181;"></span> Pending (10-14 days)</li>
+        <li><span class="legend-color" style="background-color: #F88D96;"></span> Unsettled (15-30 days)</li>
+    </ul>
+    </div>
             </div>    
             <br>   
             <h5 class="card-title mb-9 fw-semibold">Barangay Complaints</h5>
@@ -214,7 +255,6 @@ function liveSearch() {
     });
 }
 </script>
-
 
 
 <table id="complaints-table" class="table">
@@ -262,8 +302,8 @@ if ($isSettled) {
                             <tr style="background-color: <?= $backgroundColor ?>">
                             <td class="case-number"><?= str_pad($row['CNum'], 11, '0', STR_PAD_LEFT) ?></td>
                             <td class="title-column" style="white-space: pre-line;"><?= $row['ForTitle'] ?></td>
-                            <td class="complainants-column" style="white-space: nowrap;"><?= $row['CNames'] ?></td>
-                            <td class="respondents-column" style="white-space: nowrap;"><?= $row['RspndtNames'] ?></td>
+                            <td class="complainants-column" style="white-space: pre-line;"><?= $row['CNames'] ?></td>
+                            <td class="respondents-column" style="white-space: pre-line;"><?= $row['RspndtNames'] ?></td>
                             <td class="date-column"><?= date('Y-m-d', strtotime($row['Mdate'])) ?></td>
                             <td class="status-column" style="white-space: nowrap;"><?= $row['CMethod'] ?></td>
                             <?php
@@ -347,8 +387,8 @@ $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
 <!--inedit ko din itoo-->
 <div class="col-md-21text-right">
         <p style="margin-left:970px;" >Page <?= $page ?> of <?= $totalPages ?></p>
-    </div>
-  
+    </div> <br>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('search');

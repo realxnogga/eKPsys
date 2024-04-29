@@ -335,33 +335,35 @@ if ($isCity) {
 <br><h3 style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: bold"> NOTICE FOR CONSTITUTION OF PANGKAT</h3>
 <br>
 
-
 <div class="form-group" style="text-align: justify; text-indent: 0em;">
     <div class="label"></div>
     <div class="input-field">
         <div style="font-family: 'Times New Roman', Times, serif;">
-                <div style="display: block; text-align: left; margin-bottom: -25px; font-size: 18px; text-indent: 2em;">
-                    TO:
-                </div>
-                <div style="display: flex; justify-content: space-around;">
-                    <div style="text-align: center;">
-                        <span style="border-bottom: 1px solid black; font-size: 18px; padding: 0 10px;">
-                            <?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?>
-                        </span>
-                        <div style="font-size: 18px; margin-top: 10px;">
-                            Complainant/s
-                        </div>
+            <div style="display: inline-block; text-align: left; margin-bottom: -25px; font-size: 18px; text-indent: 2em;">
+                TO:
+            </div><br>
+            <div style="display: flex; justify-content: space-around;">
+                <div style="text-align: center;">
+                    <span style="border-bottom: 1px solid black; font-size: 18px; padding: 0 10px;">
+                        <?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?>
+                    </span>
+                    <div style="font-size: 18px; margin-top: 10px;">
+                        Complainant/s
                     </div>
-                    <div style="text-align: center;">
-                        <span style="border-bottom: 1px solid black; font-size: 18px; padding: 0 10px;">
-                            <?php echo !empty($rspndtNames) ? nl2br(htmlspecialchars($rspndtNames)) : '&nbsp;'; ?>
-                        </span>
-                        <div style="font-size: 18px; margin-top: 10px;">
-                            Respondent/s
-                        </div>
+                </div>
+                <div style="text-align: center;">
+                    <span style="border-bottom: 1px solid black; font-size: 18px; padding: 0 10px;">
+                        <?php echo !empty($rspndtNames) ? nl2br(htmlspecialchars($rspndtNames)) : '&nbsp;'; ?>
+                    </span>
+                    <div style="font-size: 18px; margin-top: 10px;">
+                        Respondent/s
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
 
 </div><br>
 <form method="POST">
@@ -378,7 +380,7 @@ You are hereby required to appear before me on the
     <?php endforeach; ?>
                 </select>,
                 <input type="text" name="year" placeholder="year" size="1" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black;" value="<?php echo $appear_year ?? date('Y'); ?>" required>
-                at <input type="time" id="time" name="time" size="5" style="font-size: 18px; border: none; border-bottom: 1px solid black;"  value="<?php echo $appear_time; ?>"required> o'clock in the morning/afternoon
+                at <input type="time" id="time" name="time" size="5" style="text-align: center; font-size: 18px; border: none; border-bottom: 1px solid black;"  value="<?php echo $appear_time; ?>"required> o'clock in the morning/afternoon
 for the constitution of the Pangkat ng Tagapagkasundo which shall conciliate your dispute. Should you fail to agree on the Pangkat membership or to appear on the aforesaid date for the constitution of the Pangkat, I shall determine the membership thereof by
 drawing lots.
 </div>
@@ -442,17 +444,18 @@ drawing lots.
     <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 20px;">
         <!-- Complainant Name and Label Container -->
         <div style="text-align: center;">
-            <span style="border-bottom: 1px solid black; font-size: 18px; display: inline-block;">
+            <span style="width:280px; border-bottom: 1px solid black; font-size: 18px; display: inline-block;">
                 <?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?>
             </span>
             <div style="font-size: 18px; margin-top: 10px;">
                 Complainant/s
             </div>
         </div>
+        
 
         <!-- Respondent Name and Label Container -->
         <div style="text-align: center;">
-            <span style="border-bottom: 1px solid black; font-size: 18px; display: inline-block;">
+            <span style="width:280px;  border-bottom: 1px solid black; font-size: 18px; display: inline-block;">
                 <?php echo !empty($rspndtNames) ? nl2br(htmlspecialchars($rspndtNames)) : '&nbsp;'; ?>
             </span>
             <div style="font-size: 18px; margin-top: 10px;">

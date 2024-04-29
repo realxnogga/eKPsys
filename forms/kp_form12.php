@@ -348,7 +348,7 @@ $currentYear = date('Y');
         <div style="font-family: 'Times New Roman', Times, serif;">
                 <div style="display: block; text-align: left; margin-bottom: -25px; font-size: 18px; text-indent: 2em;">
                     TO:
-                </div>
+                </div><br><br>
                 <div style="display: flex; justify-content: space-around;">
                     <div style="text-align: center;">
                         <span style="border-bottom: 1px solid black; font-size: 18px; padding: 0 10px;">
@@ -377,18 +377,18 @@ $currentYear = date('Y');
                 <br><p><b style="font-size:18px; font-family: 'Times New Roman', Times, serif;">NOTICE OF HEARING<br>(CONCILIATION PROCEEDINGS)
 </b></p> <br>
                 <div style="text-align: justify; text-indent: 2em; margin-left: 1px; font-size:18px; "> You are hereby required to appear before the Pangkat on the
-                <input style="font-size: 18px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="number" name="day" placeholder="day" min="1" max="31" value="<?php echo $appear_day; ?>" required> of
-    <select style="border: none; border-bottom: 1px solid black; font-size: 18px;" name="month" required>
+                <input style="text-align: center;font-size: 18px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="number" name="day" placeholder="day" min="1" max="31" value="<?php echo $appear_day; ?>" required> of
+    <select style="text-align: center;border: none; border-bottom: 1px solid black; font-size: 18px;" name="month" required>
         <?php foreach ($months as $m): ?>
             <?php if ($id > 0): ?>
-                <option style="font-size: 18px;" value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
+                <option style="text-align: center;font-size: 18px;" value="<?php echo $appear_month; ?>" <?php echo ($m === $appear_month) ? 'selected' : ''; ?>><?php echo $appear_month; ?></option>
             <?php else: ?>
-                <option style="font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+                <option style="text-align: center;font-size: 18px;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
             <?php endif; ?>
         <?php endforeach; ?>
     </select>,
-    <input style="font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="year" placeholder="year" value="<?php echo $appear_year ?? date('Y'); ?>" required>
-    at <input style="font-size: 18px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required> o'clock for a
+    <input style="text-align: center;font-size: 18px; width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black;" type="number" name="year" placeholder="year" value="<?php echo $appear_year ?? date('Y'); ?>" required>
+    at <input style="text-align: center;font-size: 18px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="time" id="time" name="time" size="5" style="border: none;" value="<?php echo $appear_time; ?>" required> o'clock for a
 hearing of the above-entitled case.
 
 </div>  
@@ -397,42 +397,42 @@ hearing of the above-entitled case.
 
                
                 <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-                 This <input style="height:33px; text-align:center; font-size: 18px; font-family: 'Times New Roman', Times, serif; width: 44px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="text" name="made_day" placeholder="day" size="5" value="<?php echo $existingMadeDay ?? ''; ?>" required>  day of
-                <select style="height:33px; border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; width: auto; font-size: 18px; margin-right: 5px;"  name="made_month"  required>
+                 This <input style="text-align: center;height:33px; text-align:center; font-size: 18px; font-family: 'Times New Roman', Times, serif; width: 44px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;" type="text" name="made_day" placeholder="day" size="5" value="<?php echo $existingMadeDay ?? ''; ?>" required>  day of
+                <select style="text-align: center;height:33px; border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; width: auto; font-size: 18px; margin-right: 5px;"  name="made_month"  required>
                                         <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
+            <option style="text-align: center;" value="<?php echo $existingMadeMonth; ?>" <?php echo ($m === $existingMadeMonth) ? 'selected' : ''; ?>><?php echo $existingMadeMonth; ?></option>
         <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style="text-align: center;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
                                     </select>,
-        <input style="font-family: 'Times New Roman', Times, serif; font-size: 18px; border: none;  border-bottom: 1px solid black; width: 40px;" min="2000" max="2099" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>" required>.
+        <input style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 18px; border: none;  border-bottom: 1px solid black; width: 40px;" min="2000" max="2099" type="number" name="made_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingMadeYear) ? $existingMadeYear : date('Y'); ?>" required>.
     
                 </div>
        <div style="position: relative;">
                     <br><br>
 
 
-               <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 550px; margin-right: auto;">
+               <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 540px; margin-right: auto;">
     <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;font-family: 'Times New Roman', Times, serif;">
         <?php echo !empty($punong_barangay) ? $punong_barangay : '&nbsp;'; ?>
     </span></p>
-    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center; margin-left: 590px; font-family: 'Times New Roman', Times, serif;  font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Pangkat Chairman</label>
+    <label id="punongbrgy" name="punongbrgy" size="25" style="text-align: center; margin-left: 540px; font-family: 'Times New Roman', Times, serif;  font-size: 18px; font-weight: normal; white-space: nowrap; max-width: 200px;">Pangkat Chairman</label>
                     
 
         <div style="text-align: justify; text-indent: 0em; margin-left: 20.5px;font-size: 18px; font-family: 'Times New Roman', Times, serif;">
-        <br><br>Notified this <input style="height:33px; text-align:center; font-size: 18px; font-family: 'Times New Roman', Times, serif; width: 44px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;"type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>" required>  day of
-                <select style="height:33px; border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; width: auto; font-size: 18px; margin-right: 5px;"  name="received_month"  required>  
+        <br><br>Notified this <input style="text-align: center;height:33px; text-align:center; font-size: 18px; font-family: 'Times New Roman', Times, serif; width: 44px; margin-right: 5px; padding-bottom: 0; border: none; border-bottom: 1px solid black;"type="text" name="received_day" placeholder="day" size="5" value="<?php echo $existingReceivedDay ?? ''; ?>" required>  day of
+                <select style="text-align: center;height:33px; border: none; border-bottom: 1px solid black; font-family: 'Times New Roman', Times, serif; width: auto; font-size: 18px; margin-right: 5px;"  name="received_month"  required>  
                                         <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+            <option style="text-align: center;"value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
         <?php else: ?>
-            <option value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style="text-align: center;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
                                     </select>,
-        <input style="font-family: 'Times New Roman', Times, serif; font-size: 18px; border: none;  border-bottom: 1px solid black; width: 40px;" min="2000" max="2099" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>" required>.
+        <input style="text-align: center;font-family: 'Times New Roman', Times, serif; font-size: 18px; border: none;  border-bottom: 1px solid black; width: 40px;" min="2000" max="2099" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo isset($existingReceivedYear) ? $existingReceivedYear : date('Y'); ?>" required>.
     
         </div>
 
@@ -451,23 +451,33 @@ hearing of the above-entitled case.
                 <?php endif; ?>
 <br>
 <br><br>
-    <div class="d">
-    <div style="display: flex; justify-content: space-between; font-size: 18px; text-align: center; ">
-    <div style="text-align: center; margin-left: 110px;">
-        <p style="font-size: 18px;font-family: 'Times New Roman', Times, serif; ">  Complainant/s</p>
-        <ul style="margin-bottom: 10; padding: 0; list-style: none; font-size: 18px; text-align: center;">
-        <span style="min-width: 30px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;font-family: 'Times New Roman', Times, serif;"><?php echo $cNames; ?></span>
-           
-        </ul>
-    </div>
+  
+<div style="font-family: 'Times New Roman', Times, serif;">
+    <!-- Section for Names and Labels -->
+    <div style="display: flex; justify-content: space-around; align-items: center; margin-top: 20px;">
+        <!-- Complainant Name and Label Container -->
+        <div style="text-align: center;">
+            <span style="width:280px; border-bottom: 1px solid black; font-size: 18px; display: inline-block;">
+                <?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?>
+            </span>
+            <div style="font-size: 18px; margin-top: 10px;">
+                Complainant/s
+            </div>
+        </div>
+        
 
-    <div style="text-align: center; margin-right: 110px; font-family: 'Times New Roman', Times, serif;">
-        <p style="font-size: 18px;font-family: 'Times New Roman', Times, serif; ">Respondent/s</p>
-        <ul style="margin-bottom: 10; padding: 0; list-style: none; font-size: 18px; text-align: center;">
-        <span style="min-width: 30px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;font-family: 'Times New Roman', Times, serif;"><?php echo $rspndtNames; ?></span>
-          
-        </ul>
+        <!-- Respondent Name and Label Container -->
+        <div style="text-align: center;">
+            <span style="width:280px;  border-bottom: 1px solid black; font-size: 18px; display: inline-block;">
+                <?php echo !empty($rspndtNames) ? nl2br(htmlspecialchars($rspndtNames)) : '&nbsp;'; ?>
+            </span>
+            <div style="font-size: 18px; margin-top: 10px;">
+                Respondent/s
+            </div>
+        </div>
     </div>
+</div>
+ 
 </div>
          
 <script>

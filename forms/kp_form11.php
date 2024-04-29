@@ -352,25 +352,20 @@ if ($isCity) {
     </div>
 </div>
 
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
+<div class="form-group" style="text-align: justify; text-indent: 0em; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
-                </div>
+    <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?></span>
+  
               
 <p style="font-size: 18px;"> Complainant/s </p>
 <p style="font-size: 18px;">- against -</p>
                 </div>
 
-<div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 20.5px; font-family: 'Times New Roman', Times, serif;">
-  
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
-                </div>
-             
+<div class="form-group" style="text-align: justify; text-indent: 0em; font-family: 'Times New Roman', Times, serif;">
+    <div class="label"></div>
+    <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($rspndtNames) ? nl2br(htmlspecialchars($rspndtNames)) : '&nbsp;'; ?></span>
+   
 <p style="font-size: 18px;"> Respondent/s </p> 
-
-       
 
 <h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> <b style= "font-size: 18px;"  >
 NOTICE TO CHOSEN PANGKAT MEMBER </b>
@@ -397,7 +392,7 @@ NOTICE TO CHOSEN PANGKAT MEMBER </b>
             <br><div class="form-group" style="text-align: justify;">
                 <div class="label"></div>
                 <div class="input-field">
-                    <br><br><p style="font-size: 18px;"> TO: <input type="text" name="scenario" id="to" size="30" style="font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existScenario; ?>"  list="officerList"> </p>
+                    <br><br><p style="font-size: 18px;"> TO: <input type="text" name="scenario" id="to" size="30" style=" font-size: 18px; border: none; border-bottom: 1px solid black;" value="<?php echo $existScenario; ?>"  list="officerList"> </p>
             </div>
             </div>
 
@@ -437,7 +432,7 @@ NOTICE TO CHOSEN PANGKAT MEMBER </b>
 <input type="number" name="received_year" placeholder="year" style="font-size: 18px; text-align: center; border: none; border-bottom: 1px solid black; width: 60px;" min="2000" max="2099" value="<?php echo $existingReceivedYear ?? date('Y'); ?>" required>.
         </div><br><br>
         
-<input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList" style="margin-left: 430px; border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;">
+<input type="text" name="officer" size="25" value="<?php echo $existOfficer; ?>" required list="officerList" style="text-align: center; margin-left: 430px; border: none; border-bottom: 1px solid black; font-size: 18px;  font-family: 'Times New Roman', Times, serif;">
 <br><div style="margin-top: 20px; margin-left: 440px; text-align: justify; text-indent: 3em; font-size: 18px; font-family: 'Times New Roman', Times, serif">
 Pangkat Member</p></div>
 <datalist id="officerList">

@@ -298,19 +298,27 @@ h5 {
         </button>
     </a>
     </div>
-            
-            <div style="text-align: left; font-family: 'Times New Roman', Times, serif;">
-                <h5><b>KP Form No. 8</b></h5>
-               <div style="display:inline-block;text-align: center;">
-<img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
-<img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
-<img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
+   
+    <div style="text-align: left; font-family: 'Times New Roman', Times, serif;">
+                <h5 style="font-size: 12px; font-weight: bold;">KP Form No. 8</h5>
+                <div style="text-align: center;">
+    <div style="display: inline-block;">
+        <img class="profile-img" src="<?php echo $profilePicture; ?>" alt="Profile Picture" style="height: 80px; width: 80px;">
+    </div>
+    <div style="display: inline-block;">
+        <img class="profile-img" src="<?php echo $lgulogo; ?>" alt="Lgu Logo" style="height: 80px; width: 80px;">
+    </div>
+    <div style="display: inline-block;">
+        <img class="profile-img" src="<?php echo $citylogo; ?>" alt="City Logo" style="height: 80px; width: 80px;">
+    </div>
+</div>
+
 <div style="text-align: center; font-family: 'Times New Roman', Times, serif;">
 <br>
 <h5 class="header" style="font-size: 18px;">Republic of the Philippines</h5>
 <h5 class="header" style="font-size: 18px;">Province of Laguna</h5>
-        <h5 class="header" style="text-align: center; font-size: 18px;">
-        <?php
+                <h5 style="text-align: center; font-size: 18px;">
+                <?php
 $municipality = $_SESSION['municipality_name'];
 $isCity = in_array($municipality, ['Biñan', 'Calamba', 'Cabuyao', 'San Pablo', 'San Pedro', 'Santa Rosa']);
 $isMunicipality = !$isCity;
@@ -324,10 +332,9 @@ if ($isCity) {
 }
 ?>
 </h5>
-        <h5 style="text-align: center; font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
-        <h5 style="text-align: center; font-size: 18px; margin-top: 5px;">OFFICE OF THE PUNONG BARANGAY</h5>
-            </div>
-
+                <h5 style="text-align: center; font-size: 18px;">Barangay <?php echo $_SESSION['barangay_name']; ?></h5>
+                <h5 style="text-align: center; font-size: 18px; margin-top: 5px;">OFFICE OF THE PUNONG BARANGAY</h5>
+           
             <?php
             $months = [
                 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -335,16 +342,15 @@ if ($isCity) {
             $currentYear = date('Y');
             ?>
 
-<br>
 <h3 style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: bold;">NOTICE OF HEARING</h3>
-<h3 style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: bold;">(MEDIATION PROCESS)</h3>          
-
-
+<h3 style="text-align: center; font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: bold;">(MEDIATION PROCESS)</h3>           
+            </div> </div>
+         
 <div class="form-group" style="text-align: justify; text-indent: 0em;">
     <div class="label"></div>
     <div class="input-field">
         <br><br><p style="min-width: 250px; font-size: 18px;; font-family: 'Times New Roman', Times, serif">
-        TO: <span style="border-bottom: 1px ridge black; font-size: 18px; min-width: 300px;">
+        TO: <span style="border-bottom: 1px ridge black; font-size: 18px; min-width: 250px;">
     <?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?></span>
 <div style="text-align: left;">
     <p style="font-size: 18px; margin-top: -10px; font-family: 'Times New Roman', Times, serif; text-indent: 3.5em; margin-top: 10px;">
@@ -424,10 +430,9 @@ if ($isCity) {
 
 <div style="text-align: center; font-size: 18px; margin-left: 420px; margin-right: auto;">
     <br><br>Complainant/s<br>
-    <div style="text-align: center; font-size: 18px; border-bottom: 1px solid black; display: inline-block; white-space: nowrap; max-width: 250%; text-overflow: ellipsis;">
-    <div class="custom-names" style="font-size: 18px; text-align: center; width: 100%; margin-top: 10px;">
-    <?php echo !empty($cNames) ? htmlspecialchars($cNames) : '&nbsp;'; ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</div></div>
+ <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?></span>
+  
+          
 
 <script>
 var barangayCaseNumber = "<?php echo $cNum; ?>"; // Assume $cNum is your case number variable

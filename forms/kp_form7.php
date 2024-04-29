@@ -254,6 +254,12 @@ h5 {
         border-bottom: 1px solid black !important;
     }
 }
+.name-wrapper {
+            max-width: 250px; /* Limit maximum width of the name wrapper */
+            overflow: hidden; /* Hide overflow */
+            text-overflow: ellipsis; /* Display ellipsis for overflowed text */
+            white-space: nowrap; /* Prevent wrapping */
+        }
 </style>
 <body>
     <div class="container">
@@ -323,9 +329,8 @@ if ($isCity) {
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
-                </div>
+    <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?></span>
+  
               
 <p style="font-size: 18px;"> Complainant/s </p>
 <p style="font-size: 18px;">- against -</p>
@@ -333,12 +338,10 @@ if ($isCity) {
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
-                </div>
-                <div>
-<p style="font-size: 18px;"> Respondent/s </p> </div>
-
+    <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($rspndtNames) ? nl2br(htmlspecialchars($rspndtNames)) : '&nbsp;'; ?></span>
+   
+<p style="font-size: 18px;"> Respondent/s </p> 
+             
        
 
                     <h3 style="text-align: center;"><b style="font-family: 'Times New Roman', Times, serif; font-size: 18px;">COMPLAINT</b></h3>
@@ -375,11 +378,11 @@ if ($isCity) {
     </div>
     <div style="position: relative;">
        
-        <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 570px; margin-right: auto; font-size: 18px;" >
+        <p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 570px; margin-right: auto; font-size: 18px;" ><div class="name-wrapper">
             <!-- CName here but All Capital Letters --><p class="important-warning-text" style="text-align: center; font-size: 18px; margin-left: 400px; margin-right: auto;">
             <span style="border-bottom: 1px solid black; font-size: 18px; "><?php echo ($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?></span><br>
     <label id="cmplnts" name="cmplnts" size="25" style="text-align: center; font-weight: normal; font-size: 18px;">Complainant/s</label>
-</p>
+</p></div>
 
     </div>
     <br><div style="text-align: justify; text-indent: 2em; font-size: 18px;">

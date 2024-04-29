@@ -407,6 +407,9 @@ h5 {
     border: none;
     border-bottom: 1px solid black;
 }
+.page-break {
+    page-break-before: always;
+}
 
 </style>
 <body>
@@ -478,25 +481,21 @@ if ($isCity) {
     </div>
 </div>
 
+<
 <div class="form-group" style="text-align: justify; text-indent: 0em; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
-                </div>
+    <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?></span>
+  
               
 <p style="font-size: 18px;"> Complainant/s </p>
 <p style="font-size: 18px;">- against -</p>
                 </div>
 
 <div class="form-group" style="text-align: justify; text-indent: 0em; font-family: 'Times New Roman', Times, serif;">
-  
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
-                </div>
-             
+    <div class="label"></div>
+    <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($rspndtNames) ? nl2br(htmlspecialchars($rspndtNames)) : '&nbsp;'; ?></span>
+   
 <p style="font-size: 18px;"> Respondent/s </p> 
-
-       
 
 <h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> <b style= "font-size: 18px;"  >
 SUMMONS </b>
@@ -505,8 +504,8 @@ SUMMONS </b>
 <div class="form-group" style="text-align: justify; text-indent: 0em; margin-left: 1px; font-size: 18px; font-family: 'Times New Roman', Times, serif;">
   
     <div class="input-field">
-        <p style="font-size: 18px;"> TO:     <span style="min-width: 182px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?></span></p> </div>
+        <p style="font-size: 18px;"> TO:        <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($rspndtNames) ? nl2br(htmlspecialchars($rspndtNames)) : '&nbsp;'; ?></span>
+</p> </div>
                 <div>
 <p style="font-size: 18px; text-indent:2em;"> Respondent/s </p> </div>
 
@@ -557,59 +556,60 @@ SUMMONS </b>
     Punong Barangay/Kalihim ng Lupon
 </label><br>
 
-<div class="page-break"></div>
+<div class="page-break"> <br><br><br><br><br><br><br></div>
 
 <h3 style="text-align: center; font-size: 18px;">
     <b style="font-size: 18px;">OFFICER'S RETURN</b>
 </h3>
 
+
 <div style="font-size: 18px; text-align: justify; text-indent: 2em; margin-left: 1px;">
     I served this summons upon respondent <?php echo $rspndtNames; ?> on the
     <input style="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" type="number" name="received_day" placeholder="day" min="1" max="31" value="<?php echo $existingReceivedDay ?? ''; ?>">
     day of
-                <select style ="height: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  name="received_month" required>
+                <select style ="text-align:center;height: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  name="received_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
+            <option style ="text-align:center;border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingReceivedMonth; ?>" <?php echo ($m === $existingReceivedMonth) ? 'selected' : ''; ?>><?php echo $existingReceivedMonth; ?></option>
         <?php else: ?>
-            <option style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style ="text-align:center;border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input style ="width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingReceivedYear ?? date('Y'); ?>">, and upon respondent <?php echo $rspndtNames; ?> on the day
-                <input  style ="border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"type="number" name="resp_day" placeholder="day" min="1" max="31" value="<?php echo $existingRespDay ?? ''; ?>"> of
-    <select style ="height: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" name="resp_month" required>
+                <input style ="text-align:center;width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" type="number" name="received_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingReceivedYear ?? date('Y'); ?>">, and upon respondent <?php echo $rspndtNames; ?> on the day
+                <input  style ="text-align:center;border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"type="number" name="resp_day" placeholder="day" min="1" max="31" value="<?php echo $existingRespDay ?? ''; ?>"> of
+    <select style ="text-align:center;height: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" name="resp_month" required>
     <?php foreach ($months as $m): ?>
         <?php if ($id > 0): ?>
-            <option style ="height: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
+            <option style ="text-align:center;height: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;" value="<?php echo $existingRespMonth; ?>" <?php echo ($m === $existingRespMonth) ? 'selected' : ''; ?>><?php echo $existingRespMonth; ?></option>
         <?php else: ?>
-            <option style ="height: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
+            <option style ="text-align:center;height: 30px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  value="<?php echo $m; ?>" <?php echo ($m === $currentMonth) ? 'selected' : ''; ?>><?php echo $m; ?></option>
         <?php endif; ?>
     <?php endforeach; ?>
 </select>,
-                <input style ="width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingRespYear ?? date('Y'); ?>">  by: <br>
+                <input style ="text-align:center;width: 3em; margin-right: 5px; border: none; border-bottom: 1px solid black; font-size: 18px; font-family: 'Times New Roman', Times, serif;"  type="number" name="resp_year" placeholder="year" min="<?php echo date('Y') - 100; ?>" max="<?php echo date('Y'); ?>" value="<?php echo $existingRespYear ?? date('Y'); ?>">  by: <br>
                 <p style="font-size: 18px;text-indent: 0em;"> (Write name/s of respondent/s before mode by which he/they was/were served.)</p>
 </div>
 
 
 <div style="font-size: 18px; text-align: justify; text-indent: 0em; margin-left: 20.5px;">
     <p style="font-size: 18px; text-indent: 0em; margin-left: 18px;">
-        <input style="border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario1" name="scenario_1" size="15" value="<?php echo ($existingScenario == 1) ? $rspndtName1 : ''; ?>" > 1. handing to him/them said summons in person, or <br>
-        <input style="border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario2" name="scenario_2" size="15" value="<?php echo ($existingScenario == 2) ? $rspndtName2 : ''; ?>" > 2. handing to him/them said summons and he/they refused to receive it, or <br>
-        <input style="border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario3" name="scenario_3" size="15" value="<?php echo ($existingScenario == 3) ? $rspndtName3 : ''; ?>" > 3. leaving said summons at his/their dwelling with
-        <input style="border: none; border-bottom: 1px solid black; font-size: 18px; width: 220px;" type="text" id="scenario3a" placeholder="Enter name" name="scenario_3a" size="15" value="<?php echo ($existingScenario == 3) ? $existScen3 : ''; ?>" > (name) a person of suitable age and discretion residing therein, or <br> 
-        <input style="border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario4" name="scenario_4" size="15" value="<?php echo ($existingScenario == 4) ? $rspndtName4 : ''; ?>" > 4. leaving said summons at his/their office/place of business with
-        <input style="border: none; border-bottom: 1px solid black; font-size: 18px; width: 220px;" type="text" id="scenario4a" placeholder="Enter name" name="scenario_4a" size="15" value="<?php echo ($existingScenario == 4) ? $existScen4 : ''; ?>" >, (name) a competent person in charge thereof.
+        <input style="text-align:center;border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario1" name="scenario_1" size="15" value="<?php echo ($existingScenario == 1) ? $rspndtName1 : ''; ?>" > 1. handing to him/them said summons in person, or <br>
+        <input style="text-align:center;border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario2" name="scenario_2" size="15" value="<?php echo ($existingScenario == 2) ? $rspndtName2 : ''; ?>" > 2. handing to him/them said summons and he/they refused to receive it, or <br>
+        <input style="text-align:center;border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario3" name="scenario_3" size="15" value="<?php echo ($existingScenario == 3) ? $rspndtName3 : ''; ?>" > 3. leaving said summons at his/their dwelling with
+        <input style="text-align:center;border: none; border-bottom: 1px solid black; font-size: 18px; width: 220px;" type="text" id="scenario3a" placeholder="Enter name" name="scenario_3a" size="15" value="<?php echo ($existingScenario == 3) ? $existScen3 : ''; ?>" > (name) a person of suitable age and discretion residing therein, or <br> 
+        <input style="text-align:center;border: none; border-bottom: 1px solid black; display: inline-block; font-size: 18px;" type="text" id="scenario4" name="scenario_4" size="15" value="<?php echo ($existingScenario == 4) ? $rspndtName4 : ''; ?>" > 4. leaving said summons at his/their office/place of business with
+        <input style="text-align:center;border: none; border-bottom: 1px solid black; font-size: 18px; width: 220px;" type="text" id="scenario4a" placeholder="Enter name" name="scenario_4a" size="15" value="<?php echo ($existingScenario == 4) ? $existScen4 : ''; ?>" >, (name) a competent person in charge thereof.
     </p>
 </div><br>
 
 
-<input type="text" name="officer" size="25" style="font-size: 18px; border: none; border-bottom: 1px solid black; margin-left: 450px; width: 250px;" value="<?php echo $existOfficer; ?>" required list="officerList">
+<input type="text" name="officer" size="25" style="text-align:center;font-size: 18px; border: none; border-bottom: 1px solid black; margin-left: 450px; width: 250px;" value="<?php echo $existOfficer; ?>" required list="officerList">
 <p style="font-size: 18px; font-family: 'Times New Roman', Times, serif; margin-top: 20px; margin-left: 550px;">Officer</p>
 <datalist id="officerList">
     <!-- Display 'punong_barangay' and 'lupon_chairman' as options -->
-    <option value="<?php echo $punong_barangay; ?>">
-    <option value="<?php echo $lupon_chairman; ?>">
+    <option style="text-align:center;" value="<?php echo $punong_barangay; ?>">
+    <option style=" text-align:center;"value="<?php echo $lupon_chairman; ?>">
 </datalist>
 </div>
 <p style="font-size: 18px;text-indent: 1em; margin-left: 1px;">Received by Respondent/s representative/s:</p>

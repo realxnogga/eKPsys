@@ -308,24 +308,20 @@ if ($isCity) {
     </div>
 </div>
 
-<div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;">
+<div class="form-group" style="text-align: justify; text-indent: 0em; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($cNames) ? $cNames : '&nbsp;'; ?>
-                </div>
+    <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?></span>
+  
               
 <p style="font-size: 18px;"> Complainant/s </p>
 <p style="font-size: 18px;">- against -</p>
                 </div>
 
-<div class="form-group" style="text-align: justify; font-family: 'Times New Roman', Times, serif;">
-  
-    <div style="min-width: 250px; font-size: 18px; border-bottom: 1px solid black; display: inline-block;">
-    <?php echo !empty($rspndtNames) ? $rspndtNames : '&nbsp;'; ?>
-                </div>
-             
+<div class="form-group" style="text-align: justify; text-indent: 0em; font-family: 'Times New Roman', Times, serif;">
+    <div class="label"></div>
+    <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($rspndtNames) ? nl2br(htmlspecialchars($rspndtNames)) : '&nbsp;'; ?></span>
+   
 <p style="font-size: 18px;"> Respondent/s </p> 
-
        
 <form method="POST">
 <h3 style="text-align: center; font-size: 18px; font-family: 'Times New Roman', Times, serif;"> <b style= "font-size: 18px;">

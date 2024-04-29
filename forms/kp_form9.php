@@ -481,7 +481,7 @@ if ($isCity) {
     </div>
 </div>
 
-<
+
 <div class="form-group" style="text-align: justify; text-indent: 0em; font-family: 'Times New Roman', Times, serif;">
     <div class="label"></div>
     <span style="border-bottom: 1px solid black; font-size: 18px;"><?php echo !empty($cNames) ? nl2br(htmlspecialchars($cNames)) : '&nbsp;'; ?></span>
